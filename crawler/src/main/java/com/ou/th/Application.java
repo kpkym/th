@@ -1,7 +1,7 @@
 package com.ou.th;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import com.ou.th.config.MyHttpClientDownloader;
 import com.ou.th.crawler.MercariPageProcessor;
 import com.ou.th.pipeline.MercariPipline;
 import us.codecraft.webmagic.Spider;
@@ -26,7 +26,7 @@ public class Application {
 
         Spider spider = Spider.create(new MercariPageProcessor());
 
-        HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
+        HttpClientDownloader httpClientDownloader = new MyHttpClientDownloader();
         httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(
                 new Proxy("127.0.0.1", 1087)));
 
