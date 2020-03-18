@@ -1,31 +1,39 @@
 package com.ou.th.crawler;
 
+import com.ou.th.anatation.MyExtractBy;
+import com.ou.th.model.MercarModel;
+import lombok.extern.slf4j.Slf4j;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 
-import java.util.List;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
 
 /**
  * @author kpkym
  * Date: 2020-03-16 20:51
  */
+@Slf4j
 public class MercariPageProcessor implements PageProcessor {
 
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setTimeOut(10000);
 
     @Override
     public void process(Page page) {
-        List<String> allTitles = page.getHtml().xpath("//section[@class='items-box']//div[@class='items-box-body']/h3/text()").all();
-        page.putField("titles", allTitles);
+        String url = page.getRequest().getUrl();
+        // 当前是搜索页
+        if (url.contains("/jp/search")) {
+            page.setSkip(true);
+            page.addTargetRequests(page.getHtml().xpath("//section//section/a/@href").all());
+        } else if (url.contains("/jp/items")) {
+            MercarModel mercarModel = extractDataAnotation(page);
+            page.putField(mercarModel.getTitle(), mercarModel);
+        } else {
+            page.setSkip(true);
+        }
 
-        List<String> allPrices = page.getHtml().xpath("//div[contains(@class, 'items-box-content')]//div[contains(@class,'items-box-price')]/text()").all();
-        page.putField("prices", allPrices);
-        // if (page.getResultItems().get("name")==null){
-        //     //skip this page
-        //     page.setSkip(true);
-        // }
-        // page.addTargetRequests(page.getHtml().links().regex("(https://github\\.com/[\\w\\-])").all());
+
     }
 
     @Override
@@ -33,5 +41,38 @@ public class MercariPageProcessor implements PageProcessor {
         return site;
     }
 
+
+    private MercarModel extractDataAnotation(Page page) {
+        MercarModel mercarModel = new MercarModel();
+        for (Field declaredField : mercarModel.getClass().getDeclaredFields()) {
+            handleAnotation(page, mercarModel, declaredField);
+        }
+        return mercarModel;
+    }
+
+    private void handleAnotation(Page page, MercarModel mercarModel, Field field) {
+        MyExtractBy myExtractBy = field.getAnnotationsByType(MyExtractBy.class)[0];
+        String xpath = myExtractBy.value();
+        if (myExtractBy.skip()) {
+            return;
+        }
+
+        Object value = null;
+        if (myExtractBy.needAll()) {
+            value = page.getHtml().xpath(xpath).all();
+        } else {
+            value = page.getHtml().xpath(xpath).get();
+        }
+        if (field.getName().equals("price")) {
+            value = new BigDecimal(((String) value).replaceAll("[^0-9]", ""));
+        }
+
+        try {
+            field.setAccessible(true);
+            field.set(mercarModel, value);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
