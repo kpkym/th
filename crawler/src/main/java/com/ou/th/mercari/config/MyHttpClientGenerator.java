@@ -1,4 +1,4 @@
-package com.ou.th.config;
+package com.ou.th.mercari.config;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;

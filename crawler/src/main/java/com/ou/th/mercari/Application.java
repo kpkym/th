@@ -1,9 +1,9 @@
-package com.ou.th;
+package com.ou.th.mercari;
 
 import cn.hutool.core.util.StrUtil;
-import com.ou.th.config.MyHttpClientDownloader;
-import com.ou.th.crawler.MercariPageProcessor;
-import com.ou.th.pipeline.MercariPipline;
+import com.ou.th.mercari.config.MyHttpClientDownloader;
+import com.ou.th.mercari.crawler.MercariPageProcessor;
+import com.ou.th.mercari.pipeline.MercariPipline;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.proxy.Proxy;

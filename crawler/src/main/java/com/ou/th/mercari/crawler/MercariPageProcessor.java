@@ -1,7 +1,7 @@
-package com.ou.th.crawler;
+package com.ou.th.mercari.crawler;
 
-import com.ou.th.anatation.MyExtractBy;
-import com.ou.th.model.MercarModel;
+import com.ou.th.mercari.anatation.MyExtractBy;
+import com.ou.th.mercari.model.MercarModel;
 import lombok.extern.slf4j.Slf4j;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -47,6 +47,7 @@ public class MercariPageProcessor implements PageProcessor {
         for (Field declaredField : mercarModel.getClass().getDeclaredFields()) {
             handleAnotation(page, mercarModel, declaredField);
         }
+        mercarModel.setUrl(page.getRequest().getUrl());
         return mercarModel;
     }
 

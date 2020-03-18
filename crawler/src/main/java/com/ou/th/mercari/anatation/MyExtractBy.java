@@ -1,4 +1,4 @@
-package com.ou.th.anatation;
+package com.ou.th.mercari.anatation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

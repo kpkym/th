@@ -1,6 +1,6 @@
-package com.ou.th.model;
+package com.ou.th.mercari.model;
 
-import com.ou.th.anatation.MyExtractBy;
+import com.ou.th.mercari.anatation.MyExtractBy;
 import lombok.Data;
 
 import java.math.BigDecimal;

@@ -1,4 +1,4 @@
-package com.ou.th.pipeline;
+package com.ou.th.mercari.pipeline;
 
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
