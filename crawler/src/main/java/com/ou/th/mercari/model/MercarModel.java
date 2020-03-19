@@ -23,6 +23,8 @@ public class MercarModel {
     @NeedOlder
     private boolean liked = false;
 
+    private boolean changed = false;
+
     @MyExtractBy("//h1[@class='item-name']/text()")
     private String title;
 

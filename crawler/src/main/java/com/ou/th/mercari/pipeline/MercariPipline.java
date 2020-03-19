@@ -43,8 +43,10 @@ public class MercariPipline implements Pipeline {
 
                 older.getPriceTimes().add(t);
                 needOlder(newer, older);
+                newer.setChanged(true);
+            } else {
+                return;
             }
-            return;
         }
         mercarModelService.save(newer);
 
