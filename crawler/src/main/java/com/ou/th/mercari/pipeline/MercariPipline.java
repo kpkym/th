@@ -10,8 +10,6 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author kpkym
@@ -27,30 +25,15 @@ public class MercariPipline implements Pipeline {
         MercarModel newer = (MercarModel) resultItems.getAll().values().toArray()[0];
         MercarModel older = mercarService.getByPid(newer.getPid());
 
-        List<MercarModel.PriceTime> priceTimes = older.getPriceTimes();
-        if (priceTimes.isEmpty()) {
-            MercarModel.PriceTime t = new MercarModel.PriceTime();
-            t.setDateTime(newer.getDateTime());
-            t.setCurrentPrice(newer.getCurrentPrice());
+        MercarModel.PriceTime t = new MercarModel.PriceTime();
+        t.setDateTime(newer.getDateTime());
+        t.setCurrentPrice(newer.getCurrentPrice());
 
-            older.getPriceTimes().add(t);
-        } else {
-            BigDecimal oldCurrentPrice = priceTimes.remove(priceTimes.size() - 1).getCurrentPrice();
-            if (!newer.getCurrentPrice().equals(oldCurrentPrice)) {
-                MercarModel.PriceTime t = new MercarModel.PriceTime();
-                t.setDateTime(newer.getDateTime());
-                t.setCurrentPrice(newer.getCurrentPrice());
-
-                older.getPriceTimes().add(t);
-                needOlder(newer, older);
-                newer.setChanged(true);
-            } else {
-                return;
-            }
-        }
+        // 因为在列表页就判断了是不是需要保存，所以在这里不需要进行判断了
+        needOlder(newer, older);
+        newer.getPriceTimes().add(t);
+        newer.setChanged(true);
         mercarService.save(newer);
-
-
     }
 
     private void needOlder(MercarModel newer, MercarModel older) {
