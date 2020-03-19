@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @Component
 public class MercariPageProcessor implements PageProcessor {
 
-    private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setTimeOut(10000);
+    private Site site = Site.me().setRetryTimes(10).setSleepTime(2300).setTimeOut(10000);
 
     @Override
     public void process(Page page) {
