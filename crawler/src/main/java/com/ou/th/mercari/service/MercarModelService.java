@@ -8,4 +8,6 @@ import com.ou.th.mercari.model.MercarModel;
  */
 public interface MercarModelService {
     void save(MercarModel mercarModel);
+
+    MercarModel getByPid(String pid);
 }

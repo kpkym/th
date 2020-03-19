@@ -1,11 +1,13 @@
 package com.ou.th.mercari.model;
 
 import com.ou.th.mercari.anatation.MyExtractBy;
+import com.ou.th.mercari.anatation.NeedOlder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +18,10 @@ import java.util.List;
 @RedisHash("mercarModel")
 public class MercarModel {
     @Id
-    String id;
+    private String pid;
+
+    @NeedOlder
+    private boolean liked = false;
 
     @MyExtractBy("//h1[@class='item-name']/text()")
     private String title;
@@ -48,8 +53,19 @@ public class MercarModel {
     @MyExtractBy(value = "//section//div/div[3]/div/div/img/@src", needAll = true)
     private List<String> picture;
 
-    @MyExtractBy("//div[@class='item-price-box text-center']/span[@class='item-price bold']/text()")
-    private BigDecimal price;
+    @MyExtractBy(value = "//div[@class='item-price-box text-center']/span[@class='item-price bold']/text()")
+    private BigDecimal currentPrice;
 
     private String url;
+
+    private Long dateTime;
+
+    @NeedOlder
+    private List<PriceTime> priceTimes = new ArrayList<>();
+
+    @Data
+    public static class PriceTime{
+        private Long dateTime;
+        private BigDecimal currentPrice;
+    }
 }

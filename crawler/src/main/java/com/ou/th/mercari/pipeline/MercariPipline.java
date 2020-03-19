@@ -1,5 +1,6 @@
 package com.ou.th.mercari.pipeline;
 
+import com.ou.th.mercari.anatation.NeedOlder;
 import com.ou.th.mercari.model.MercarModel;
 import com.ou.th.mercari.service.MercarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
+
+import java.lang.reflect.Field;
 
 /**
  * @author kpkym
@@ -19,8 +22,37 @@ public class MercariPipline implements Pipeline {
 
     @Override
     public synchronized void process(ResultItems resultItems, Task task) {
-        MercarModel mercarModel = (MercarModel) resultItems.getAll().values().toArray()[0];
+        MercarModel newer = (MercarModel) resultItems.getAll().values().toArray()[0];
+        MercarModel older = mercarModelService.getByPid(newer.getPid());
 
-        mercarModelService.save(mercarModel);
+        MercarModel.PriceTime t = new MercarModel.PriceTime();
+        t.setDateTime(newer.getDateTime());
+        t.setCurrentPrice(newer.getCurrentPrice());
+
+        older.getPriceTimes().add(t);
+
+        needOlder(newer, older);
+        mercarModelService.save(newer);
+    }
+
+    private void needOlder(MercarModel newer, MercarModel older) {
+        for (Field newerField : newer.getClass().getDeclaredFields()) {
+            NeedOlder[] annotationsByType = newerField.getAnnotationsByType(NeedOlder.class);
+            if (annotationsByType.length < 1) {
+                continue;
+            }
+            try {
+                Field olderField = older.getClass().getDeclaredField(newerField.getName());
+                olderField.setAccessible(true);
+                newerField.setAccessible(true);
+
+                newerField.set(newer, olderField.get(older));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

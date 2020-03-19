@@ -2,6 +2,7 @@ package com.ou.th.mercari.crawler;
 
 import com.ou.th.mercari.anatation.MyExtractBy;
 import com.ou.th.mercari.model.MercarModel;
+import com.ou.th.mercari.util.MercariUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
@@ -49,9 +50,17 @@ public class MercariPageProcessor implements PageProcessor {
         for (Field declaredField : mercarModel.getClass().getDeclaredFields()) {
             handleAnotation(page, mercarModel, declaredField);
         }
-        mercarModel.setUrl(page.getRequest().getUrl());
+        handleNonAnotation(mercarModel, page);
+
         return mercarModel;
     }
+
+    private void handleNonAnotation(MercarModel mercarModel, Page page) {
+        mercarModel.setUrl(page.getRequest().getUrl());
+        mercarModel.setDateTime(System.currentTimeMillis());
+        mercarModel.setPid(MercariUtil.getPid(mercarModel));
+    }
+
 
     private void handleAnotation(Page page, MercarModel mercarModel, Field field) {
         MyExtractBy[] annotationsByType = field.getAnnotationsByType(MyExtractBy.class);
@@ -67,7 +76,7 @@ public class MercariPageProcessor implements PageProcessor {
         } else {
             value = page.getHtml().xpath(xpath).get();
         }
-        if (field.getName().equals("price")) {
+        if (field.getName().contains("rice")) {
             value = new BigDecimal(((String) value).replaceAll("[^0-9]", ""));
         }
 

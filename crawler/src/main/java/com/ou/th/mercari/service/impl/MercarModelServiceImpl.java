@@ -16,6 +16,11 @@ public class MercarModelServiceImpl implements MercarModelService {
     DataRepo dataRepo;
 
     @Override
+    public MercarModel getByPid(String pid) {
+        return dataRepo.findById(pid).orElse(new MercarModel());
+    }
+
+    @Override
     public void save(MercarModel mercarModel) {
         dataRepo.save(mercarModel);
     }
