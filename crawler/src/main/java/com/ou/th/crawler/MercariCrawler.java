@@ -11,7 +11,6 @@ import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.proxy.Proxy;
 import us.codecraft.webmagic.proxy.SimpleProxyProvider;
 
-import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,8 +27,7 @@ public class MercariCrawler {
     @Autowired
     MercariPipline pipeline;
 
-    @PostConstruct
-    public void init() throws IOException {
+    public void start() throws IOException {
         String url = null;
         FileReader reader = new FileReader(Thread.currentThread().getContextClassLoader().getResource("initURL.kpk").getFile());
         BufferedReader br = new BufferedReader(reader);
