@@ -1,5 +1,6 @@
 package com.ou.th.mercari.crawler;
 
+import cn.hutool.core.util.StrUtil;
 import com.ou.th.mercari.anatation.MyExtractBy;
 import com.ou.th.mercari.model.MercarModel;
 import com.ou.th.mercari.util.MercariUtil;
@@ -25,6 +26,7 @@ public class MercariPageProcessor implements PageProcessor {
     @Override
     public void process(Page page) {
         String url = page.getRequest().getUrl();
+        log.info("当前URL为：" + url);
         // 当前是搜索页
         if (url.contains("/jp/search")) {
             page.setSkip(true);
@@ -36,7 +38,10 @@ public class MercariPageProcessor implements PageProcessor {
             page.setSkip(true);
         }
 
-
+        String next = page.getHtml().xpath("//li[contains(@class, 'pager-next')]//li[1]/a/@href").get();
+        if (StrUtil.isNotEmpty(next)) {
+            page.addTargetRequest(next);
+        }
     }
 
     @Override
