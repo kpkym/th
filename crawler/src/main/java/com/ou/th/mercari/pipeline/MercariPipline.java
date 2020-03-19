@@ -2,7 +2,7 @@ package com.ou.th.mercari.pipeline;
 
 import com.ou.th.mercari.anatation.NeedOlder;
 import com.ou.th.mercari.model.MercarModel;
-import com.ou.th.mercari.service.MercarModelService;
+import com.ou.th.mercari.service.MercarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
@@ -20,12 +20,12 @@ import java.util.List;
 @Component
 public class MercariPipline implements Pipeline {
     @Autowired
-    MercarModelService mercarModelService;
+    MercarService mercarService;
 
     @Override
     public synchronized void process(ResultItems resultItems, Task task) {
         MercarModel newer = (MercarModel) resultItems.getAll().values().toArray()[0];
-        MercarModel older = mercarModelService.getByPid(newer.getPid());
+        MercarModel older = mercarService.getByPid(newer.getPid());
 
         List<MercarModel.PriceTime> priceTimes = older.getPriceTimes();
         if (priceTimes.isEmpty()) {
@@ -48,7 +48,7 @@ public class MercariPipline implements Pipeline {
                 return;
             }
         }
-        mercarModelService.save(newer);
+        mercarService.save(newer);
 
 
     }

@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.ou.th.mercari.config.MyHttpClientDownloader;
 import com.ou.th.mercari.crawler.MercariPageProcessor;
 import com.ou.th.mercari.pipeline.MercariPipline;
+import com.ou.th.util.ConfigUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
@@ -29,7 +30,7 @@ public class MercariCrawler {
 
     public void start() throws IOException {
         String url = null;
-        FileReader reader = new FileReader(Thread.currentThread().getContextClassLoader().getResource("initURL.kpk").getFile());
+        FileReader reader = new FileReader(ConfigUtil.getConfigFile());
         BufferedReader br = new BufferedReader(reader);
         url = br.readLine();
 
