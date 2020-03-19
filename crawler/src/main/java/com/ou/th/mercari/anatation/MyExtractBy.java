@@ -19,6 +19,4 @@ public @interface MyExtractBy {
     Type type() default Type.XPath;
 
     boolean needAll() default false;
-
-    boolean skip() default false;
 }
