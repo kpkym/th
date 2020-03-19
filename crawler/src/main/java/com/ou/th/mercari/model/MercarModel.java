@@ -52,8 +52,8 @@ public class MercarModel {
     @MyExtractBy(value = "//tr[8]/td/text()")
     private String deliveryTime;
 
-    @MyExtractBy(value = "//section//div/div[3]/div/div/img/@src", needAll = true)
-    private List<String> picture;
+    @MyExtractBy(value = "//div[@class='owl-carousel']//img/@data-src", needAll = true)
+    private List<String> pictures;
 
     @MyExtractBy(value = "//div[@class='item-price-box text-center']/span[@class='item-price bold']/text()")
     private BigDecimal currentPrice;

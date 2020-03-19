@@ -16,7 +16,7 @@ public class CrawlerController {
     @Autowired
     MercariCrawler mercariCrawler;
 
-    @GetMapping(value = "/mercari")
+    @GetMapping(value = "/")
     public void mercari() throws IOException {
         mercariCrawler.start();
     }
