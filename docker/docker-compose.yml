@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  fdfs:
+    # restart: always
+    build: ./nginx_environment
+    container_name: fdfs
+    ports:
+      - 57596:80
+    volumes:
+      - './nginx_environment/fdfs:/etc/fdfs'
+      - '~/config/fastdfs/th/tracker_data:/fastdfs/tracker/data'
+      - '~/config/fastdfs/th/store_path:/fastdfs/store_path'
+      - '~/config/fastdfs/th/storage_data:/fastdfs/storage/data'
+      - '~/config/fastdfs/th/client_data:/fastdfs/client'
