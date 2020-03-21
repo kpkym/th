@@ -12,3 +12,4 @@
 
 # 问题解决
 1. [解决WebMagic抓HTTPS时出现SSLException](http://nullpointer.pw/%E8%A7%A3%E5%86%B3WebMagic%E6%8A%93HTTPS%E6%97%B6%E5%87%BA%E7%8E%B0SSLException.html)
+2. 由于直连图片服务器的信号也不好，所以使用fastdfs搭建一个图片服务器
