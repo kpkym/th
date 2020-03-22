@@ -2,3 +2,10 @@ configFile: initURL.kpk
 proxy:
   host: localhost
   port: 1087
+
+fdfs:
+  so-timeout: 1501
+  connect-timeout: 601
+  tracker-list:            #TrackerList参数,支持多个
+    - 192.168.1.3:22122
+

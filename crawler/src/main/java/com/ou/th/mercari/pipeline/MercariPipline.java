@@ -3,23 +3,13 @@ package com.ou.th.mercari.pipeline;
 import com.ou.th.mercari.anatation.NeedOlder;
 import com.ou.th.mercari.model.MercarModel;
 import com.ou.th.mercari.service.MercarService;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import com.ou.th.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 
 /**
@@ -31,11 +21,9 @@ public class MercariPipline implements Pipeline {
     @Autowired
     MercarService mercarService;
 
-    @Value("${proxy.host}")
-    String proxyHost;
+    @Autowired
+    FastdfsUtil fastdfsUtil;
 
-    @Value("${proxy.port}")
-    Integer proxyPort;
 
     @Override
     public void process(ResultItems resultItems, Task task) {
@@ -49,8 +37,8 @@ public class MercariPipline implements Pipeline {
 
         // 第一次添加
         if (older.getPid() == null) {
-            newer.getPictures().replaceAll(this::saveImg);
-        } else {
+            newer.getPictures().replaceAll(fastdfsUtil::uploadFromUrl);
+        }else {
             needOlder(newer, older);
         }
         newer.getPriceTimes().add(t);
@@ -75,40 +63,5 @@ public class MercariPipline implements Pipeline {
             }
         }
 
-    }
-
-    // TODO url 替换 fastdfs地址
-    public String saveImg(String url) {
-        HttpHost proxy = new HttpHost(proxyHost, proxyPort, "http");
-        DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-        CloseableHttpClient client = HttpClients.custom()
-                .setRoutePlanner(routePlanner)
-                .build();
-
-        HttpGet request = new HttpGet(url);
-
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-            HttpEntity entity = response.getEntity();
-
-            InputStream is = null;
-            is = entity.getContent();
-
-            String filePath = "1.png";
-            FileOutputStream fos = new FileOutputStream(new File(filePath));
-
-            int inByte;
-            while ((inByte = is.read()) != -1) {
-                fos.write(inByte);
-            }
-            is.close();
-            fos.close();
-        client.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }

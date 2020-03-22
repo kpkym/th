@@ -7,6 +7,7 @@ services:
     ports:
       - 57596:80
       - 22122:22122
+      - 23000:23000
     volumes:
       - './nginx_environment/fdfs:/etc/fdfs'
       - '~/config/fastdfs/th/tracker_data:/fastdfs/tracker/data'
