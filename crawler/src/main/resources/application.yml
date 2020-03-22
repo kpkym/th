@@ -1,0 +1,4 @@
+configFile: initURL.kpk
+proxy:
+  host: localhost
+  port: 1087

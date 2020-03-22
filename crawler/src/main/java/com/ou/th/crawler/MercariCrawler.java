@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.ou.th.mercari.config.MyHttpClientDownloader;
 import com.ou.th.mercari.crawler.MercariPageProcessor;
 import com.ou.th.mercari.pipeline.MercariPipline;
-import com.ou.th.util.ConfigUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
@@ -28,17 +28,27 @@ public class MercariCrawler {
     @Autowired
     MercariPipline pipeline;
 
+    @Value("${configFile}")
+    String configFile;
+
+    @Value("${proxy.host}")
+    String proxyHost;
+
+    @Value("${proxy.port}")
+    Integer proxyPort;
+
     public void start() throws IOException {
         String url = null;
-        FileReader reader = new FileReader(ConfigUtil.getConfigFile());
+        FileReader reader = new FileReader(configFile);
         BufferedReader br = new BufferedReader(reader);
         url = br.readLine();
 
         Spider spider = Spider.create(pageProcessor);
 
+
         HttpClientDownloader httpClientDownloader = new MyHttpClientDownloader();
         httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(
-                new Proxy("127.0.0.1", 1087)));
+                new Proxy(proxyHost, proxyPort)));
 
         while (url != null) {
             if (StrUtil.isNotEmpty(url)) {
