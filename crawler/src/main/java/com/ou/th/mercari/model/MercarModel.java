@@ -20,8 +20,12 @@ public class MercarModel {
     @Id
     private String pid;
 
+    // 感兴趣 看过之后会继续留在界面
     @NeedOlder
     private boolean liked = false;
+
+    // 不感兴趣 看过之后如果没有改变则继续不显示
+    private boolean disliked = false;
 
     private boolean changed = false;
 

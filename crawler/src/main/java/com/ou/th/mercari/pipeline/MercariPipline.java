@@ -34,15 +34,16 @@ public class MercariPipline implements Pipeline {
         MercarModel.PriceTime t = new MercarModel.PriceTime();
         t.setDateTime(newer.getDateTime());
         t.setCurrentPrice(newer.getCurrentPrice());
+        newer.getPriceTimes().add(t);
 
         // 第一次添加
         if (older.getPid() == null) {
             newer.getPictures().replaceAll(fastdfsUtil::uploadFromUrl);
         }else {
             needOlder(newer, older);
+            newer.setChanged(true);
+            newer.setDisliked(false);
         }
-        newer.getPriceTimes().add(t);
-        newer.setChanged(true);
         mercarService.save(newer);
     }
 
