@@ -1,5 +1,6 @@
 package com.ou.th.controller;
 
+import com.ou.th.Msg;
 import com.ou.th.crawler.MercariCrawler;
 import com.ou.th.mercari.service.MercarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @author kpkym
@@ -29,7 +29,7 @@ public class MercariController {
     }
 
     @GetMapping("list")
-    public List list() {
-        return mercarService.list();
+    public Msg list() {
+        return Msg.success(mercarService.list());
     }
 }
