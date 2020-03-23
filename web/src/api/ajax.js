@@ -3,8 +3,7 @@
 函数的返回值是promise对象
  */
 import axios from 'axios';
-
-const baseUrl = "http://localhost:8080/";
+import {baseUrl} from "config/config";
 
 export default function ajax(url, data={}, type='GET') {
   console.log(baseUrl)
