@@ -26,3 +26,27 @@
 1. [解决WebMagic抓HTTPS时出现SSLException](http://nullpointer.pw/%E8%A7%A3%E5%86%B3WebMagic%E6%8A%93HTTPS%E6%97%B6%E5%87%BA%E7%8E%B0SSLException.html)
 2. [使用Docker搭建测试环境问题](https://github.com/tobato/FastDFS_Client/wiki/%E4%BD%BF%E7%94%A8Docker%E6%90%AD%E5%BB%BA%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E9%97%AE%E9%A2%98)
     `sudo ifconfig lo0 alias 172.19.0.2` | `sudo ifconfig lo0 -alias 172.19.0.2`
+3. [React.StrictMode 调用setState方法传入函数时会调用两次](https://github.com/facebook/react/issues/12856)
+    ```js
+    if (typeof _payload === 'function') {
+      // Updater function
+      {
+        enterDisallowedContextReadInDEV();
+
+        if ( workInProgress.mode & StrictMode) {
+          _payload.call(instance, prevState, nextProps);
+        }
+      }
+
+      partialState = _payload.call(instance, prevState, nextProps);
+
+      {
+        exitDisallowedContextReadInDEV();
+      }
+    } else {
+      // Partial state object
+      partialState = _payload;
+    }
+    ```
+
+
