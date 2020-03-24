@@ -29,7 +29,7 @@ public class MercarModel {
 
     private boolean changed = false;
 
-    @MyExtractBy("//div[@class='item-sold-out-badge']//div/text()")
+    @MyExtractBy("//div[@class='item-photo']//div[@class='item-sold-out-badge']/div/text()")
     private String sold;
 
     @MyExtractBy("//h1[@class='item-name']/text()")
