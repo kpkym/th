@@ -24,17 +24,28 @@ class App extends Component {
             mercariMatrix.push(t);
         }
 
-        this.state = {mercariMatrix};
+        this.state = {mercariMatrix, liked: true};
     }
-
-    state = {
-        mercariMatrix: []
-
-    };
 
     componentDidMount() {
         // getAllMercari().then(e => this.setState({mercaris: e.data.data}));
     }
+
+    triggerLiked = (e) => {
+        this.setState(({mercariMatrix}) => {
+            let clonedMercariMatrix = JSON.parse(JSON.stringify(mercariMatrix));
+            loop: for (let i of clonedMercariMatrix) {
+                for (let j of i) {
+                    if (j.pid === e.pid) {
+                        j.liked = !j.liked;
+                        break loop;
+                    }
+                }
+            }
+            return {mercariMatrix: clonedMercariMatrix};
+        });
+    };
+
 
     render() {
         return (
@@ -42,16 +53,18 @@ class App extends Component {
                 {this.state.mercariMatrix.map((line, index) => (
                     <Row gutter={[20, 20]} key={index}>
                         {line.map(e => (
-                            <Col span={4} key={e.url}>
+                            <Col span={4} key={e.pid}>
                                 <Card
                                     title={e.title}
                                     hoverable
-                                    cover={<a href={e.url} style={{height: "100%", width: "100%", textAlign:"center"}} target="_blank">
+                                    cover={<a href={e.url} style={{height: "100%", width: "100%", textAlign: "center"}}
+                                              target="_blank">
                                         <img style={{height: "100px", objectFit: 'scale-down'}}
                                              src={baseImgUrl + "/" + e.pictures[0]}/></a>}
                                     actions={[
-                                        <Button type="link"><HeartTwoTone twoToneColor="#eb2f96"/></Button>,
-                                        <Button type="link"><HeartTwoTone twoToneColor="#ccc"/></Button>,
+                                        <Button type="link" onClick={() => this.triggerLiked(e)}>{e.liked ?
+                                            <HeartTwoTone twoToneColor="#eb2f96"/>
+                                            : <HeartTwoTone twoToneColor="#ccc"/>}</Button>,
                                         <Button type="link"><DeleteOutlined/></Button>,
                                     ]}
                                 >
