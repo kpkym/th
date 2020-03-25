@@ -4,7 +4,7 @@ import "./css/App.css"
 import Header from "components/Header/Header"
 import ProductItem from "components/ProductItem/ProductItem"
 import {connect} from "react-redux";
-import {triggerIsSelling} from "redux/actions"
+import {initMercariAction, triggerIsSellingAction, updateMerciAction} from "redux/actions"
 
 function array2Matrix(arr, lineLen = 6) {
     let matrix = [];
@@ -24,7 +24,7 @@ function array2Matrix(arr, lineLen = 6) {
 }
 
 let filterdData = (mercaris, isSelling = true) => {
-    return mercaris.filter(e => !e.sold || !isSelling);
+    return mercaris.filter(e => !e.sold || !isSelling).filter(e => !e.disliked);
 };
 
 let displaydData = (mercaris) => {
@@ -34,18 +34,30 @@ let displaydData = (mercaris) => {
 class App extends Component {
     static propTypes = {};
 
+
+    componentDidMount() {
+        this.props.initMercariAction();
+    }
+
+
     render() {
-        let {mercaris, isSelling, triggerIsSelling} = this.props;
+        let {mercaris, isSelling, triggerIsSellingAction} = this.props;
         let viewData = filterdData(mercaris, isSelling);
+        viewData.sort((a, b) => a.currentPrice - b.currentPrice);
         let data = displaydData(viewData);
         return (
             <>
-                <Header isSelling={isSelling} triggerIsSelling={triggerIsSelling} mercaris={mercaris} viewCount={viewData.length}/>
+                <Row><Col><button onClick={() => viewData.forEach(e => {
+                    e.disliked = true;
+                    this.props.updateMerciAction(e);
+                })}>del all</button></Col></Row>
+
+                <Header isSelling={isSelling} triggerIsSellingAction={triggerIsSellingAction} mercaris={mercaris} viewCount={viewData.length}/>
                 {data.map((line, index) => (
                     <Row gutter={[20, 20]} key={index}>
                         {line.map(e => (
                             <Col span={4} key={e.pid}>
-                                <ProductItem item={e}/>
+                                <ProductItem update={this.props.updateMerciAction} item={e}/>
                             </Col>
                         ))}
                     </Row>
@@ -56,4 +68,4 @@ class App extends Component {
 
 export default connect(state => (
     {...state.mercaris, mercaris: state.mercaris.items}
-), {triggerIsSelling})(App);
+), {triggerIsSellingAction, initMercariAction, updateMerciAction})(App);

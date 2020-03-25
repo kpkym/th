@@ -6,7 +6,6 @@ import axios from 'axios';
 import {baseUrl} from "config/config";
 
 export default function ajax(url, data={}, type='GET') {
-  console.log(baseUrl)
   url = baseUrl + url;
   if(type==='GET') { // 发送GET请求
     // 拼请求参数串
