@@ -13,10 +13,10 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.net.ssl.SSLHandshakeException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -48,8 +48,8 @@ public class FastdfsUtil {
         try (CloseableHttpClient client = HttpClients.custom()
                 .setRoutePlanner(routePlanner)
                 .build();
-             InputStream is =  client.execute(request).getEntity().getContent()
-        ){
+             InputStream is = client.execute(request).getEntity().getContent()
+        ) {
             String fileExtName = FilenameUtils.getExtension(url);
             if (fileExtName.contains("?")) {
                 fileExtName = fileExtName.substring(0, fileExtName.indexOf('?'));
@@ -60,10 +60,15 @@ public class FastdfsUtil {
                     .withFile(new ByteArrayInputStream(bytes), bytes.length, fileExtName)
                     .build();
             path = storageClient.uploadFile(fastImageFile);
+        } catch (SSLHandshakeException e) {
+            log.error("SSLHandshakeException 错误, URL=" + url);
+            e.printStackTrace();
+            path = new StorePath("", url);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("下载图片失败，退出程序");
-            System.exit(SpringApplication.exit(applicationContext, () -> 1));
+            path = new StorePath("", url);
+            // System.exit(SpringApplication.exit(applicationContext, () -> 1));
         }
         return path == null ? null : path.getPath();
     }

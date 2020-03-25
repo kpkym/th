@@ -2,11 +2,10 @@ package com.ou.th.controller;
 
 import com.ou.th.Msg;
 import com.ou.th.crawler.MercariCrawler;
+import com.ou.th.mercari.model.MercarModel;
 import com.ou.th.mercari.service.MercarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -32,4 +31,11 @@ public class MercariController {
     public Msg list() {
         return Msg.success(mercarService.list());
     }
+
+    @PostMapping("update")
+    public Msg update(@RequestBody MercarModel mercarModel) {
+        System.out.println(mercarModel.getUrl());
+        return Msg.success(mercarService.save(mercarModel));
+    }
+
 }

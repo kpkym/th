@@ -28,11 +28,12 @@ public class MercarServiceImpl implements MercarService {
     public List<MercarModel> list() {
         return StreamSupport
                 .stream(dataRepo.findAll().spliterator(), false)
+                .filter(e -> !e.isDisliked())
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void save(MercarModel mercarModel) {
-        dataRepo.save(mercarModel);
+    public MercarModel save(MercarModel mercarModel) {
+        return dataRepo.save(mercarModel);
     }
 }

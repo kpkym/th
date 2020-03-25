@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 @Component
 public class MercariPageProcessor implements PageProcessor {
 
-    private Site site = Site.me().setRetryTimes(10).setSleepTime(2300).setTimeOut(10000);
+    private Site site = Site.me().setRetryTimes(10).setSleepTime(2300).setTimeOut(100000);
 
     @Autowired
     MercarService mercarService;
@@ -35,12 +35,10 @@ public class MercariPageProcessor implements PageProcessor {
     @Override
     public void process(Page page) {
         String url = page.getRequest().getUrl();
-        log.info("当前URL为：" + url);
         // 当前是搜索页
         if (url.contains("/jp/search")) {
+            log.info("当前URL为：" + url);
             page.setSkip(true);
-            // page.addTargetRequests(page.getHtml().xpath("//section//section/a/@href").all());
-
             // 找到所有的链接跟价格
             List<String> allHref = page.getHtml().xpath("//div[contains(@class, 'items-box-content')]//a/@href").all();
             List<String> allprice = page.getHtml().xpath("//div[contains(@class, 'items-box-content')]//div[contains(@class, 'items-box-price')]/text()").all();

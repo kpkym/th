@@ -9,7 +9,7 @@ import java.util.List;
  * Date: 2020-03-19 06:40
  */
 public interface MercarService {
-    void save(MercarModel mercarModel);
+    MercarModel save(MercarModel mercarModel);
 
     MercarModel getByPid(String pid);
 
