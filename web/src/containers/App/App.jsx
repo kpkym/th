@@ -53,7 +53,7 @@ class App extends Component {
                 <Row><Col>
                     <button onClick={() => viewData.forEach(e => {
                         e.disliked = true;
-                        this.props.updateMerciAction(e, false);
+                        this.props.updateMerciAction(e, true);
                     })}>del all
                     </button>
                 </Col></Row>
