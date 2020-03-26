@@ -29,15 +29,16 @@ class ProductItem extends Component {
             <Card
                 title={item.title}
                 hoverable
-                cover={<button onClick={() => this.triggerLiked(item)} style={{height: "100%", width: "100%", textAlign: "center"}}
+                cover={<a href={item.url} style={{height: "100%", width: "100%", textAlign: "center"}}
                           target="_blank">
                     <img style={{height: "100px", objectFit: 'scale-down'}}
-                         src={src}/></button>}
+                         src={src}/></a>}
                 actions={[
                     <Button type="link" onClick={() => this.triggerLiked(item)}>{item.liked ?
                         <HeartTwoTone twoToneColor="#eb2f96"/>
                         : <HeartTwoTone twoToneColor="#ccc"/>}</Button>,
                     <Button type="link" onClick={() => this.del(item)}><DeleteOutlined/></Button>,
+                    <a href={"https://www.suruga-ya.jp/search?category=&search_word="+item.title} target="_blank">駿河屋</a>
                 ]}
             >
                 <Card.Meta title={item.title} description={<Statistic title="价格" value={item.currentPrice}/>}/>

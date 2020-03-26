@@ -6,14 +6,13 @@ import {Checkbox, Descriptions, PageHeader, Statistic} from 'antd';
 
 class Header extends Component {
     static propTypes = {
-        isSelling: PropTypes.bool.isRequired,
-        triggerIsSellingAction: PropTypes.func.isRequired,
         viewCount: PropTypes.number.isRequired,
-        mercaris: PropTypes.array.isRequired
+        mercaris: PropTypes.array.isRequired,
+        changeIsLiked: PropTypes.func.isRequired
     };
 
     render() {
-        let {isSelling, triggerIsSellingAction, mercaris, viewCount} = this.props;
+        let {mercaris, viewCount, changeIsLiked} = this.props;
         let likedCount = mercaris.reduce((a, b) => a + b.liked, 0);
         let delCount = mercaris.reduce((a, b) => a + b.disliked, 0);
         return (
@@ -21,8 +20,7 @@ class Header extends Component {
                 <Descriptions size="small" column={6}>
                     <Descriptions.Item>
                         <div>
-                            <Checkbox checked={isSelling} onChange={triggerIsSellingAction}>贩卖中</Checkbox><br/>
-                            <Checkbox>我感兴趣的</Checkbox><br/>
+                            <Checkbox onChange={changeIsLiked}>我感兴趣的</Checkbox><br/>
                         </div>
                     </Descriptions.Item>
                     <Descriptions.Item><Statistic title="显示数量" value={viewCount}/></Descriptions.Item>

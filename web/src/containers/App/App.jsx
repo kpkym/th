@@ -4,7 +4,7 @@ import "./css/App.css"
 import Header from "components/Header/Header"
 import ProductItem from "components/ProductItem/ProductItem"
 import {connect} from "react-redux";
-import {initMercariAction, triggerIsSellingAction, updateMerciAction} from "redux/actions"
+import {initMercariAction, updateMerciAction} from "redux/actions"
 
 function array2Matrix(arr, lineLen = 6) {
     let matrix = [];
@@ -23,8 +23,8 @@ function array2Matrix(arr, lineLen = 6) {
     return matrix;
 }
 
-let filterdData = (mercaris, isSelling = true) => {
-    return mercaris.filter(e => !e.sold || !isSelling).filter(e => !e.disliked);
+let filterdData = (mercaris, isLiked = false) => {
+    return mercaris.filter(e => e.liked === isLiked);
 };
 
 let displaydData = (mercaris) => {
@@ -34,6 +34,9 @@ let displaydData = (mercaris) => {
 class App extends Component {
     static propTypes = {};
 
+    state = {
+        isLiked: false
+    };
 
     componentDidMount() {
         this.props.initMercariAction();
@@ -41,18 +44,22 @@ class App extends Component {
 
 
     render() {
-        let {mercaris, isSelling, triggerIsSellingAction} = this.props;
-        let viewData = filterdData(mercaris, isSelling);
+        let {mercaris} = this.props;
+        let viewData = filterdData(mercaris, this.state.isLiked);
         viewData.sort((a, b) => a.currentPrice - b.currentPrice);
         let data = displaydData(viewData);
         return (
             <>
-                <Row><Col><button onClick={() => viewData.forEach(e => {
-                    e.disliked = true;
-                    this.props.updateMerciAction(e);
-                })}>del all</button></Col></Row>
+                <Row><Col>
+                    <button onClick={() => viewData.forEach(e => {
+                        e.disliked = true;
+                        this.props.updateMerciAction(e, false);
+                    })}>del all
+                    </button>
+                </Col></Row>
 
-                <Header isSelling={isSelling} triggerIsSellingAction={triggerIsSellingAction} mercaris={mercaris} viewCount={viewData.length}/>
+                <Header changeIsLiked={() => this.setState({isLiked: !this.state.isLiked})}
+                        mercaris={mercaris} viewCount={viewData.length}/>
                 {data.map((line, index) => (
                     <Row gutter={[20, 20]} key={index}>
                         {line.map(e => (
@@ -68,4 +75,4 @@ class App extends Component {
 
 export default connect(state => (
     {...state.mercaris, mercaris: state.mercaris.items}
-), {triggerIsSellingAction, initMercariAction, updateMerciAction})(App);
+), {initMercariAction, updateMerciAction})(App);
