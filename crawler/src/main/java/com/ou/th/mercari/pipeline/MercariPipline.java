@@ -11,6 +11,7 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * @author kpkym
@@ -38,7 +39,9 @@ public class MercariPipline implements Pipeline {
 
         // 第一次添加
         if (older.getPid() == null) {
-            newer.getPictures().replaceAll(fastdfsUtil::uploadFromUrl);
+            // 只上传第一张图片
+            List<String> pictures = newer.getPictures();
+            pictures.set(0, fastdfsUtil.uploadFromUrl(pictures.get(0)));
         }else {
             needOlder(newer, older);
             newer.setChanged(true);
