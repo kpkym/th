@@ -2,8 +2,9 @@ package com.ou.th.controller;
 
 import com.ou.th.Msg;
 import com.ou.th.crawler.MercariCrawler;
-import com.ou.th.mercari.model.MercarModel;
-import com.ou.th.mercari.service.MercarService;
+import com.ou.th.crawler.mercari.dao.DataRepo;
+import com.ou.th.crawler.mercari.model.MercariModel;
+import com.ou.th.crawler.mercari.service.MercariService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,10 @@ public class MercariController {
     MercariCrawler mercariCrawler;
 
     @Autowired
-    MercarService mercarService;
+    MercariService mercariService;
+
+    @Autowired
+    DataRepo da;
 
     @GetMapping(value = "start")
     public void mercari() throws IOException {
@@ -29,13 +33,17 @@ public class MercariController {
 
     @GetMapping("list")
     public Msg list() {
-        return Msg.success(mercarService.list());
+        return Msg.success(mercariService.list());
     }
 
     @PostMapping("update")
-    public Msg update(@RequestBody MercarModel mercarModel) {
-        System.out.println(mercarModel.getUrl());
-        return Msg.success(mercarService.save(mercarModel));
+    public Msg update(@RequestBody MercariModel mercariModel) {
+        return Msg.success(mercariService.save(mercariModel));
+    }
+
+    @GetMapping("get")
+    public Msg get() {
+        return Msg.success(da.findById("m47404082182"));
     }
 
 }

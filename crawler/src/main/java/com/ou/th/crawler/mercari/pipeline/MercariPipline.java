@@ -1,8 +1,8 @@
-package com.ou.th.mercari.pipeline;
+package com.ou.th.crawler.mercari.pipeline;
 
-import com.ou.th.mercari.anatation.NeedOlder;
-import com.ou.th.mercari.model.MercarModel;
-import com.ou.th.mercari.service.MercarService;
+import com.ou.th.crawler.mercari.anatation.NeedOlder;
+import com.ou.th.crawler.mercari.model.MercariModel;
+import com.ou.th.crawler.mercari.service.MercariService;
 import com.ou.th.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class MercariPipline implements Pipeline {
     @Autowired
-    MercarService mercarService;
+    MercariService mercariService;
 
     @Autowired
     FastdfsUtil fastdfsUtil;
@@ -28,11 +28,11 @@ public class MercariPipline implements Pipeline {
 
     @Override
     public void process(ResultItems resultItems, Task task) {
-        MercarModel newer = (MercarModel) resultItems.getAll().values().toArray()[0];
-        MercarModel older = mercarService.getByPid(newer.getPid());
+        MercariModel newer = (MercariModel) resultItems.getAll().values().toArray()[0];
+        MercariModel older = mercariService.getByPid(newer.getPid());
 
         // 因为在列表页就判断了是不是需要保存，所以在这里不需要进行判断了
-        MercarModel.PriceTime t = new MercarModel.PriceTime();
+        MercariModel.PriceTime t = new MercariModel.PriceTime();
         t.setDateTime(newer.getDateTime());
         t.setCurrentPrice(newer.getCurrentPrice());
         newer.getPriceTimes().add(t);
@@ -47,10 +47,10 @@ public class MercariPipline implements Pipeline {
             newer.setChanged(true);
             newer.setDisliked(false);
         }
-        mercarService.save(newer);
+        mercariService.save(newer);
     }
 
-    private void needOlder(MercarModel newer, MercarModel older) {
+    private void needOlder(MercariModel newer, MercariModel older) {
         for (Field newerField : newer.getClass().getDeclaredFields()) {
             NeedOlder[] annotationsByType = newerField.getAnnotationsByType(NeedOlder.class);
             if (annotationsByType.length < 1) {

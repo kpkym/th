@@ -1,9 +1,9 @@
 package com.ou.th.crawler;
 
 import cn.hutool.core.util.StrUtil;
-import com.ou.th.mercari.config.MyHttpClientDownloader;
-import com.ou.th.mercari.crawler.MercariPageProcessor;
-import com.ou.th.mercari.pipeline.MercariPipline;
+import com.ou.th.crawler.mercari.config.MyHttpClientDownloader;
+import com.ou.th.crawler.mercari.crawler.MercariPageProcessor;
+import com.ou.th.crawler.mercari.pipeline.MercariPipline;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

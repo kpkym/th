@@ -1,10 +1,10 @@
-package com.ou.th.mercari.crawler;
+package com.ou.th.crawler.mercari.crawler;
 
 import cn.hutool.core.util.StrUtil;
-import com.ou.th.mercari.anatation.MyExtractBy;
-import com.ou.th.mercari.model.MercarModel;
-import com.ou.th.mercari.service.MercarService;
-import com.ou.th.mercari.util.MercariUtil;
+import com.ou.th.crawler.mercari.anatation.MyExtractBy;
+import com.ou.th.crawler.mercari.model.MercariModel;
+import com.ou.th.crawler.mercari.service.MercariService;
+import com.ou.th.crawler.mercari.util.MercariUtil;
 import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class MercariPageProcessor implements PageProcessor {
     private Site site = Site.me().setRetryTimes(10).setSleepTime(2300).setTimeOut(100000);
 
     @Autowired
-    MercarService mercarService;
+    MercariService mercariService;
 
     @Override
     public void process(Page page) {
@@ -50,7 +50,7 @@ public class MercariPageProcessor implements PageProcessor {
             List<String> hrefs = hrefprices.stream().filter(e -> {
                 String href = e.getKey();
                 BigDecimal price = MercariUtil.StrToBigdecimal(e.getValue());
-                MercarModel older = mercarService.getByPid(MercariUtil.getPid(href));
+                MercariModel older = mercariService.getByPid(MercariUtil.getPid(href));
 
                 // 如果在上一次加入了并且价格还没有改变就不进入这个页面了
                 return !price.equals(older.getCurrentPrice());
@@ -59,8 +59,8 @@ public class MercariPageProcessor implements PageProcessor {
             // 最后筛选后的地址添加回调度器
             page.addTargetRequests(hrefs);
         } else if (url.contains("/jp/items")) {
-            MercarModel mercarModel = extractDataAnotation(page);
-            page.putField(mercarModel.getTitle(), mercarModel);
+            MercariModel mercariModel = extractDataAnotation(page);
+            page.putField(mercariModel.getTitle(), mercariModel);
         } else {
             page.setSkip(true);
         }
@@ -77,24 +77,24 @@ public class MercariPageProcessor implements PageProcessor {
     }
 
 
-    private MercarModel extractDataAnotation(Page page) {
-        MercarModel mercarModel = new MercarModel();
-        for (Field declaredField : mercarModel.getClass().getDeclaredFields()) {
-            handleAnotation(page, mercarModel, declaredField);
+    private MercariModel extractDataAnotation(Page page) {
+        MercariModel mercariModel = new MercariModel();
+        for (Field declaredField : mercariModel.getClass().getDeclaredFields()) {
+            handleAnotation(page, mercariModel, declaredField);
         }
-        handleNonAnotation(mercarModel, page);
+        handleNonAnotation(mercariModel, page);
 
-        return mercarModel;
+        return mercariModel;
     }
 
-    private void handleNonAnotation(MercarModel mercarModel, Page page) {
-        mercarModel.setUrl(page.getRequest().getUrl());
-        mercarModel.setDateTime(System.currentTimeMillis());
-        mercarModel.setPid(MercariUtil.getPid(mercarModel));
+    private void handleNonAnotation(MercariModel mercariModel, Page page) {
+        mercariModel.setUrl(page.getRequest().getUrl());
+        mercariModel.setDateTime(System.currentTimeMillis());
+        mercariModel.setPid(MercariUtil.getPid(mercariModel));
     }
 
 
-    private void handleAnotation(Page page, MercarModel mercarModel, Field field) {
+    private void handleAnotation(Page page, MercariModel mercariModel, Field field) {
         MyExtractBy[] annotationsByType = field.getAnnotationsByType(MyExtractBy.class);
         if (annotationsByType.length < 1) {
             return;
@@ -114,7 +114,7 @@ public class MercariPageProcessor implements PageProcessor {
 
         try {
             field.setAccessible(true);
-            field.set(mercarModel, value);
+            field.set(mercariModel, value);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }

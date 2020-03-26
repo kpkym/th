@@ -1,8 +1,8 @@
-package com.ou.th.mercari.service.impl;
+package com.ou.th.crawler.mercari.service.impl;
 
-import com.ou.th.mercari.dao.DataRepo;
-import com.ou.th.mercari.model.MercarModel;
-import com.ou.th.mercari.service.MercarService;
+import com.ou.th.crawler.mercari.dao.DataRepo;
+import com.ou.th.crawler.mercari.model.MercariModel;
+import com.ou.th.crawler.mercari.service.MercariService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +15,17 @@ import java.util.stream.StreamSupport;
  * Date: 2020-03-19 06:41
  */
 @Service
-public class MercarServiceImpl implements MercarService {
+public class MercariServiceImpl implements MercariService {
     @Autowired
     DataRepo dataRepo;
 
     @Override
-    public MercarModel getByPid(String pid) {
-        return dataRepo.findById(pid).orElse(new MercarModel());
+    public MercariModel getByPid(String pid) {
+        return dataRepo.findById(pid).orElse(new MercariModel());
     }
 
     @Override
-    public List<MercarModel> list() {
+    public List<MercariModel> list() {
         return StreamSupport
                 .stream(dataRepo.findAll().spliterator(), false)
                 .filter(e -> !e.isDisliked())
@@ -33,7 +33,7 @@ public class MercarServiceImpl implements MercarService {
     }
 
     @Override
-    public MercarModel save(MercarModel mercarModel) {
-        return dataRepo.save(mercarModel);
+    public MercariModel save(MercariModel mercariModel) {
+        return dataRepo.save(mercariModel);
     }
 }

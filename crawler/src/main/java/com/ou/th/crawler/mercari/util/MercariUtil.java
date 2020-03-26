@@ -1,7 +1,7 @@
-package com.ou.th.mercari.util;
+package com.ou.th.crawler.mercari.util;
 
 import cn.hutool.core.util.URLUtil;
-import com.ou.th.mercari.model.MercarModel;
+import com.ou.th.crawler.mercari.model.MercariModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ import java.util.List;
  * Date: 2020-03-19 22:25
  */
 public class MercariUtil {
-    public static String getPid(MercarModel mercarModel) {
-        String url = mercarModel.getUrl();
+    public static String getPid(MercariModel mercariModel) {
+        String url = mercariModel.getUrl();
         String normalize = URLUtil.normalize(url);
 
         String[] split = normalize.split("/+");
@@ -24,9 +24,9 @@ public class MercariUtil {
     }
 
     public static String getPid(String s) {
-        MercarModel mercarModel = new MercarModel();
-        mercarModel.setUrl(s);
-        return getPid(mercarModel);
+        MercariModel mercariModel = new MercariModel();
+        mercariModel.setUrl(s);
+        return getPid(mercariModel);
     }
 
     public static BigDecimal StrToBigdecimal(String s) {

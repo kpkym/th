@@ -1,7 +1,7 @@
-package com.ou.th.mercari.model;
+package com.ou.th.crawler.mercari.model;
 
-import com.ou.th.mercari.anatation.MyExtractBy;
-import com.ou.th.mercari.anatation.NeedOlder;
+import com.ou.th.crawler.mercari.anatation.MyExtractBy;
+import com.ou.th.crawler.mercari.anatation.NeedOlder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
@@ -9,16 +9,27 @@ import org.springframework.data.redis.core.RedisHash;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * @author kpkym
  * Date: 2020-03-18 23:30
  */
 @Data
 @RedisHash("mercarModel")
-public class MercarModel {
+public class MercariModel {
     @Id
     private String pid;
+
+    public MercariModel() {
+        System.out.println(1);
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+    public String getPid() {
+        return pid;
+    }
 
     // 感兴趣 看过之后会继续留在界面
     @NeedOlder
