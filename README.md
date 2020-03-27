@@ -48,5 +48,10 @@
       partialState = _payload;
     }
     ```
-
-
+4. [Spring配置 @ConfigurationProperties vs @Value](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-vs-value)
+    
+    |      Feature      | @ConfigurationProperties | @Value |
+    |:-----------------:|:------------------------:|:------:|
+    |  Relaxed binding  |           Yes            |   No   |
+    | Meta-data support |           Yes            |   No   |
+    |  SpEL evaluation  |            No            |  Yes   |
