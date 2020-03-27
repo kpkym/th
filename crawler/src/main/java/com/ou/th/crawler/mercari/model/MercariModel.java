@@ -14,22 +14,10 @@ import java.util.List;
  * Date: 2020-03-18 23:30
  */
 @Data
-@RedisHash("mercarModel")
+@RedisHash("mercariModel")
 public class MercariModel {
     @Id
     private String pid;
-
-    public MercariModel() {
-        System.out.println(1);
-    }
-
-    public void setPid(String pid) {
-        this.pid = pid;
-    }
-
-    public String getPid() {
-        return pid;
-    }
 
     // 感兴趣 看过之后会继续留在界面
     @NeedOlder

@@ -58,7 +58,7 @@ public class MercariCrawler {
         }
         spider.setDownloader(httpClientDownloader);
         spider.addPipeline(pipeline);
-        spider.thread(5);
+        spider.thread(20);
         spider.start();
     }
 }

@@ -40,10 +40,4 @@ public class MercariController {
     public Msg update(@RequestBody MercariModel mercariModel) {
         return Msg.success(mercariService.save(mercariModel));
     }
-
-    @GetMapping("get")
-    public Msg get() {
-        return Msg.success(da.findById("m47404082182"));
-    }
-
 }
