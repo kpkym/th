@@ -3,6 +3,7 @@ package com.ou.th.util;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.domain.upload.FastImageFile;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
+import com.ou.th.config.KpkConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -12,7 +13,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -33,14 +33,11 @@ public class FastdfsUtil {
     @Autowired
     ApplicationContext applicationContext;
 
-    @Value("${proxy.host}")
-    String proxyHost;
-
-    @Value("${proxy.port}")
-    Integer proxyPort;
+    @Autowired
+    KpkConfig kpkConfig;
 
     public String uploadFromUrl(String url) {
-        HttpHost proxy = new HttpHost(proxyHost, proxyPort, "http");
+        HttpHost proxy = new HttpHost(kpkConfig.getProxy().getHost(), kpkConfig.getProxy().getPort(), "http");
         DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
 
         HttpGet request = new HttpGet(url);

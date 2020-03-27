@@ -1,11 +1,9 @@
-configFile: initURL.kpk
-proxy:
-  host: localhost
-  port: 1087
+spring:
+  profiles:
+    active: kpk
 
 fdfs:
   so-timeout: 1501
   connect-timeout: 601
   tracker-list:            #TrackerList参数,支持多个
     - localhost:22122
-
