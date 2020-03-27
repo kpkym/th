@@ -34,7 +34,14 @@ public class MercariPageProcessor implements PageProcessor {
 
     @Override
     public void process(Page page) {
+        // 下一页
+        String next = page.getHtml().xpath("//li[contains(@class, 'pager-next')]//li[1]/a/@href").get();
+        if (StrUtil.isNotEmpty(next)) {
+            page.addTargetRequest(next);
+        }
+
         String url = page.getRequest().getUrl();
+
         // 当前是搜索页
         if (url.contains("/jp/search")) {
             log.info("当前URL为：" + url);
@@ -63,11 +70,6 @@ public class MercariPageProcessor implements PageProcessor {
             page.putField(mercariModel.getTitle(), mercariModel);
         } else {
             page.setSkip(true);
-        }
-
-        String next = page.getHtml().xpath("//li[contains(@class, 'pager-next')]//li[1]/a/@href").get();
-        if (StrUtil.isNotEmpty(next)) {
-            page.addTargetRequest(next);
         }
     }
 
