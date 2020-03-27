@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Col, Row} from 'antd';
+import {Affix, Button, Col, Row} from 'antd';
 import "./css/App.css"
 import Header from "components/Header/Header"
 import ProductItem from "components/ProductItem/ProductItem"
@@ -50,12 +50,18 @@ class App extends Component {
         let data = displaydData(viewData);
         return (
             <>
-                <Row><Col>
-                    <button onClick={() => viewData.forEach(e => {
-                        e.disliked = true;
-                        this.props.updateMerciAction(e, true);
-                    })}>del all
-                    </button>
+                <Row><Col offset={20} span={3}>
+                    <Affix offsetTop={10} style={{position: "absolute"}}>
+                        <Button type="danger" size="large" block onClick={() => {
+                            console.log("start")
+                            viewData.forEach(e => {
+                                e.disliked = true;
+                                this.props.updateMerciAction(e);
+                            });
+                            this.props.initMercariAction();
+                        }}>删除所有显示的数据
+                        </Button>
+                    </Affix>
                 </Col></Row>
 
                 <Header changeIsLiked={() => this.setState({isLiked: !this.state.isLiked})}
