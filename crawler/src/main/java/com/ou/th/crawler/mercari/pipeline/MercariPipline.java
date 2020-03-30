@@ -35,7 +35,6 @@ public class MercariPipline implements Pipeline {
         MercariModel.PriceTime t = new MercariModel.PriceTime();
         t.setDateTime(newer.getDateTime());
         t.setCurrentPrice(newer.getCurrentPrice());
-        newer.getPriceTimes().add(t);
 
         // 第一次添加
         if (older.getPid() == null) {
@@ -47,6 +46,8 @@ public class MercariPipline implements Pipeline {
             newer.setChanged(true);
             newer.setDisliked(false);
         }
+        // 一定要放在复制老数据后面
+        newer.getPriceTimes().add(t);
         mercariService.save(newer);
     }
 
