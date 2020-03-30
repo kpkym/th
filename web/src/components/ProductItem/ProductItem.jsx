@@ -29,7 +29,7 @@ class ProductItem extends Component {
         let headStyle = {backgroundColor: item.changed ? "lightgreen" : ""};
         let price = (
             <Statistic title="价格" value={item.priceTimes[ptLength - 1].currentPrice}
-                       suffix={item.changed ?
+                       suffix={ptLength > 1 ?
                            <span style={{textDecorationLine: item.changed ? "line-through" : ""}}>{item.priceTimes[ptLength - 2].currentPrice}</span>
                            : ""}
             />
