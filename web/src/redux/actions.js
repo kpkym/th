@@ -15,11 +15,8 @@ export function initMercariAction() {
     };
 }
 
-export function updateMerciAction(data, refresh=false) {
+export function updateMerciAction(data) {
     return dispatch => {
         updateMercari(data).then(() => dispatch({type: UPDATE_MERCARI, data}));
-        if (refresh) {
-            dispatch(initMercariAction());
-        }
     };
 }

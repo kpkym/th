@@ -25,9 +25,19 @@ class ProductItem extends Component {
         let {item} = this.props;
         let src = baseImgUrl + "/" + item.pictures[0];
         src = src.includes("static.mercdn.net") ?  src.replace(baseImgUrl+"/", "") : src;
+        let ptLength = item.priceTimes.length;
+        let headStyle = {backgroundColor: item.changed ? "lightgreen" : ""};
+        let price = (
+            <Statistic title="价格" value={item.priceTimes[ptLength - 1].currentPrice}
+                       suffix={item.changed ?
+                           <span style={{textDecorationLine: item.changed ? "line-through" : ""}}>{item.priceTimes[ptLength - 2].currentPrice}</span>
+                           : ""}
+            />
+        );
         return (
             <Card
                 title={item.title}
+                headStyle={headStyle}
                 hoverable
                 cover={<a href={item.url} style={{height: "100%", width: "100%", textAlign: "center"}}
                           target="_blank">
@@ -41,7 +51,7 @@ class ProductItem extends Component {
                     <a href={"https://www.suruga-ya.jp/search?category=&search_word="+item.title} target="_blank">駿河屋</a>
                 ]}
             >
-                <Card.Meta title={item.title} description={<Statistic title="价格" value={item.currentPrice}/>}/>
+                <Card.Meta title={item.title} description={price}/>
             </Card>
         );
     }
