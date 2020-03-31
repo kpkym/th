@@ -3,7 +3,6 @@ package com.ou.th.crawler.mercari.util;
 import cn.hutool.core.util.URLUtil;
 import com.ou.th.crawler.mercari.model.MercariModel;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +28,4 @@ public class MercariUtil {
         return getPid(mercariModel);
     }
 
-    public static BigDecimal StrToBigdecimal(String s) {
-        return new BigDecimal(s.replaceAll("[^0-9]", ""));
-    }
 }

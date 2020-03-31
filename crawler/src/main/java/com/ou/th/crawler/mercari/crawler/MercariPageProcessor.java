@@ -5,6 +5,7 @@ import com.ou.th.crawler.mercari.anatation.MyExtractBy;
 import com.ou.th.crawler.mercari.model.MercariModel;
 import com.ou.th.crawler.mercari.service.MercariService;
 import com.ou.th.crawler.mercari.util.MercariUtil;
+import com.ou.th.crawler.util.CommonUtil;
 import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class MercariPageProcessor implements PageProcessor {
 
             List<String> hrefs = hrefprices.stream().filter(e -> {
                 String href = e.getKey();
-                BigDecimal price = MercariUtil.StrToBigdecimal(e.getValue());
+                BigDecimal price = CommonUtil.StrToBigdecimal(e.getValue());
                 MercariModel older = mercariService.getByPid(MercariUtil.getPid(href));
 
                 // 如果在上一次加入了并且价格还没有改变就不进入这个页面了
@@ -111,7 +112,7 @@ public class MercariPageProcessor implements PageProcessor {
             value = page.getHtml().xpath(xpath).get();
         }
         if (field.getName().contains("rice")) {
-            value = MercariUtil.StrToBigdecimal((String) value);
+            value = CommonUtil.StrToBigdecimal((String) value);
         }
 
         try {
