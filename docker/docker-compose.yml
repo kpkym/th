@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   fdfs:
-    # restart: always
+    restart: always
     build: ./nginx_environment
     container_name: fdfs
     ports:

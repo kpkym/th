@@ -60,5 +60,4 @@ RUN cd nginx-1.16.1 && ./configure \
 COPY nginx.conf /usr/local/nginx/nginx.conf
 COPY startup.sh startup.sh
 
-EXPOSE 80 22122
 CMD sh startup.sh
