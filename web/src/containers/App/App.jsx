@@ -23,8 +23,8 @@ function array2Matrix(arr, lineLen = 6) {
     return matrix;
 }
 
-let filterdData = (mercaris, isLiked = false) => {
-    return mercaris.filter(e => e.liked === isLiked);
+let filterdData = (mercaris, disliked = false, isLiked = false) => {
+    return mercaris.filter(e => e.disliked === false && e.liked === isLiked);
 };
 
 let displaydData = (mercaris) => {
