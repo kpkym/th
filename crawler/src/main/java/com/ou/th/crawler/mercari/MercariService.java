@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -18,14 +19,14 @@ public class MercariService {
     @Autowired
     DataRepo dataRepo;
 
-    public MercariModel getByPid(String pid) {
-        return dataRepo.findById(pid).orElse(new MercariModel());
+    public Optional<MercariModel> getById(String id) {
+        return dataRepo.findById(id);
     }
 
     public List<MercariModel> list() {
         List<MercariModel> mercariModels = StreamSupport
                 .stream(dataRepo.findAll().spliterator(), false)
-                .filter(e -> !e.isDisliked())
+                .filter(e -> !e.isDel())
                 .collect(Collectors.toList());
         log.info("获取列表数据总数：" + mercariModels.size());
         return mercariModels;
@@ -34,4 +35,9 @@ public class MercariService {
     public MercariModel save(MercariModel mercariModel) {
         return dataRepo.save(mercariModel);
     }
+
+    public void saveBatch(List<MercariModel> mercariModels) {
+        dataRepo.saveAll(mercariModels);
+    }
+
 }

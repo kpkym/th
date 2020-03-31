@@ -12,7 +12,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface MyExtractBy {
-    String value();
+    String list();
+
+    String detail();
 
     enum Type {XPath, Regex, Css, JsonPath}
 

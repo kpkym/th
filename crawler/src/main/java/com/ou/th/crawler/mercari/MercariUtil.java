@@ -11,7 +11,7 @@ import java.util.List;
  * Date: 2020-03-19 22:25
  */
 public class MercariUtil {
-    public static String getPid(MercariModel mercariModel) {
+    public static String getId(MercariModel mercariModel) {
         String url = mercariModel.getUrl();
         String normalize = URLUtil.normalize(url);
 
@@ -21,10 +21,10 @@ public class MercariUtil {
         return strings.get(strings.indexOf("items") + 1);
     }
 
-    public static String getPid(String s) {
+    public static String getId(String s) {
         MercariModel mercariModel = new MercariModel();
         mercariModel.setUrl(s);
-        return getPid(mercariModel);
+        return getId(mercariModel);
     }
 
 }

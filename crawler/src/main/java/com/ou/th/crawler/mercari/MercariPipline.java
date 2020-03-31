@@ -9,6 +9,7 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,23 +27,32 @@ public class MercariPipline implements Pipeline {
 
     @Override
     public void process(ResultItems resultItems, Task task) {
-        MercariModel newer = (MercariModel) resultItems.getAll().values().toArray()[0];
-        MercariModel older = mercariService.getByPid(newer.getPid());
+        if (resultItems.get("arr") != null) {
+            List<MercariModel> mercariModels = resultItems.get("arr");
+            for (MercariModel mercariModel : mercariModels) {
+                save(mercariModel);
+            }
+        } else {
+            save(resultItems.get("obj"));
+        }
+    }
 
-        // 因为在列表页就判断了是不是需要保存，所以在这里不需要进行判断了
+    private void save(MercariModel newer) {
+        String id = MercariUtil.getId(newer);
+        MercariModel older = mercariService.getById(id).orElse(new MercariModel());
+
         MercariModel.PriceTime t = new MercariModel.PriceTime();
-        t.setDateTime(newer.getDateTime());
-        t.setCurrentPrice(newer.getCurrentPrice());
+        t.setDateTime(new Date().getTime());
+        t.setPrice(newer.getPrice());
 
-        // 第一次添加
-        if (older.getPid() == null) {
+        if (older.getId() == null) {
             // 只上传第一张图片
-            List<String> pictures = newer.getPictures();
-            pictures.set(0, fastdfsUtil.uploadFromUrl(pictures.get(0)));
-        }else {
+            newer.setId(id);
+            newer.setPicture(fastdfsUtil.uploadFromUrl(newer.getPicturesOriginal()));
+        }else if (!older.getPrice().equals(newer.getPrice())){
             needOlder(newer, older);
-            newer.setChanged(true);
-            newer.setDisliked(false);
+            newer.setChange(true);
+            newer.setDel(false);
         }
         // 一定要放在复制老数据后面
         newer.getPriceTimes().add(t);

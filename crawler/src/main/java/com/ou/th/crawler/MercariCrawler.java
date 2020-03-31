@@ -32,7 +32,6 @@ public class MercariCrawler {
 
         Spider spider = Spider.create(pageProcessor);
 
-
         HttpClientDownloader httpClientDownloader = new MyHttpClientDownloader();
         httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(
                 new Proxy(kpkConfig.getProxy().getHost(), kpkConfig.getProxy().getPort())));
