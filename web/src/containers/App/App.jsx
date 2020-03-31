@@ -23,7 +23,7 @@ function array2Matrix(arr, lineLen = 6) {
     return matrix;
 }
 
-let filterdData = (mercaris, disliked = false, isLiked = false) => {
+let filterdData = (mercaris, isLiked = false) => {
     return mercaris.filter(e => e.disliked === false && e.liked === isLiked);
 };
 
@@ -53,7 +53,6 @@ class App extends Component {
                 <Row><Col offset={20} span={3}>
                     <Affix offsetTop={10} style={{position: "absolute"}}>
                         <Button type="danger" size="large" block onClick={() => {
-                            console.log("start")
                             viewData.forEach(e => {
                                 e.disliked = true;
                                 this.props.updateMerciAction(e);
