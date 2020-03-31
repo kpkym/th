@@ -1,7 +1,7 @@
-package com.ou.th.crawler.mercari.model;
+package com.ou.th.crawler.mercari;
 
-import com.ou.th.crawler.mercari.anatation.MyExtractBy;
-import com.ou.th.crawler.mercari.anatation.NeedOlder;
+import com.ou.th.crawler.common.anatation.MyExtractBy;
+import com.ou.th.crawler.common.anatation.NeedOlder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;

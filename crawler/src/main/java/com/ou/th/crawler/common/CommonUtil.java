@@ -1,4 +1,4 @@
-package com.ou.th.crawler.util;
+package com.ou.th.crawler.common;
 
 import java.math.BigDecimal;
 

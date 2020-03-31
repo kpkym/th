@@ -1,4 +1,4 @@
-package com.ou.th.crawler.mercari.anatation;
+package com.ou.th.crawler.common.anatation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

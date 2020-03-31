@@ -1,4 +1,4 @@
-package com.ou.th.crawler.mercari.config;
+package com.ou.th.crawler.common.config;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;

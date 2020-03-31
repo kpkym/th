@@ -1,8 +1,6 @@
-package com.ou.th.crawler.mercari.pipeline;
+package com.ou.th.crawler.mercari;
 
-import com.ou.th.crawler.mercari.anatation.NeedOlder;
-import com.ou.th.crawler.mercari.model.MercariModel;
-import com.ou.th.crawler.mercari.service.MercariService;
+import com.ou.th.crawler.common.anatation.NeedOlder;
 import com.ou.th.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

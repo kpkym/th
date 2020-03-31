@@ -1,9 +1,9 @@
 package com.ou.th.crawler;
 
 import com.ou.th.config.KpkConfig;
-import com.ou.th.crawler.mercari.config.MyHttpClientDownloader;
-import com.ou.th.crawler.mercari.crawler.MercariPageProcessor;
-import com.ou.th.crawler.mercari.pipeline.MercariPipline;
+import com.ou.th.crawler.common.config.MyHttpClientDownloader;
+import com.ou.th.crawler.mercari.MercariPageProcessor;
+import com.ou.th.crawler.mercari.MercariPipline;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;

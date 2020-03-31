@@ -1,6 +1,5 @@
-package com.ou.th.crawler.mercari.dao;
+package com.ou.th.crawler.mercari;
 
-import com.ou.th.crawler.mercari.model.MercariModel;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**

@@ -1,11 +1,8 @@
-package com.ou.th.crawler.mercari.crawler;
+package com.ou.th.crawler.mercari;
 
 import cn.hutool.core.util.StrUtil;
-import com.ou.th.crawler.mercari.anatation.MyExtractBy;
-import com.ou.th.crawler.mercari.model.MercariModel;
-import com.ou.th.crawler.mercari.service.MercariService;
-import com.ou.th.crawler.mercari.util.MercariUtil;
-import com.ou.th.crawler.util.CommonUtil;
+import com.ou.th.crawler.common.CommonUtil;
+import com.ou.th.crawler.common.anatation.MyExtractBy;
 import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

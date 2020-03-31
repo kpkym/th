@@ -1,7 +1,6 @@
-package com.ou.th.crawler.mercari.util;
+package com.ou.th.crawler.mercari;
 
 import cn.hutool.core.util.URLUtil;
-import com.ou.th.crawler.mercari.model.MercariModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
