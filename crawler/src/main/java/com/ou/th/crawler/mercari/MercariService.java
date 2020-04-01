@@ -26,7 +26,7 @@ public class MercariService {
     public List<MercariModel> list() {
         List<MercariModel> mercariModels = StreamSupport
                 .stream(dataRepo.findAll().spliterator(), false)
-                .filter(e -> !e.isDel())
+                .filter(e -> !e.getIsDel())
                 .collect(Collectors.toList());
         log.info("获取列表数据总数：" + mercariModels.size());
         return mercariModels;
@@ -35,9 +35,4 @@ public class MercariService {
     public MercariModel save(MercariModel mercariModel) {
         return dataRepo.save(mercariModel);
     }
-
-    public void saveBatch(List<MercariModel> mercariModels) {
-        dataRepo.saveAll(mercariModels);
-    }
-
 }

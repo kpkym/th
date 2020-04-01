@@ -47,8 +47,8 @@ public class MercariPipline implements Pipeline {
             newer.setPicture(fastdfsUtil.uploadFromUrl(newer.getPicturesOriginal()));
         } else if (!older.getPrice().equals(newer.getPrice())) {
             needOlder(newer, older);
-            newer.setChange(true);
-            newer.setDel(false);
+            newer.setIsChange(true);
+            newer.setIsDel(false);
         } else {
             // 如果不是第一插入或价格不变则不保存
             return;

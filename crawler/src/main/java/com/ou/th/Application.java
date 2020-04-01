@@ -7,8 +7,6 @@ import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.Import;
 import org.springframework.jmx.support.RegistrationPolicy;
 
-import java.io.IOException;
-
 /**
  * @author kpkym
  * Date: 2020-03-19 06:37
@@ -18,7 +16,8 @@ import java.io.IOException;
 // 解决jmx重复注册bean的问题
 @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 public class Application {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
         SpringApplication.run(Application.class, args);
     }
 }
