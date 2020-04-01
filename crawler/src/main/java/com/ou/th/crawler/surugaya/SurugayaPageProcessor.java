@@ -1,18 +1,13 @@
 package com.ou.th.crawler.surugaya;
 
 import com.ou.th.crawler.common.CommonUtil;
-import com.ou.th.crawler.common.anatation.MyExtractBy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Html;
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,46 +40,17 @@ public class SurugayaPageProcessor implements PageProcessor {
             List<SurugayaModel> surugayaModels = new ArrayList<>();
 
             for (String item : items) {
-                SurugayaModel e = this.handleAnotation(item);
-                e.setDateTime(new Date().getTime());
-                surugayaModels.add(e);
+                surugayaModels.add(CommonUtil.handleAnotation(item, new SurugayaModel(), true));
             }
             page.putField("data", surugayaModels);
-            // 最后筛选后的地址添加回调度器
-            // page.addTargetRequests(hrefs);
+        } else if (url.contains("/jp/items")) {
+        } else {
+            page.setSkip(true);
         }
-        // else if (url.contains("/jp/items")) {
-        // } else {
-        //     page.setSkip(true);
-        // }
     }
 
     @Override
     public Site getSite() {
         return site;
-    }
-
-    private SurugayaModel handleAnotation(String item) {
-        SurugayaModel surugayaModel = new SurugayaModel();
-        Field[] declaredFields = SurugayaModel.class.getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-            MyExtractBy myExtractBy = declaredField.getAnnotation(MyExtractBy.class);
-            if (myExtractBy == null) {
-                continue;
-            }
-            String xpath = myExtractBy.value();
-            Object value = new Html(item).xpath(xpath).get();
-            if (declaredField.getType().isAssignableFrom(BigDecimal.class)) {
-                value = "品切れ".equals(value) ? Integer.MAX_VALUE + "" : value;
-                value = CommonUtil.StrToBigdecimal((String) value);
-            }
-            declaredField.setAccessible(true);
-            try {
-                declaredField.set(surugayaModel, value);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return surugayaModel;
     }
 }

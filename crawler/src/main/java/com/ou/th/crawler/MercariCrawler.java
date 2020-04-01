@@ -4,12 +4,14 @@ import com.ou.th.config.KpkConfig;
 import com.ou.th.crawler.common.config.MyHttpClientDownloader;
 import com.ou.th.crawler.mercari.MercariPageProcessor;
 import com.ou.th.crawler.mercari.MercariPipline;
+import com.ou.th.crawler.mercari.MyMercariHashSetDuplicateRemover;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.proxy.Proxy;
 import us.codecraft.webmagic.proxy.SimpleProxyProvider;
+import us.codecraft.webmagic.scheduler.QueueScheduler;
 
 import java.io.IOException;
 
@@ -37,6 +39,9 @@ public class MercariCrawler {
                 new Proxy(kpkConfig.getProxy().getHost(), kpkConfig.getProxy().getPort())));
 
         spider = spider.addUrl(kpkConfig.getMercariUrls().toArray(new String[0]));
+        spider.setScheduler(new QueueScheduler()
+                .setDuplicateRemover(new MyMercariHashSetDuplicateRemover())
+        );
         spider.setDownloader(httpClientDownloader);
         spider.addPipeline(pipeline);
         spider.thread(20);

@@ -1,16 +1,31 @@
 package com.ou.th.crawler.common;
 
+import cn.hutool.core.util.URLUtil;
 import com.ou.th.crawler.common.anatation.MyExtractBy;
 import us.codecraft.webmagic.selector.Html;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author kpkym
  * Date: 2020-03-31 17:47
  */
 public class CommonUtil {
+    public static String getParamValue(String url, String param) {
+        String normalize = URLUtil.normalize(url);
+        normalize = url.substring(url.indexOf("?") + 1);
+        String[] split = normalize.split("[&=]");
+        List<String> strings = new ArrayList<>(Arrays.asList(split));
+
+        int p = strings.lastIndexOf(param);
+        return p >= 0 ? strings.get(p + 1) : null;
+    }
+
+
     public static BigDecimal StrToBigdecimal(String s) {
         return new BigDecimal(s.replaceAll("[^0-9]", ""));
     }

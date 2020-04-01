@@ -29,7 +29,7 @@ public class MyMercariHashSetDuplicateRemover extends HashSetDuplicateRemover {
 
             return keyword + ":" + page;
         } else if (url.contains("/jp/items")) {
-            return MercariUtil.getId(url);
+            return MercariUtil.getIdFrom(url);
         }
         return "";
     }

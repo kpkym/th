@@ -38,24 +38,28 @@ public class MercariPipline implements Pipeline {
     }
 
     private void save(MercariModel newer) {
-        String id = MercariUtil.getId(newer);
+        String id = MercariUtil.getIdFrom(newer.getUrl());
         MercariModel older = mercariService.getById(id).orElse(new MercariModel());
-
-        MercariModel.PriceTime t = new MercariModel.PriceTime();
-        t.setDateTime(new Date().getTime());
-        t.setPrice(newer.getPrice());
 
         if (older.getId() == null) {
             // 只上传第一张图片
             newer.setId(id);
             newer.setPicture(fastdfsUtil.uploadFromUrl(newer.getPicturesOriginal()));
-        }else if (!older.getPrice().equals(newer.getPrice())){
+        } else if (!older.getPrice().equals(newer.getPrice())) {
             needOlder(newer, older);
             newer.setChange(true);
             newer.setDel(false);
+        } else {
+            // 如果不是第一插入或价格不变则不保存
+            return;
         }
         // 一定要放在复制老数据后面
-        newer.getPriceTimes().add(t);
+        newer.getPriceTimes().add(
+                MercariModel.PriceTime.builder()
+                        .dateTime(new Date().getTime())
+                        .price(newer.getPrice())
+                        .build()
+        );
         mercariService.save(newer);
     }
 
