@@ -1,7 +1,7 @@
 打算写一个爬虫项目实现商品价格对比，方便看有哪些便宜的东西可以淘
 
 * [x] [煤炉(mercari)](https://www.mercari.com/jp/)
-* [ ] [骏河屋~~垃圾屋~~(suruga-ya)](https://www.suruga-ya.jp/)
+* [x] [骏河屋~~垃圾屋~~(suruga-ya)](https://www.suruga-ya.jp/)
 * [ ] \***********
 
 # 项目思路
