@@ -4,7 +4,7 @@ import "./css/App.css"
 import Header from "components/Header/Header"
 import ProductItem from "components/ProductItem/ProductItem"
 import {connect} from "react-redux";
-import {initMercariAction, initSurugayaAction, updateMercariAction} from "redux/actions"
+import {initMercariAction, initSurugayaAction, updateMercariAction, updateSurugayaAction} from "redux/actions"
 
 function array2Matrix(arr, lineLen = 6) {
     let matrix = [];
@@ -35,12 +35,13 @@ class App extends Component {
     static propTypes = {};
 
     state = {
-        isLike: false
+        isLike: false,
+        website: ""
     };
 
     componentDidMount() {
-        // this.props.initMercariAction();
-        this.props.initSurugayaAction();
+        // this.props.initMercariAction().then(()=> this.setState({"website": "mercari"}));
+        this.props.initSurugayaAction().then(() => this.setState({"website": "surugaya"}));
     }
 
 
@@ -84,5 +85,6 @@ export default connect(state => (
 ), {
     initMercariAction,
     updateMercariAction,
-    initSurugayaAction
+    initSurugayaAction,
+    updateSurugayaAction
 })(App);
