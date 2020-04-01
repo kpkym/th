@@ -1,4 +1,4 @@
-package com.ou.th;
+package com.ou.th.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

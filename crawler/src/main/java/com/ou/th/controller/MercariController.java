@@ -1,10 +1,10 @@
 package com.ou.th.controller;
 
-import com.ou.th.Msg;
 import com.ou.th.crawler.MercariCrawler;
 import com.ou.th.crawler.mercari.DataRepo;
 import com.ou.th.crawler.mercari.MercariModel;
 import com.ou.th.crawler.mercari.MercariService;
+import com.ou.th.util.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

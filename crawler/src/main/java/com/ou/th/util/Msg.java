@@ -1,4 +1,4 @@
-package com.ou.th;
+package com.ou.th.util;
 
 import lombok.Data;
 
