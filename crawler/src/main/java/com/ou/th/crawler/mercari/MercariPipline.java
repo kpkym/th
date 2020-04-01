@@ -40,43 +40,47 @@ public class MercariPipline implements Pipeline {
     private void save(MercariModel newer) {
         String id = MercariUtil.getIdFrom(newer.getUrl());
         MercariModel older = mercariService.getById(id).orElse(new MercariModel());
-        MercariModel obj;
         if (older.getId() == null) {
-            // 只上传第一张图片
-            newer.setId(id);
-            newer.setPicture(fastdfsUtil.uploadFromUrl(newer.getPicturesOriginal()));
-            obj = newer;
+            initSave(newer, id);
         } else if (!older.getPrice().equals(newer.getPrice())) {
             needUpdate(older, newer);
             older.setIsChange(true);
             older.setIsDel(false);
-            obj = older;
-        } else {
-            // 如果不是第一插入或价格不变则不保存
-            return;
+            older.getPriceTimes().add(
+                    MercariModel.PriceTime.builder()
+                            .dateTime(new Date().getTime())
+                            .price(older.getPrice())
+                            .build()
+            );
+            mercariService.save(older);
         }
-        // 一定要放在复制老数据后面
-        obj.getPriceTimes().add(
+    }
+
+    private void initSave(MercariModel mercariModel, String id) {
+        // 只上传第一张图片
+        mercariModel.setId(id);
+        mercariModel.setPicture(fastdfsUtil.uploadFromUrl(mercariModel.getPicturesOriginal()));
+        mercariModel.getPriceTimes().add(
                 MercariModel.PriceTime.builder()
                         .dateTime(new Date().getTime())
-                        .price(newer.getPrice())
+                        .price(mercariModel.getPrice())
                         .build()
         );
-        mercariService.save(obj);
+        mercariService.save(mercariModel);
     }
 
     private void needUpdate(MercariModel older, MercariModel newer) {
-        for (Field newerField : older.getClass().getDeclaredFields()) {
-            NeedUpdate[] annotationsByType = newerField.getAnnotationsByType(NeedUpdate.class);
+        for (Field olderField : older.getClass().getDeclaredFields()) {
+            NeedUpdate[] annotationsByType = olderField.getAnnotationsByType(NeedUpdate.class);
             if (annotationsByType.length < 1) {
                 continue;
             }
             try {
-                Field olderField = older.getClass().getDeclaredField(newerField.getName());
+                Field newerField = newer.getClass().getDeclaredField(olderField.getName());
                 olderField.setAccessible(true);
                 newerField.setAccessible(true);
 
-                olderField.set(newer, newerField.get(older));
+                olderField.set(older, newerField.get(newer));
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
             }

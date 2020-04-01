@@ -33,10 +33,6 @@ public class MercariService {
     }
 
     public MercariModel save(MercariModel mercariModel) {
-        // mercariModel.setIsDel(true);
-        if (mercariModel.getId()==null) {
-            System.out.println("Fk");
-        }
         return dataRepo.save(mercariModel);
     }
 }

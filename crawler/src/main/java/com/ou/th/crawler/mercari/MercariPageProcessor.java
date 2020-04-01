@@ -38,7 +38,7 @@ public class MercariPageProcessor implements PageProcessor {
             }
             page.putField("arr", mercariModels);
             List<String> all = page.getHtml().xpath("//li[@class='pager-cell']/a/@href").all();
-            // page.addTargetRequests(all);
+            page.addTargetRequests(all);
         } else if (url.contains("/jp/items")) {
             page.putField("obj", CommonUtil.handleAnotation(page.getHtml().get(), new MercariModel(), false));
         } else {
