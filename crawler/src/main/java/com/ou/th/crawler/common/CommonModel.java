@@ -1,6 +1,5 @@
 package com.ou.th.crawler.common;
 
-import com.ou.th.crawler.common.anatation.NeedOlder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,17 +15,12 @@ import java.util.List;
  */
 @Data
 public class CommonModel {
-    // 感兴趣 看过之后会继续留在界面
-    @NeedOlder
     protected boolean isLike = false;
 
     protected boolean isDel = false;
 
     protected boolean isChange = false;
 
-    protected String picture;
-
-    @NeedOlder
     protected List<PriceTime> priceTimes = new ArrayList<>();
 
     @NoArgsConstructor

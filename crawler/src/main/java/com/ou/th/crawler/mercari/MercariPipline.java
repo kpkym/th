@@ -1,6 +1,6 @@
 package com.ou.th.crawler.mercari;
 
-import com.ou.th.crawler.common.anatation.NeedOlder;
+import com.ou.th.crawler.common.anatation.NeedUpdate;
 import com.ou.th.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,32 +40,34 @@ public class MercariPipline implements Pipeline {
     private void save(MercariModel newer) {
         String id = MercariUtil.getIdFrom(newer.getUrl());
         MercariModel older = mercariService.getById(id).orElse(new MercariModel());
-
+        MercariModel obj;
         if (older.getId() == null) {
             // 只上传第一张图片
             newer.setId(id);
             newer.setPicture(fastdfsUtil.uploadFromUrl(newer.getPicturesOriginal()));
+            obj = newer;
         } else if (!older.getPrice().equals(newer.getPrice())) {
-            needOlder(newer, older);
-            newer.setIsChange(true);
-            newer.setIsDel(false);
+            needUpdate(older, newer);
+            older.setIsChange(true);
+            older.setIsDel(false);
+            obj = older;
         } else {
             // 如果不是第一插入或价格不变则不保存
             return;
         }
         // 一定要放在复制老数据后面
-        newer.getPriceTimes().add(
+        obj.getPriceTimes().add(
                 MercariModel.PriceTime.builder()
                         .dateTime(new Date().getTime())
                         .price(newer.getPrice())
                         .build()
         );
-        mercariService.save(newer);
+        mercariService.save(obj);
     }
 
-    private void needOlder(MercariModel newer, MercariModel older) {
-        for (Field newerField : newer.getClass().getDeclaredFields()) {
-            NeedOlder[] annotationsByType = newerField.getAnnotationsByType(NeedOlder.class);
+    private void needUpdate(MercariModel older, MercariModel newer) {
+        for (Field newerField : older.getClass().getDeclaredFields()) {
+            NeedUpdate[] annotationsByType = newerField.getAnnotationsByType(NeedUpdate.class);
             if (annotationsByType.length < 1) {
                 continue;
             }
@@ -74,7 +76,7 @@ public class MercariPipline implements Pipeline {
                 olderField.setAccessible(true);
                 newerField.setAccessible(true);
 
-                newerField.set(newer, olderField.get(older));
+                olderField.set(newer, newerField.get(older));
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
             }
