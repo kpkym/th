@@ -36,17 +36,46 @@ class App extends Component {
 
     state = {
         isLike: false,
-        website: ""
+        website: "",
+        initFunc: null,
+        updateFunc: null
     };
 
-    componentDidMount() {
-        // this.props.initMercariAction().then(()=> this.setState({"website": "mercari"}));
-        this.props.initSurugayaAction().then(() => this.setState({"website": "surugaya"}));
+    delAll = (viewData) => {
+        viewData.forEach(e => {
+            e.isDel = true;
+            this.state.updateFunc(e);
+        });
+        this.state.initFunc();
+    };
+
+    triggerWebsite = () => {
+        if (this.state.website === "mercari") {
+            this.props.initSurugayaAction().then(() => this.setState({
+                website: "surugaya",
+                initFunc: this.props.initSurugayaAction,
+                updateFunc: this.props.updateSurugayaAction
+            }));
+        } else {
+            this.props.initMercariAction().then(() => this.setState({
+                website: "mercari",
+                initFunc: this.props.initMercariAction,
+                updateFunc: this.props.updateMercariAction
+            }));
+        }
     }
 
+    componentDidMount() {
+        this.props.initMercariAction().then(() => this.setState({
+            website: "mercari",
+            initFunc: this.props.initMercariAction,
+            updateFunc: this.props.updateMercariAction
+        }));
+    }
 
     render() {
         let {items} = this.props;
+
         let viewData = filterdData(items, this.state.isLike);
         viewData.sort((a, b) => a.price - b.price);
 
@@ -55,23 +84,17 @@ class App extends Component {
             <>
                 <Row><Col offset={20} span={3}>
                     <Affix offsetTop={10} style={{position: "absolute"}}>
-                        <Button type="danger" size="large" block onClick={() => {
-                            viewData.forEach(e => {
-                                e.isDel = true;
-                                this.props.updateMercariAction(e);
-                            });
-                            this.props.initMercariAction();
-                        }}>删除所有显示的数据
+                        <Button type="danger" size="large" block onClick={() => this.delAll(viewData)}>删除所有显示的数据
                         </Button>
                     </Affix>
                 </Col></Row>
-                <Header changeIsLike={() => this.setState({isLike: !this.state.isLike})}
+                <Header triggerWebsite={this.triggerWebsite} changeIsLike={() => this.setState({isLike: !this.state.isLike})}
                         items={items} viewCount={viewData.length}/>
                 {data.map((line, index) => (
                     <Row gutter={[20, 20]} key={index}>
                         {line.map(e => (
                             <Col span={4} key={e.pid}>
-                                <ProductItem update={this.props.updateMercariAction} item={e}/>
+                                <ProductItem update={this.state.updateFunc} item={e}/>
                             </Col>
                         ))}
                     </Row>
