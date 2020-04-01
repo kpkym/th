@@ -23,8 +23,8 @@ function array2Matrix(arr, lineLen = 6) {
     return matrix;
 }
 
-let filterdData = (mercaris, isLiked = false) => {
-    return mercaris.filter(e => e.disliked === false && e.liked === isLiked);
+let filterdData = (mercaris, isLike = false) => {
+    return mercaris.filter(e => e.isDel === false && e.isLike === isLike);
 };
 
 let displaydData = (mercaris) => {
@@ -35,7 +35,7 @@ class App extends Component {
     static propTypes = {};
 
     state = {
-        isLiked: false
+        isLike: false
     };
 
     componentDidMount() {
@@ -45,8 +45,9 @@ class App extends Component {
 
     render() {
         let {mercaris} = this.props;
-        let viewData = filterdData(mercaris, this.state.isLiked);
-        viewData.sort((a, b) => a.currentPrice - b.currentPrice);
+        let viewData = filterdData(mercaris, this.state.isLike);
+        viewData.sort((a, b) => a.price - b.price);
+
         let data = displaydData(viewData);
         return (
             <>
@@ -54,7 +55,7 @@ class App extends Component {
                     <Affix offsetTop={10} style={{position: "absolute"}}>
                         <Button type="danger" size="large" block onClick={() => {
                             viewData.forEach(e => {
-                                e.disliked = true;
+                                e.isDel = true;
                                 this.props.updateMerciAction(e);
                             });
                             this.props.initMercariAction();
@@ -62,8 +63,7 @@ class App extends Component {
                         </Button>
                     </Affix>
                 </Col></Row>
-
-                <Header changeIsLiked={() => this.setState({isLiked: !this.state.isLiked})}
+                <Header changeIsLike={() => this.setState({isLike: !this.state.isLike})}
                         mercaris={mercaris} viewCount={viewData.length}/>
                 {data.map((line, index) => (
                     <Row gutter={[20, 20]} key={index}>

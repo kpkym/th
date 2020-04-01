@@ -11,26 +11,27 @@ class ProductItem extends Component {
     };
 
     triggerLiked = (mercari) => {
-        mercari.liked = !mercari.liked;
+        mercari.isLike = !mercari.isLike;
         this.props.update(mercari);
     };
 
     del = (mercari) => {
-        mercari.disliked = true;
+        mercari.isDel = true;
         this.props.update(mercari);
     };
 
 
     render() {
         let {item} = this.props;
-        let src = baseImgUrl + "/" + item.pictures[0];
-        src = src.includes("static.mercdn.net") ?  src.replace(baseImgUrl+"/", "") : src;
+        let src = baseImgUrl + item.picture;
+
+        src = src.includes("static.mercdn.net") ?  item.picturesOriginal : src;
         let ptLength = item.priceTimes.length;
-        let headStyle = {backgroundColor: item.changed ? "lightgreen" : ""};
+        let headStyle = {backgroundColor: item.isChange ? "lightgreen" : ""};
         let price = (
-            <Statistic title="价格" value={item.priceTimes[ptLength - 1].currentPrice}
+            <Statistic title="价格" value={item.priceTimes[ptLength - 1].price}
                        suffix={ptLength > 1 ?
-                           <span style={{textDecorationLine: item.changed ? "line-through" : ""}}>{item.priceTimes[ptLength - 2].currentPrice}</span>
+                           <span style={{textDecorationLine: item.isChange ? "line-through" : ""}}>{item.priceTimes[ptLength - 2].price}</span>
                            : ""}
             />
         );
@@ -44,7 +45,7 @@ class ProductItem extends Component {
                     <img style={{height: "100px", objectFit: 'scale-down'}}
                          src={src}/></a>}
                 actions={[
-                    <Button type="link" onClick={() => this.triggerLiked(item)}>{item.liked ?
+                    <Button type="link" onClick={() => this.triggerLiked(item)}>{item.isLike ?
                         <HeartTwoTone twoToneColor="#eb2f96"/>
                         : <HeartTwoTone twoToneColor="#ccc"/>}</Button>,
                     <Button type="link" onClick={() => this.del(item)}><DeleteOutlined/></Button>,

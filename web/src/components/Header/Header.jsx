@@ -12,14 +12,14 @@ class Header extends Component {
     };
 
     render() {
-        let {mercaris, viewCount, changeIsLiked} = this.props;
-        let likedCount = mercaris.reduce((a, b) => a + b.liked, 0);
+        let {mercaris, viewCount, changeIsLike} = this.props;
+        let likedCount = mercaris.reduce((a, b) => a + b.isLike, 0);
         return (
             <PageHeader title="Mercari">
                 <Descriptions size="small" column={6}>
                     <Descriptions.Item>
                         <div>
-                            <Checkbox onChange={changeIsLiked}>我感兴趣的</Checkbox><br/>
+                            <Checkbox onChange={changeIsLike}>我感兴趣的</Checkbox><br/>
                         </div>
                     </Descriptions.Item>
                     <Descriptions.Item><Statistic title="显示数量" value={viewCount}/></Descriptions.Item>
