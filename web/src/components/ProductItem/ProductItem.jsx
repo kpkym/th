@@ -40,7 +40,7 @@ class ProductItem extends Component {
                 title={item.title}
                 headStyle={headStyle}
                 hoverable
-                cover={<a href={item.url} style={{height: "100%", width: "100%", textAlign: "center"}}
+                cover={<a href={item.url.includes("mercari.com") ? item.url : "https://www.mercari.com"+item.url} style={{height: "100%", width: "100%", textAlign: "center"}}
                           target="_blank">
                     <img style={{height: "100px", objectFit: 'scale-down'}}
                          src={src}/></a>}
