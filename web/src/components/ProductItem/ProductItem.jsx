@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Card, Statistic} from "antd";
-import {DeleteOutlined, HeartTwoTone} from "@ant-design/icons";
+import {Button, Card, Drawer, Statistic} from "antd";
+import {DeleteOutlined, HeartTwoTone, HistoryOutlined} from "@ant-design/icons";
 import {baseImgUrl} from "config/config";
 
 function itemUrlAndPic(item, website = "mercari") {
@@ -22,6 +22,10 @@ class ProductItem extends Component {
         update: PropTypes.func.isRequired,
     };
 
+    state = {
+        visible: false
+    }
+
     triggerLiked = (mercari) => {
         mercari.isLike = !mercari.isLike;
         this.props.update(mercari);
@@ -32,6 +36,11 @@ class ProductItem extends Component {
         this.props.update(mercari);
     };
 
+    showDrawer = () => {
+        this.setState({
+            visible: true,
+        });
+    };
 
     render() {
         let {item, website} = this.props;
@@ -61,11 +70,25 @@ class ProductItem extends Component {
                         <HeartTwoTone twoToneColor="#eb2f96"/>
                         : <HeartTwoTone twoToneColor="#ccc"/>}</Button>,
                     <Button type="link" onClick={() => this.del(item)}><DeleteOutlined/></Button>,
+                    <Button type="link" onClick={this.showDrawer}>
+                        <HistoryOutlined/>
+                    </Button>,
                     <a href={"https://www.suruga-ya.jp/search?category=&search_word=" + item.title}
                        target="_blank">駿河屋</a>
                 ]}
             >
                 <Card.Meta title={item.title} description={price}/>
+
+                <Drawer
+                    title="价格历史记录"
+                    placement="bottom"
+                    onClose={() => this.setState({visible: false})}
+                    visible={this.state.visible}
+                >
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                </Drawer>
             </Card>
         );
     }

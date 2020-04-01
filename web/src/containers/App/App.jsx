@@ -94,7 +94,7 @@ class App extends Component {
                     <Row gutter={[20, 20]} key={index}>
                         {line.map(e => (
                             <Col span={4} key={e.pid}>
-                                <ProductItem update={this.state.updateFunc} item={e}/>
+                                <ProductItem website={this.state.website} update={this.state.updateFunc} item={e}/>
                             </Col>
                         ))}
                     </Row>
