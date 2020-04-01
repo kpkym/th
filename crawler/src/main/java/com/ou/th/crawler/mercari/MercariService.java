@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * @author kpkym
@@ -24,10 +22,7 @@ public class MercariService {
     }
 
     public List<MercariModel> list() {
-        List<MercariModel> mercariModels = StreamSupport
-                .stream(mercariRepo.findAll().spliterator(), false)
-                .filter(e -> !e.getIsDel())
-                .collect(Collectors.toList());
+        List<MercariModel> mercariModels = mercariRepo.findAllByIsDelFalse();
         log.info("获取列表数据总数：" + mercariModels.size());
         return mercariModels;
     }

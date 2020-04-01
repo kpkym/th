@@ -5,7 +5,6 @@ import com.ou.th.crawler.common.anatation.MyExtractBy;
 import com.ou.th.crawler.common.anatation.NeedUpdate;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.math.BigDecimal;
 /**
@@ -13,7 +12,6 @@ import java.math.BigDecimal;
  * Date: 2020-03-18 23:30
  */
 @Data
-@RedisHash("mercariModel")
 public class MercariModel extends CommonModel {
     @Id
     private String id;

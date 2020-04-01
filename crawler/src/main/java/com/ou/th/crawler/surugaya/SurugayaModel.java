@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.math.BigDecimal;
 
@@ -20,7 +19,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @Data
-@RedisHash("surugayaModel")
 public class SurugayaModel extends CommonModel {
     @Id
     private String id;
