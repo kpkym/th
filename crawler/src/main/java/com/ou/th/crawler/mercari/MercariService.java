@@ -17,15 +17,15 @@ import java.util.stream.StreamSupport;
 @Service
 public class MercariService {
     @Autowired
-    DataRepo dataRepo;
+    MercariRepo mercariRepo;
 
     public Optional<MercariModel> getById(String id) {
-        return dataRepo.findById(id);
+        return mercariRepo.findById(id);
     }
 
     public List<MercariModel> list() {
         List<MercariModel> mercariModels = StreamSupport
-                .stream(dataRepo.findAll().spliterator(), false)
+                .stream(mercariRepo.findAll().spliterator(), false)
                 .filter(e -> !e.getIsDel())
                 .collect(Collectors.toList());
         log.info("获取列表数据总数：" + mercariModels.size());
@@ -33,6 +33,6 @@ public class MercariService {
     }
 
     public MercariModel save(MercariModel mercariModel) {
-        return dataRepo.save(mercariModel);
+        return mercariRepo.save(mercariModel);
     }
 }

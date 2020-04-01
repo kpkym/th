@@ -1,7 +1,6 @@
 package com.ou.th.controller;
 
 import com.ou.th.crawler.MercariCrawler;
-import com.ou.th.crawler.mercari.DataRepo;
 import com.ou.th.crawler.mercari.MercariModel;
 import com.ou.th.crawler.mercari.MercariService;
 import com.ou.th.util.Msg;
@@ -22,9 +21,6 @@ public class MercariController {
 
     @Autowired
     MercariService mercariService;
-
-    @Autowired
-    DataRepo da;
 
     @GetMapping(value = "start")
     public void mercari() throws IOException {
