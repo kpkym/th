@@ -17,33 +17,39 @@ import java.util.List;
 @Slf4j
 @Component
 public class SurugayaPageProcessor implements PageProcessor {
-
+    private String surugayaImgPrefix = "https://www.suruga-ya.jp/database/pics/game/";
+    private String surugayaImgSuffix = ".jpg";
     private Site site = Site.me().setRetryTimes(10).setSleepTime(2300).setTimeOut(100000);
 
     @Override
     public void process(Page page) {
-        // 下一页
-        // String next = page.getHtml().xpath("//li[contains(@class, 'pager-next')]//li[1]/a/@href").get();
-        // if (StrUtil.isNotEmpty(next)) {
-        //     page.addTargetRequest(next);
-        // }
-
         String url = page.getRequest().getUrl();
-
         // 当前是搜索页
         if (url.contains("/search")) {
             log.info("当前URL为：" + url);
-            page.setSkip(true);
-            // 找到所有的链接跟价格
             List<String> items = page.getHtml().xpath("//div[@class='item']").all();
-
             List<SurugayaModel> surugayaModels = new ArrayList<>();
 
             for (String item : items) {
-                surugayaModels.add(CommonUtil.handleAnotation(item, new SurugayaModel(), true));
+                SurugayaModel surugayaModel = CommonUtil.handleAnotation(item, new SurugayaModel(), true);
+                surugayaModel.setPicturesOriginal(
+                        surugayaImgPrefix
+                                + SurugayaUtil.getIdFrom(surugayaModel.getUrl()).toLowerCase()
+                                + surugayaImgSuffix
+                );
+                surugayaModels.add(surugayaModel);
             }
-            page.putField("data", surugayaModels);
-        } else if (url.contains("/jp/items")) {
+            page.putField("arr", surugayaModels);
+            List<String> all = page.getHtml().xpath("//div[@id='pager']//a/@href").all();
+            page.addTargetRequests(all);
+        } else if (url.contains("/product/detail")) {
+            SurugayaModel surugayaModel = CommonUtil.handleAnotation(page.getHtml().get(), new SurugayaModel(), false);
+            surugayaModel.setPicturesOriginal(
+                    surugayaImgPrefix
+                            + SurugayaUtil.getIdFrom(surugayaModel.getUrl()).toLowerCase()
+                            + surugayaImgSuffix
+            );
+            page.putField("obj", surugayaModel);
         } else {
             page.setSkip(true);
         }

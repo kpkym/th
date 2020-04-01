@@ -2,12 +2,15 @@ package com.ou.th.crawler.surugaya;
 
 import com.ou.th.crawler.common.CommonModel;
 import com.ou.th.crawler.common.anatation.MyExtractBy;
+import com.ou.th.crawler.common.anatation.NeedUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+
+import java.math.BigDecimal;
 
 /**
  * @author kpkym
@@ -22,12 +25,17 @@ public class SurugayaModel extends CommonModel {
     @Id
     private String id;
 
-    @MyExtractBy(list = "//p[@class='title']/a/text()", detail = "//p[@class='title']/a/text()")
+    @MyExtractBy(list = "//p[@class='title']/a/text()", detail = "//h2[@id='item_title']/text()")
     private String title;
 
-    @MyExtractBy(list = "//div[@class='item']//img/@data-src", detail = "//div[@class='item']//img/@data-src")
-    private String pictureOriginal;
+    private String picture;
 
-    @MyExtractBy(list = "//a/@href", detail = "")
+    private String picturesOriginal;
+
+    @NeedUpdate
+    @MyExtractBy(list = "//p[@class='price']/text()|//span[@class='text-red']/strong/text()", detail = "//table[@class='table_grade_list']//span/text()")
+    private BigDecimal price;
+
+    @MyExtractBy(list = "//p[@class='title']/a/@href", detail = "//input[@type='hidden' and @name='url']/@value")
     private String url;
 }

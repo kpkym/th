@@ -16,6 +16,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "kpk")
 public class KpkConfig {
     private List<String> mercariUrls;
+    private List<String> surugayaUrls;
 
     @NestedConfigurationProperty
     private KpkProxy proxy;

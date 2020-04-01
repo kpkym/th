@@ -1,10 +1,14 @@
 package com.ou.th.config;
 
+import com.ou.th.crawler.common.config.MyHttpClientDownloader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import us.codecraft.webmagic.downloader.HttpClientDownloader;
+import us.codecraft.webmagic.proxy.Proxy;
+import us.codecraft.webmagic.proxy.SimpleProxyProvider;
 
 /**
  * @author kpkym
@@ -33,5 +37,14 @@ public class MyConfig {
 
         //3.返回新的CorsFilter.
         return new CorsFilter(configSource);
+    }
+
+    @Bean
+    public HttpClientDownloader httpClientDownloader(KpkConfig kpkConfig) {
+        HttpClientDownloader httpClientDownloader = new MyHttpClientDownloader();
+        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(
+                new Proxy(kpkConfig.getProxy().getHost(), kpkConfig.getProxy().getPort())));
+
+        return httpClientDownloader;
     }
 }
