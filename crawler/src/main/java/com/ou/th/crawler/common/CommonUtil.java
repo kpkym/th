@@ -26,8 +26,20 @@ public class CommonUtil {
     }
 
 
+    /**
+     * 字符串转bigdecimal, 无效字符串返回 new BigDecimal(Integer.MAX_VALUE)
+     * @param s
+     * @return
+     */
     public static BigDecimal StrToBigdecimal(String s) {
-        return new BigDecimal(s.replaceAll("[^0-9]", ""));
+        BigDecimal bigDecimal;
+        try {
+            bigDecimal = new BigDecimal(s.replaceAll("[^0-9]", ""));
+        } catch (Exception e) {
+            bigDecimal = new BigDecimal(Integer.MAX_VALUE);
+        }
+
+        return bigDecimal;
     }
 
     public static<T> T handleAnotation(String item, T t, boolean isList) {
@@ -40,7 +52,6 @@ public class CommonUtil {
             String xpath = isList ? myExtractBy.list() : myExtractBy.detail();
             Object value = new Html(item).xpath(xpath).get();
             if (declaredField.getType().isAssignableFrom(BigDecimal.class)) {
-                value = "品切れ".equals(value) ? Integer.MAX_VALUE + "" : value;
                 value = CommonUtil.StrToBigdecimal((String) value);
             }
             declaredField.setAccessible(true);

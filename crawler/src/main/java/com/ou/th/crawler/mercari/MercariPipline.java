@@ -1,6 +1,6 @@
 package com.ou.th.crawler.mercari;
 
-import com.ou.th.crawler.common.anatation.NeedUpdate;
+import com.ou.th.crawler.common.CommonPipline;
 import com.ou.th.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,6 @@ import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
-import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class MercariPipline implements Pipeline {
         if (older.getId() == null) {
             initSave(newer, id);
         } else if (!older.getPrice().equals(newer.getPrice())) {
-            needUpdate(older, newer);
+            CommonPipline.needUpdate(older, newer);
             older.setIsChange(true);
             older.setIsDel(false);
             older.getPriceTimes().add(
@@ -67,24 +66,5 @@ public class MercariPipline implements Pipeline {
                         .build()
         );
         mercariService.save(mercariModel);
-    }
-
-    private void needUpdate(MercariModel older, MercariModel newer) {
-        for (Field olderField : older.getClass().getDeclaredFields()) {
-            NeedUpdate[] annotationsByType = olderField.getAnnotationsByType(NeedUpdate.class);
-            if (annotationsByType.length < 1) {
-                continue;
-            }
-            try {
-                Field newerField = newer.getClass().getDeclaredField(olderField.getName());
-                olderField.setAccessible(true);
-                newerField.setAccessible(true);
-
-                olderField.set(older, newerField.get(newer));
-            } catch (IllegalAccessException | NoSuchFieldException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 }
