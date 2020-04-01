@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {baseImgUrl} from "../../config/config";
 import {Button, Card, Statistic} from "antd";
 import {DeleteOutlined, HeartTwoTone} from "@ant-design/icons";
 
@@ -8,6 +7,10 @@ class ProductItem extends Component {
     static propTypes = {
         item: PropTypes.object.isRequired,
         update: PropTypes.func.isRequired,
+    };
+
+    state = {
+
     };
 
     triggerLiked = (mercari) => {
@@ -23,9 +26,7 @@ class ProductItem extends Component {
 
     render() {
         let {item} = this.props;
-        let src = baseImgUrl + item.picture;
 
-        src = src.includes("static.mercdn.net") ?  item.picturesOriginal : src;
         let ptLength = item.priceTimes.length;
         let headStyle = {backgroundColor: item.isChange ? "lightgreen" : ""};
         let price = (
@@ -40,10 +41,10 @@ class ProductItem extends Component {
                 title={item.title}
                 headStyle={headStyle}
                 hoverable
-                cover={<a href={item.url.includes("mercari.com") ? item.url : "https://www.mercari.com"+item.url} style={{height: "100%", width: "100%", textAlign: "center"}}
+                cover={<a href={item.url} style={{height: "100%", width: "100%", textAlign: "center"}}
                           target="_blank">
                     <img style={{height: "100px", objectFit: 'scale-down'}}
-                         src={src}/></a>}
+                         src={item.picture}/></a>}
                 actions={[
                     <Button type="link" onClick={() => this.triggerLiked(item)}>{item.isLike ?
                         <HeartTwoTone twoToneColor="#eb2f96"/>
