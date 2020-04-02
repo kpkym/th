@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Button, Card, Drawer, Statistic} from "antd";
 import {DeleteOutlined, HeartTwoTone, HistoryOutlined} from "@ant-design/icons";
 import {baseImgUrl} from "config/config";
+import PriceHistoryChart from "components/PriceHistoryChart/PriceHistoryChart"
 
 function itemUrlAndPic(item, website = "mercari") {
     let url, picture;
@@ -44,6 +45,7 @@ class ProductItem extends Component {
 
     render() {
         let {item, website} = this.props;
+        let {priceTimes: chartData} = item;
 
         let ptLength = item.priceTimes.length;
         let headStyle = {backgroundColor: item.isChange ? "lightgreen" : ""};
@@ -80,14 +82,12 @@ class ProductItem extends Component {
                 <Card.Meta title={item.title} description={price}/>
 
                 <Drawer
-                    title="价格历史记录"
                     placement="bottom"
+                    closable={false}
                     onClose={() => this.setState({visible: false})}
                     visible={this.state.visible}
                 >
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
+                    <PriceHistoryChart chartData={chartData}/>
                 </Drawer>
             </Card>
         );
