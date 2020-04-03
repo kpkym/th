@@ -5,12 +5,11 @@ import com.ou.th.crawler.surugaya.MySurugayaHashSetDuplicateRemover;
 import com.ou.th.crawler.surugaya.SurugayaPageProcessor;
 import com.ou.th.crawler.surugaya.SurugayaPipline;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.scheduler.QueueScheduler;
-
-import java.io.IOException;
 
 /**
  * @author kpkym
@@ -30,7 +29,8 @@ public class SurugayaScrawler {
     @Autowired
     KpkConfig kpkConfig;
 
-    public void start() throws IOException {
+    @Scheduled(fixedDelay = 30 * 60 * 1000, initialDelay = 10 * 60 * 1000)
+    public void start() {
         Spider spider = Spider.create(pageProcessor);
         spider = spider.addUrl(kpkConfig.getSurugayaUrls().toArray(new String[0]));
 

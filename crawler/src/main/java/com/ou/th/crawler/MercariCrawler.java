@@ -6,14 +6,13 @@ import com.ou.th.crawler.mercari.MercariPageProcessor;
 import com.ou.th.crawler.mercari.MercariPipline;
 import com.ou.th.crawler.mercari.MyMercariHashSetDuplicateRemover;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.proxy.Proxy;
 import us.codecraft.webmagic.proxy.SimpleProxyProvider;
 import us.codecraft.webmagic.scheduler.QueueScheduler;
-
-import java.io.IOException;
 
 /**
  * @author kpkym
@@ -30,8 +29,8 @@ public class MercariCrawler {
     @Autowired
     KpkConfig kpkConfig;
 
-    public void start() throws IOException {
-
+    @Scheduled(fixedDelay = 30 * 60 * 1000)
+    public void start() {
         Spider spider = Spider.create(pageProcessor);
 
         HttpClientDownloader httpClientDownloader = new MyHttpClientDownloader();
