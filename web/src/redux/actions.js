@@ -3,9 +3,16 @@
 异步action
 同步action
  */
-import {INIT, UPDATE} from './action-types'
-import {getAllMercari, getAllSurugaya, updateMercari, updateSurugaya} from "api/index"
+import {INIT, UPDATE, DELETE} from './action-types'
+import {getAllMercari, getAllSurugaya, updateMercari, updateSurugaya, delMercari, delSurugaya} from "api/index"
 
+function convert2Arr(data) {
+    return Array.isArray(data) ? data : [data];
+}
+
+function updateDate(arr, func) {
+    return arr.map(e => func(e));
+}
 
 export function initMercariAction() {
     return dispatch => {
@@ -13,9 +20,17 @@ export function initMercariAction() {
     };
 }
 
-export function updateMercariAction(data) {
+export function updateMercariAction(data, func) {
     return dispatch => {
-        return updateMercari(data).then(() => dispatch({type: UPDATE, data}));
+        let updatedData = updateDate(convert2Arr(data), func);
+        return updateMercari(updatedData).then(() => dispatch({type: UPDATE, data: updatedData}));
+    };
+}
+
+export function delMercariAction(data) {
+    let ids = convert2Arr(data);
+    return dispatch => {
+        return delMercari(ids).then(() => dispatch({type: DELETE, data:ids}));
     };
 }
 
@@ -27,8 +42,16 @@ export function initSurugayaAction() {
     }
 }
 
-export function updateSurugayaAction(data) {
+export function updateSurugayaAction(data, func) {
     return dispatch => {
-        return updateSurugaya(data).then(() => dispatch({type: UPDATE, data}));
+        let updatedData = updateDate(convert2Arr(data), func);
+        return updateSurugaya(updatedData).then(() => dispatch({type: UPDATE, data: updatedData}));
+    };
+}
+
+export function delSurugayaAction(data) {
+    let ids = convert2Arr(data)
+    return dispatch => {
+        return delSurugaya(ids).then(() => dispatch({type: DELETE, data:ids}));
     };
 }

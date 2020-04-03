@@ -14,9 +14,14 @@ public class Msg {
 
     private Msg() {}
 
-    public static Msg success(Object data) {
+    public static Msg success() {
         Msg msg = new Msg();
         msg.code = 200;
+        return msg;
+    }
+
+    public static Msg success(Object data) {
+        Msg msg = success();
         msg.data = data;
         return msg;
     }

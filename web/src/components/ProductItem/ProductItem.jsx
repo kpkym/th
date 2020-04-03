@@ -2,39 +2,30 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Card, Drawer, Statistic} from "antd";
 import {DeleteOutlined, HeartTwoTone, HistoryOutlined} from "@ant-design/icons";
-import {baseImgUrl} from "config/config";
 import PriceHistoryChart from "components/PriceHistoryChart/PriceHistoryChart"
 
-function itemUrlAndPic(item, website = "mercari") {
-    let url, picture;
-    if (website === "mercari") {
-        url = item.url.includes("mercari.com") ? item.url : "https://www.mercari.com" + item.url;
-        picture = item.picture.includes("static.mercdn.net") ? item.picture : (baseImgUrl + item.picture);
-    } else if (website === "surugaya") {
-        url = item.url;
-        picture = item.picture.includes("/database/pics") ? item.picture : baseImgUrl + item.picture;
-    }
-    return ({url, picture});
-}
 
 class ProductItem extends Component {
     static propTypes = {
         item: PropTypes.object.isRequired,
-        update: PropTypes.func.isRequired,
+        updateFunc: PropTypes.func.isRequired,
+        delFunc: PropTypes.func.isRequired,
+        item2UrlAndPic: PropTypes.func.isRequired,
     };
 
     state = {
         visible: false
-    }
-
-    triggerLiked = (mercari) => {
-        mercari.isLike = !mercari.isLike;
-        this.props.update(mercari);
     };
 
-    del = (mercari) => {
-        mercari.isDel = true;
-        this.props.update(mercari);
+    triggerLiked = (item) => {
+        let {updateFunc} = this.props;
+        updateFunc(item, e => {
+            e.isLike = !e.isLike;
+            return e});
+    };
+
+    del = (item) => {
+        this.props.delFunc(item.id);
     };
 
     showDrawer = () => {
@@ -44,7 +35,8 @@ class ProductItem extends Component {
     };
 
     render() {
-        let {item, website} = this.props;
+        let {item, item2UrlAndPic} = this.props;
+        let {triggerLiked, del, showDrawer} = this;
         let {priceTimes: chartData} = item;
 
         let ptLength = item.priceTimes.length;
@@ -62,17 +54,17 @@ class ProductItem extends Component {
                 title={item.title}
                 headStyle={headStyle}
                 hoverable
-                cover={<a href={itemUrlAndPic(item, website).url}
+                cover={<a href={item2UrlAndPic(item).url}
                           style={{height: "100%", width: "100%", textAlign: "center"}}
                           target="_blank">
                     <img style={{height: "100px", objectFit: 'scale-down'}}
-                         src={itemUrlAndPic(item, website).picture}/></a>}
+                         src={item2UrlAndPic(item).picture}/></a>}
                 actions={[
-                    <Button type="link" onClick={() => this.triggerLiked(item)}>{item.isLike ?
+                    <Button type="link" onClick={() => triggerLiked(item)}>{item.isLike ?
                         <HeartTwoTone twoToneColor="#eb2f96"/>
                         : <HeartTwoTone twoToneColor="#ccc"/>}</Button>,
-                    <Button type="link" onClick={() => this.del(item)}><DeleteOutlined/></Button>,
-                    <Button type="link" onClick={this.showDrawer}>
+                    <Button type="link" onClick={() => del(item)}><DeleteOutlined/></Button>,
+                    <Button type="link" onClick={showDrawer}>
                         <HistoryOutlined/>
                     </Button>,
                     <a href={"https://www.suruga-ya.jp/search?category=&search_word=" + item.title}

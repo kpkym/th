@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author kpkym
@@ -32,8 +33,16 @@ public class MercariController {
         return Msg.success(mercariService.list());
     }
 
-    @PostMapping("update")
-    public Msg update(@RequestBody MercariModel mercariModel) {
-        return Msg.success(mercariService.save(mercariModel));
+    @PutMapping("")
+    public Msg update(@RequestBody List<MercariModel> mercariModels) {
+        mercariService.save(mercariModels);
+        return Msg.success();
+    }
+
+
+    @PatchMapping("")
+    public Msg del(@RequestBody List<String> ids) {
+        mercariService.del(ids);
+        return Msg.success();
     }
 }

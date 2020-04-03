@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author kpkym
@@ -32,8 +33,16 @@ public class SurugayaController {
         return Msg.success(surugayaService.list());
     }
 
-    @PostMapping("update")
-    public Msg update(@RequestBody SurugayaModel surugayaModel) {
-        return Msg.success(surugayaService.save(surugayaModel));
+    @PutMapping("")
+    public Msg update(@RequestBody List<SurugayaModel> surugayaModels) {
+        surugayaService.save(surugayaModels);
+        return Msg.success();
+    }
+
+
+    @PatchMapping("")
+    public Msg del(@RequestBody List<String> ids) {
+        surugayaService.del(ids);
+        return Msg.success();
     }
 }

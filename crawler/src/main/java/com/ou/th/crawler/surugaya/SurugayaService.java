@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * @author kpkym
@@ -27,7 +29,18 @@ public class SurugayaService {
         return surugayaModels;
     }
 
-    public SurugayaModel save(SurugayaModel surugayaModel) {
-        return surugayaRepo.save(surugayaModel);
+    public void save(SurugayaModel surugayaModel) {
+        surugayaRepo.save(surugayaModel);
+    }
+
+    public void save(List<SurugayaModel> surugayaModels) {
+        surugayaRepo.saveAll(surugayaModels);
+    }
+
+    public void del(List<String> ids) {
+        List<SurugayaModel> surugayaModels = StreamSupport.stream(surugayaRepo.findAllById(ids).spliterator(), false)
+                .peek(e -> e.setIsDel(true))
+                .collect(Collectors.toList());
+        save(surugayaModels);
     }
 }

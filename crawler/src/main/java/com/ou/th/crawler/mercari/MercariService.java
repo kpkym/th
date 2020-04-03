@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * @author kpkym
@@ -27,7 +29,19 @@ public class MercariService {
         return mercariModels;
     }
 
-    public MercariModel save(MercariModel mercariModel) {
-        return mercariRepo.save(mercariModel);
+    public void save(MercariModel mercariModel) {
+        mercariRepo.save(mercariModel);
+    }
+
+    public void save(List<MercariModel> mercariModels) {
+        mercariRepo.saveAll(mercariModels);
+    }
+
+
+    public void del(List<String> ids) {
+        List<MercariModel> mercariModels = StreamSupport.stream(mercariRepo.findAllById(ids).spliterator(), false)
+                .peek(e -> e.setIsDel(true))
+                .collect(Collectors.toList());
+        save(mercariModels);
     }
 }
