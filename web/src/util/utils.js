@@ -1,5 +1,7 @@
 import {baseImgUrl} from "../config/config";
 
+export let outOfStockPrice = 2147483647;
+
 export function array2Matrix(arr, lineLen = 6) {
     let matrix = [];
     let t = [];

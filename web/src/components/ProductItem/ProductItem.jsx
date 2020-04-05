@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import {Button, Card, Drawer, Statistic} from "antd";
 import {DeleteOutlined, HeartTwoTone, HistoryOutlined} from "@ant-design/icons";
 import PriceHistoryChart from "components/PriceHistoryChart/PriceHistoryChart"
+import {outOfStockPrice} from 'util/utils'
 
+function outOfStockPrice2Text(price) {
+    return price === outOfStockPrice ? "缺货" : price;
+}
 
 class ProductItem extends Component {
     static propTypes = {
@@ -42,10 +46,10 @@ class ProductItem extends Component {
         let ptLength = item.priceTimes.length;
         let headStyle = {backgroundColor: item.isChange ? "lightgreen" : ""};
         let price = (
-            <Statistic title="价格" value={item.priceTimes[ptLength - 1].price}
+            <Statistic title="价格" value={outOfStockPrice2Text(item.priceTimes[ptLength - 1].price)}
                        suffix={ptLength > 1 ?
                            <span
-                               style={{textDecorationLine: item.isChange ? "line-through" : ""}}>{item.priceTimes[ptLength - 2].price}</span>
+                               style={{textDecorationLine: item.isChange ? "line-through" : ""}}>{outOfStockPrice2Text(item.priceTimes[ptLength - 2].price)}</span>
                            : ""}
             />
         );
