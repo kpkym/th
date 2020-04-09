@@ -4,8 +4,15 @@ import "./css/App.css"
 import Header from "components/Header/Header"
 import ProductItem from "components/ProductItem/ProductItem"
 import {connect} from "react-redux";
-import {initMercariAction, initSurugayaAction, updateMercariAction, updateSurugayaAction,delMercariAction,delSurugayaAction} from "redux/actions"
-import {filterData,displaydData, chooseItem2UrlAndPic} from "util/utils";
+import {
+    delMercariAction,
+    delSurugayaAction,
+    initMercariAction,
+    initSurugayaAction,
+    updateMercariAction,
+    updateSurugayaAction
+} from "redux/actions"
+import {chooseItem2UrlAndPic, displaydData, filterData} from "util/utils";
 
 class App extends Component {
     static propTypes = {};
@@ -20,6 +27,13 @@ class App extends Component {
 
     delAll = (viewData) => {
         this.state.delFunc(viewData.map(e => e.id)).then(() => this.state.initFunc());
+    };
+
+    readAll = (viewData) => {
+        this.state.updateFunc(viewData, e => {
+            e.isChange = false;
+            return e;
+        }).then(() => this.state.initFunc());
     };
 
     switch2Surugaya = () => {
@@ -56,31 +70,37 @@ class App extends Component {
     render() {
         let {items} = this.props;
         let {updateFunc, delFunc, item2UrlAndPic} = this.state;
-        let {delAll, triggerWebsite} = this;
+        let {delAll, readAll, triggerWebsite} = this;
         let viewData = filterData(items, this.state.isLike);
         viewData.sort((a, b) => a.price - b.price);
 
         let data = displaydData(viewData);
         return (
             <>
-                <Row><Col offset={20} span={3}>
-                    <Affix offsetTop={10} style={{position: "absolute"}}>
-                        <Button type="danger" size="large" block onClick={() => delAll(viewData)}>删除所有显示的数据
-                        </Button>
-                    </Affix>
-                </Col></Row>
+                {
+                    this.state.isLike ? (
+                        <Affix offsetTop={10} style={{position: "absolute", left: "10vw"}}>
+                            <Button type="primary" size="large" onClick={() => readAll(viewData)}>已读所有显示的数据</Button>
+                        </Affix>
+                    ) : null
+                }
+                <Affix offsetTop={10} style={{position: "absolute", right: "2vw"}}>
+                    <Button type="danger" size="large" onClick={() => delAll(viewData)}>删除所有显示的数据</Button>
+                </Affix>
                 <Header triggerWebsite={triggerWebsite} changeIsLike={() => this.setState({isLike: !this.state.isLike})}
                         items={items} viewCount={viewData.length}/>
                 {data.map((line, index) => (
                     <Row gutter={[20, 20]} key={index}>
                         {line.map(e => (
                             <Col span={4} key={e.pid}>
-                                    <ProductItem delFunc={delFunc} updateFunc={updateFunc} item={e} item2UrlAndPic={item2UrlAndPic}/>
+                                <ProductItem delFunc={delFunc} updateFunc={updateFunc} item={e}
+                                             item2UrlAndPic={item2UrlAndPic}/>
                             </Col>
                         ))}
                     </Row>
                 ))}
-            </>);
+            </>
+        );
     }
 }
 
