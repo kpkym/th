@@ -49,7 +49,7 @@ class ProductItem extends Component {
             <Statistic title="价格" value={outOfStockPrice2Text(item.priceTimes[ptLength - 1].price)}
                        suffix={ptLength > 1 ?
                            <span
-                               style={{textDecorationLine: item.isChange ? "line-through" : ""}}>{outOfStockPrice2Text(item.priceTimes[ptLength - 2].price)}</span>
+                               style={{textDecorationLine: "line-through"}}>{outOfStockPrice2Text(item.priceTimes[ptLength - 2].price)}</span>
                            : ""}
             />
         );

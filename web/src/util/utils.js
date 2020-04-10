@@ -43,3 +43,7 @@ export function chooseItem2UrlAndPic(website) {
     }
     return null;
 }
+
+export function getViewData(items, isLike) {
+    return filterData(items, isLike).sort((a, b) => a.price - b.price);
+}

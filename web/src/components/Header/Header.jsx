@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {Button, Checkbox, Descriptions, message, PageHeader, Statistic, Radio, Switch} from 'antd';
+import {Button, Descriptions, message, PageHeader, Radio, Statistic, Switch} from 'antd';
 import {crawlerMercari, crawlerSurugaya} from 'api/index'
 
 class Header extends Component {
@@ -10,6 +10,8 @@ class Header extends Component {
         items: PropTypes.array.isRequired,
         changeIsLike: PropTypes.func.isRequired,
         triggerWebsite: PropTypes.func.isRequired,
+        website: PropTypes.string,
+        isLike: PropTypes.bool
     };
 
     crawler = (func) => func().then(() => {
@@ -17,16 +19,16 @@ class Header extends Component {
     });
 
     render() {
-        let {items, viewCount, changeIsLike, triggerWebsite} = this.props;
+        let {items, viewCount, changeIsLike, triggerWebsite, website, isLike} = this.props;
         let likedCount = items.reduce((a, b) => a + b.isLike, 0);
         return (
             <PageHeader title="吃土中……">
                 <Descriptions size="small" column={7}>
                     <Descriptions.Item>
-                        <Switch onChange={changeIsLike}/>我感兴趣的<br/>
+                        <Switch checked={isLike} onChange={changeIsLike}/>我感兴趣的<br/>
                     </Descriptions.Item>
                     <Descriptions.Item>
-                        <Radio.Group defaultValue="mercari" buttonStyle="solid"
+                        <Radio.Group value={website ? website : "mercari"} buttonStyle="solid"
                                      onChange={e => triggerWebsite(e.target.value)}>
                             <Radio.Button value="mercari">Mercari</Radio.Button>
                             <Radio.Button value="surugaya">Surugaya</Radio.Button>
