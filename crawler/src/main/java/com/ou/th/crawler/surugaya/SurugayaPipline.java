@@ -41,7 +41,7 @@ public class SurugayaPipline implements Pipeline {
         SurugayaModel older = surugayaService.getById(id).orElse(new SurugayaModel());
         if (older.getId() == null) {
             initSave(newer, id);
-        } else if (!older.getPrice().equals(newer.getPrice())) {
+        } else if (!older.getIsDontCrawler() && !older.getPrice().equals(newer.getPrice())) {
             CommonPipline.needUpdate(older, newer);
             older.setIsChange(true);
             older.setIsDel(false);

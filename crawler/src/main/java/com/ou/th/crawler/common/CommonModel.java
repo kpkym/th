@@ -21,6 +21,8 @@ public class CommonModel {
 
     protected boolean isChange = false;
 
+    protected boolean isDontCrawler = false;
+
     protected List<PriceTime> priceTimes = new ArrayList<>();
 
     @NoArgsConstructor

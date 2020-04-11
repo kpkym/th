@@ -29,7 +29,7 @@ public class MercariCrawler {
     @Autowired
     KpkConfig kpkConfig;
 
-    @Scheduled(fixedDelay = 30 * 60 * 1000)
+    @Scheduled(cron = "7 6,39 * * * *")
     public void start() {
         Spider spider = Spider.create(pageProcessor);
 
