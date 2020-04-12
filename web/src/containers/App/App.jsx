@@ -75,28 +75,33 @@ class App extends Component {
         this.props.initMercariAction().then(() => {
             window.addEventListener("keyup", e => {
                 switch (e.key) {
-                    case 'q':
+                    case 'a':
+                    case 'ArrowLeft':
                         this.triggerWebsite("mercari");
                         break;
-                    case 'e':
+                    case 'd':
+                    case 'ArrowRight':
                         this.triggerWebsite("surugaya");
                         break;
                     case 'w':
+                    case 'ArrowUp':
                         this.changeIsLike();
                         break;
-                    case 'd':
+                    case 's':
+                    case 'ArrowDown':
+                        if (this.state.isLike) {
+                            this.readAll();
+                        }
+                        break;
+                    case 'x':
                         let read2DelAll = window.localStorage.getItem("read2DelAll");
                         if (read2DelAll) {
                             this.delAll();
+                            window.localStorage.removeItem("read2DelAll");
                         } else {
                             window.localStorage.setItem("read2DelAll", "true");
-                            message.warning("是否确认删除所有？", 0.3);
-                            window.setTimeout(() => window.localStorage.removeItem("read2DelAll"), 300);
-                        }
-                        break;
-                    case 'a':
-                        if (this.state.isLike) {
-                            this.readAll();
+                            message.warning("是否确认删除所有？", 1);
+                            window.setTimeout(() => window.localStorage.removeItem("read2DelAll"), 1000);
                         }
                         break;
                     default:

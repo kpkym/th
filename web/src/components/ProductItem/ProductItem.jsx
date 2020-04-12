@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Card, Drawer, Statistic} from "antd";
-import {DeleteOutlined, HeartTwoTone, HistoryOutlined} from "@ant-design/icons";
+import {Button, Card, Drawer, Popconfirm, Statistic} from "antd";
+import {CloseOutlined, DeleteOutlined, HeartTwoTone, HistoryOutlined} from "@ant-design/icons";
 import PriceHistoryChart from "components/PriceHistoryChart/PriceHistoryChart"
 import {outOfStockPrice} from 'util/utils'
 
@@ -21,15 +21,22 @@ class ProductItem extends Component {
         visible: false
     };
 
-    triggerLiked = (item) => {
-        let {updateFunc} = this.props;
+    triggerLiked = () => {
+        let {updateFunc, item} = this.props;
         updateFunc(item, e => {
             e.isLike = !e.isLike;
             return e});
     };
 
-    del = (item) => {
-        this.props.delFunc(item.id);
+    del = () => {
+        this.props.delFunc(this.props.item.id);
+    };
+
+    dontCrawler = () => {
+        let {updateFunc, item} = this.props;
+        updateFunc(item, e => {
+            e.isDontCrawler = true;
+            return e}).then(this.del());
     };
 
     showDrawer = () => {
@@ -40,7 +47,7 @@ class ProductItem extends Component {
 
     render() {
         let {item, item2UrlAndPic} = this.props;
-        let {triggerLiked, del, showDrawer} = this;
+        let {triggerLiked, del, showDrawer, dontCrawler} = this;
         let {priceTimes: chartData} = item;
 
         let ptLength = item.priceTimes.length;
@@ -64,10 +71,16 @@ class ProductItem extends Component {
                     <img style={{height: "100px", objectFit: 'scale-down'}}
                          src={item2UrlAndPic(item).picture}/></a>}
                 actions={[
-                    <Button type="link" onClick={() => triggerLiked(item)}>{item.isLike ?
+                    <Button type="link" onClick={triggerLiked}>{item.isLike ?
                         <HeartTwoTone twoToneColor="#eb2f96"/>
                         : <HeartTwoTone twoToneColor="#ccc"/>}</Button>,
-                    <Button type="link" onClick={() => del(item)}><DeleteOutlined/></Button>,
+                    <Button type="link" onClick={del}><DeleteOutlined/></Button>,
+                    <Popconfirm
+                        title="是否不再抓取当前内容?"
+                        onConfirm={dontCrawler}
+                        okText="确认"
+                        cancelText="取消"
+                    ><Button type="link"><CloseOutlined /></Button></Popconfirm>,
                     <Button type="link" onClick={showDrawer}>
                         <HistoryOutlined/>
                     </Button>,
@@ -75,8 +88,7 @@ class ProductItem extends Component {
                        target="_blank">駿河屋</a>
                 ]}
             >
-                <Card.Meta title={item.title} description={price}/>
-
+                <Card.Meta description={price}/>
                 <Drawer
                     placement="bottom"
                     closable={false}
