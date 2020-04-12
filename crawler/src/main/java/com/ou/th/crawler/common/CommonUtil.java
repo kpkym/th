@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author kpkym
@@ -18,11 +19,11 @@ public class CommonUtil {
     public static String getParamValue(String url, String param) {
         String normalize = URLUtil.normalize(url);
         normalize = url.substring(url.indexOf("?") + 1);
-        String[] split = normalize.split("[&=]");
+        String[] split = normalize.split("[&]");
         List<String> strings = new ArrayList<>(Arrays.asList(split));
 
-        int p = strings.lastIndexOf(param);
-        return p >= 0 ? strings.get(p + 1) : null;
+        return strings.stream().filter(e -> e.startsWith(param)).findFirst()
+                .map(value -> value.substring(param.length() + 1)).orElse(null);
     }
 
 

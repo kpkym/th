@@ -23,7 +23,7 @@ public class MySurugayaHashSetDuplicateRemover implements DuplicateRemover {
     protected String getKey(Request request) {
         String url = request.getUrl();
         if (url.contains("/search")) {
-            String keyword = CommonUtil.getParamValue(url, "brand");
+            String keyword = CommonUtil.getParamValue(url, "restrict[]");
             String page = CommonUtil.getParamValue(url, "page");
             page = page == null ? "1" : page;
 
