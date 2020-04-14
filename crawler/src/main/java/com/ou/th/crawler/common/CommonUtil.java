@@ -9,21 +9,23 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author kpkym
  * Date: 2020-03-31 17:47
  */
 public class CommonUtil {
-    public static String getParamValue(String url, String param) {
+    public static String getParamUniqueValue(String url, String param) {
         String normalize = URLUtil.normalize(url);
         normalize = url.substring(url.indexOf("?") + 1);
         String[] split = normalize.split("[&]");
         List<String> strings = new ArrayList<>(Arrays.asList(split));
 
-        return strings.stream().filter(e -> e.startsWith(param)).findFirst()
-                .map(value -> value.substring(param.length() + 1)).orElse(null);
+        return strings.stream().filter(e -> e.startsWith(param))
+                .sorted(String::compareTo)
+                .map(value -> value.substring(param.length() + 1))
+                .collect(Collectors.joining(","));
     }
 
 

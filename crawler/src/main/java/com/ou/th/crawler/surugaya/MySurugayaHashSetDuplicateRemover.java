@@ -1,6 +1,7 @@
 package com.ou.th.crawler.surugaya;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
+import cn.hutool.core.util.StrUtil;
 import com.ou.th.crawler.common.CommonUtil;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Task;
@@ -23,9 +24,8 @@ public class MySurugayaHashSetDuplicateRemover implements DuplicateRemover {
     protected String getKey(Request request) {
         String url = request.getUrl();
         if (url.contains("/search")) {
-            String keyword = CommonUtil.getParamValue(url, "restrict[]");
-            String page = CommonUtil.getParamValue(url, "page");
-            page = page == null ? "1" : page;
+            String keyword = CommonUtil.getParamUniqueValue(url, "restrict[]");
+            String page = StrUtil.emptyToDefault(CommonUtil.getParamUniqueValue(url, "page"), "1");
 
             return keyword + ":" + page;
         } else if (url.contains("/product/detail")) {
