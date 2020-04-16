@@ -1,6 +1,7 @@
 package com.ou.th.crawler;
 
 import com.ou.th.config.KpkConfig;
+import com.ou.th.crawler.log.CrawlerLogService;
 import com.ou.th.crawler.surugaya.MySurugayaHashSetDuplicateRemover;
 import com.ou.th.crawler.surugaya.SurugayaPageProcessor;
 import com.ou.th.crawler.surugaya.SurugayaPipline;
@@ -29,6 +30,9 @@ public class SurugayaScrawler {
     @Autowired
     KpkConfig kpkConfig;
 
+    @Autowired
+    CrawlerLogService logService;
+
     @Scheduled(cron = "7 6,39 * * * *")
     public void start() {
         Spider spider = Spider.create(pageProcessor);
@@ -42,5 +46,7 @@ public class SurugayaScrawler {
         spider.addPipeline(pipeline);
         spider.thread(20);
         spider.start();
+
+        logService.logStartd("骏河屋");
     }
 }

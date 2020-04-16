@@ -42,6 +42,9 @@ public class MercariPipline implements Pipeline {
         if (older.getId() == null) {
             initSave(newer, id);
         } else if (!older.getIsDontCrawler() && !older.getPrice().equals(newer.getPrice())) {
+            if (older.getIsDontCrawler()) {
+                return;
+            }
             CommonPipline.needUpdate(older, newer);
             older.setIsChange(true);
             older.setIsDel(false);

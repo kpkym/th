@@ -2,6 +2,7 @@ package com.ou.th.crawler;
 
 import com.ou.th.config.KpkConfig;
 import com.ou.th.crawler.common.config.MyHttpClientDownloader;
+import com.ou.th.crawler.log.CrawlerLogService;
 import com.ou.th.crawler.mercari.MercariPageProcessor;
 import com.ou.th.crawler.mercari.MercariPipline;
 import com.ou.th.crawler.mercari.MyMercariHashSetDuplicateRemover;
@@ -29,6 +30,9 @@ public class MercariCrawler {
     @Autowired
     KpkConfig kpkConfig;
 
+    @Autowired
+    CrawlerLogService logService;
+
     @Scheduled(cron = "2 23,59 * * * *")
     public void start() {
         Spider spider = Spider.create(pageProcessor);
@@ -45,5 +49,7 @@ public class MercariCrawler {
         spider.addPipeline(pipeline);
         spider.thread(20);
         spider.start();
+
+        logService.logStartd("煤炉");
     }
 }

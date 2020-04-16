@@ -29,21 +29,30 @@ public class SurugayaPipline implements Pipeline {
         if (resultItems.get("arr") != null) {
             List<SurugayaModel> surugayaModels = resultItems.get("arr");
             for (SurugayaModel surugayaModel : surugayaModels) {
-                save(surugayaModel);
+                save(surugayaModel, resultItems);
             }
         } else {
-            save(resultItems.get("obj"));
+            save(resultItems.get("obj"), resultItems);
         }
     }
 
-    private void save(SurugayaModel newer) {
+    private boolean hasPriceTag(ResultItems resultItems) {
+        return resultItems.getRequest().getUrl().contains("price");
+    }
+
+    private void save(SurugayaModel newer, ResultItems resultItems) {
         String id = SurugayaUtil.getIdFrom(newer.getUrl());
         SurugayaModel older = surugayaService.getById(id).orElse(new SurugayaModel());
         if (older.getId() == null) {
             initSave(newer, id);
-        } else if (!older.getIsDontCrawler() && !older.getPrice().equals(newer.getPrice())) {
+        } else if (!older.getPrice().equals(newer.getPrice())) {
+            // 有价格标签跟标记不抓取则不抓取(防止点错)
+            if (hasPriceTag(resultItems) && older.getIsDontCrawler()) {
+                return;
+            }
             CommonPipline.needUpdate(older, newer);
             older.setIsChange(true);
+            older.setIsDontCrawler(false);
             older.setIsDel(false);
             older.getPriceTimes().add(
                     SurugayaModel.PriceTime.builder()
