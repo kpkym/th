@@ -93,9 +93,17 @@ class App extends Component {
                             this.readAll();
                         }
                         break;
+                    case 'z':
+                        if (window.confirm("是否确认不再抓取所有？")) {
+                            this.state.updateFunc(getViewData(this.props.items, this.state.isLike), e => {
+                                e.isDontCrawler = true;
+                                return e;
+                            }).then(() => this.delAll());
+                            window.localStorage.removeItem("xx");
+                        }
+                        break;
                     case 'x':
-                        let read2DelAll = window.localStorage.getItem("read2DelAll");
-                        if (read2DelAll) {
+                        if (window.localStorage.getItem("read2DelAll")) {
                             this.delAll();
                             window.localStorage.removeItem("read2DelAll");
                         } else {
