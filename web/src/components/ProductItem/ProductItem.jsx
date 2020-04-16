@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Card, Drawer, Popconfirm, Statistic} from "antd";
+import {Button, Card, Drawer, Statistic} from "antd";
 import {CloseOutlined, DeleteOutlined, HeartTwoTone, HistoryOutlined} from "@ant-design/icons";
 import PriceHistoryChart from "components/PriceHistoryChart/PriceHistoryChart"
 import {outOfStockPrice} from 'util/utils'
@@ -25,7 +25,8 @@ class ProductItem extends Component {
         let {updateFunc, item} = this.props;
         updateFunc(item, e => {
             e.isLike = !e.isLike;
-            return e});
+            return e
+        });
     };
 
     del = () => {
@@ -36,7 +37,8 @@ class ProductItem extends Component {
         let {updateFunc, item} = this.props;
         updateFunc(item, e => {
             e.isDontCrawler = true;
-            return e}).then(this.del());
+            return e
+        }).then(() => this.del());
     };
 
     showDrawer = () => {
@@ -75,12 +77,7 @@ class ProductItem extends Component {
                         <HeartTwoTone twoToneColor="#eb2f96"/>
                         : <HeartTwoTone twoToneColor="#ccc"/>}</Button>,
                     <Button type="link" onClick={del}><DeleteOutlined/></Button>,
-                    <Popconfirm
-                        title="是否不再抓取当前内容?"
-                        onConfirm={dontCrawler}
-                        okText="确认"
-                        cancelText="取消"
-                    ><Button type="link"><CloseOutlined /></Button></Popconfirm>,
+                    <Button type="link" onClick={dontCrawler}><CloseOutlined /></Button>,
                     <Button type="link" onClick={showDrawer}>
                         <HistoryOutlined/>
                     </Button>,
