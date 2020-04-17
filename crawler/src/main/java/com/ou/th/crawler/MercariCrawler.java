@@ -1,7 +1,6 @@
 package com.ou.th.crawler;
 
 import com.ou.th.config.KpkConfig;
-import com.ou.th.crawler.common.config.MyHttpClientDownloader;
 import com.ou.th.crawler.log.CrawlerLogService;
 import com.ou.th.crawler.mercari.MercariPageProcessor;
 import com.ou.th.crawler.mercari.MercariPipline;
@@ -11,8 +10,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
-import us.codecraft.webmagic.proxy.Proxy;
-import us.codecraft.webmagic.proxy.SimpleProxyProvider;
 import us.codecraft.webmagic.scheduler.QueueScheduler;
 
 /**
@@ -28,6 +25,9 @@ public class MercariCrawler {
     MercariPipline pipeline;
 
     @Autowired
+    HttpClientDownloader httpClientDownloader;
+
+    @Autowired
     KpkConfig kpkConfig;
 
     @Autowired
@@ -36,11 +36,6 @@ public class MercariCrawler {
     @Scheduled(cron = "2 23,59 * * * *")
     public void start() {
         Spider spider = Spider.create(pageProcessor);
-
-        HttpClientDownloader httpClientDownloader = new MyHttpClientDownloader();
-        httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(
-                new Proxy(kpkConfig.getProxy().getHost(), kpkConfig.getProxy().getPort())));
-
         spider = spider.addUrl(kpkConfig.getMercariUrls().toArray(new String[0]));
         spider.setScheduler(new QueueScheduler()
                 .setDuplicateRemover(new MyMercariHashSetDuplicateRemover())
