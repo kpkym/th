@@ -16,7 +16,6 @@ import org.springframework.data.annotation.Id;
 @Data
 public class CrawlerLogModel {
     @Id
-    private String id;
-    private String site;
     private Long time;
+    private String site;
 }

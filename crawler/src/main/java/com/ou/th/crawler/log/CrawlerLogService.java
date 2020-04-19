@@ -1,10 +1,13 @@
 package com.ou.th.crawler.log;
 
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Streams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author kpkym
@@ -25,4 +28,7 @@ public class CrawlerLogService {
         );
     }
 
+    public List<CrawlerLogModel> list() {
+        return Streams.stream(logRepo.findAll()).collect(Collectors.toList());
+    }
 }
