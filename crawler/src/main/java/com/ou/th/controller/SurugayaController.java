@@ -1,5 +1,6 @@
 package com.ou.th.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.ou.th.crawler.SurugayaScrawler;
 import com.ou.th.crawler.surugaya.SurugayaModel;
 import com.ou.th.crawler.surugaya.SurugayaService;
@@ -29,8 +30,8 @@ public class SurugayaController {
     }
 
     @GetMapping("list")
-    public Msg list() {
-        return Msg.success(surugayaService.list());
+    public Msg list(String keyword) {
+        return Msg.success(StrUtil.isEmpty(keyword) ? surugayaService.list() : surugayaService.list(keyword));
     }
 
     @PutMapping("")

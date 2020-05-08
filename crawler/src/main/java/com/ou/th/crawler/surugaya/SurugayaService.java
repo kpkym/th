@@ -29,6 +29,12 @@ public class SurugayaService {
         return surugayaModels;
     }
 
+    public List<SurugayaModel> list(String keyword) {
+        List<SurugayaModel> surugayaModels = surugayaRepo.findAllByIdOrTitleContainsIgnoreCase(keyword, keyword);
+        log.info("获取列表数据总数(关键字[" + keyword + "])：" + surugayaModels.size());
+        return surugayaModels;
+    }
+
     public void save(SurugayaModel surugayaModel) {
         surugayaRepo.save(surugayaModel);
     }
@@ -39,8 +45,14 @@ public class SurugayaService {
 
     public void del(List<String> ids) {
         List<SurugayaModel> surugayaModels = StreamSupport.stream(surugayaRepo.findAllById(ids).spliterator(), false)
-                .peek(e -> e.setIsDel(true))
+                .peek(e -> {
+                    e.setIsDel(true);
+                    e.setIsChange(false);
+                    e.setIsLike(false);
+                })
                 .collect(Collectors.toList());
         save(surugayaModels);
     }
+
+
 }

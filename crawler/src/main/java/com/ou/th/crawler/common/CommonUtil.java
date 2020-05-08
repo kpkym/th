@@ -53,7 +53,7 @@ public class CommonUtil {
                 continue;
             }
             String xpath = isList ? myExtractBy.list() : myExtractBy.detail();
-            Object value = new Html(item).xpath(xpath).all().toString();
+            Object value = new Html(item).xpath(xpath).get();
             if (declaredField.getType().isAssignableFrom(BigDecimal.class)) {
                 value = CommonUtil.StrToBigdecimal((String) value);
             }
