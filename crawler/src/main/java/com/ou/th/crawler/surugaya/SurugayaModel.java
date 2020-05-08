@@ -30,7 +30,7 @@ public class SurugayaModel extends CommonModel {
     private String picturesOriginal;
 
     @NeedUpdate
-    @MyExtractBy(list = "//p[@class='price']/text()|//span[@class='text-red']/strong/text()", detail = "//table[@class='table_grade_list']//span/text()")
+    @MyExtractBy(list = "//p[@class='price']/text()|//span[@class='text-red']/strong/text()", detail = "//table[@class='table_grade_list']//span[contains(@class, 'text-red')]/text()")
     private BigDecimal price;
 
     @MyExtractBy(list = "//p[@class='title']/a/@href", detail = "//input[@type='hidden' and @name='url']/@value")
