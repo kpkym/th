@@ -3,25 +3,37 @@ package com.ou.th.crawler.surugaya;
 import com.ou.th.crawler.common.CommonPipline;
 import com.ou.th.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author kpkym
  * Date: 2020-04-01 15:06
  */
 @Component
-public class SurugayaPipline implements Pipeline {
+public class SurugayaPipline implements Pipeline, Closeable {
     @Autowired
     SurugayaService surugayaService;
 
     @Autowired
     FastdfsUtil fastdfsUtil;
+
+    @Autowired
+    @Qualifier("asyncSurugayaArr")
+    CopyOnWriteArrayList<SurugayaModel> asyncSurugayaArr;
+
+    Lock lock = new ReentrantLock();
 
 
     @Override
@@ -60,7 +72,18 @@ public class SurugayaPipline implements Pipeline {
                             .price(older.getPrice())
                             .build()
             );
-            surugayaService.save(older);
+            // 如果是指定详情页面就删除队列中的数据，然后再添加
+            if (resultItems.getRequest().getUrl().contains("product/detail")) {
+                try {
+                    lock.lock();
+                    asyncSurugayaArr.remove(older);
+                    asyncSurugayaArr.addIfAbsent(older);
+                }finally {
+                    lock.unlock();
+                }
+            } else {
+                asyncSurugayaArr.addIfAbsent(older);
+            }
         }
     }
 
@@ -74,6 +97,12 @@ public class SurugayaPipline implements Pipeline {
                         .price(mercariModel.getPrice())
                         .build()
         );
-        surugayaService.save(mercariModel);
+        asyncSurugayaArr.addIfAbsent(mercariModel);
+    }
+
+    @Override
+    public void close() throws IOException {
+        surugayaService.save(asyncSurugayaArr);
+        asyncSurugayaArr.clear();
     }
 }

@@ -24,7 +24,7 @@ public class MySurugayaHashSetDuplicateRemover implements DuplicateRemover {
     protected String getKey(Request request) {
         String url = request.getUrl();
         if (url.contains("/search")) {
-            String keyword = CommonUtil.getParamUniqueValue(url, "restrict[]");
+            String keyword = CommonUtil.getParamUniqueValue(url, "restrict[]") + CommonUtil.getParamUniqueValue(url, "search_word");
             String page = StrUtil.emptyToDefault(CommonUtil.getParamUniqueValue(url, "page"), "1");
 
             return keyword + ":" + page;

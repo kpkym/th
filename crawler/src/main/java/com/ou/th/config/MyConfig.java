@@ -1,14 +1,25 @@
 package com.ou.th.config;
 
 import com.ou.th.crawler.common.config.MyHttpClientDownloader;
+import com.ou.th.crawler.mercari.MercariPageProcessor;
+import com.ou.th.crawler.mercari.MercariPipline;
+import com.ou.th.crawler.mercari.MyMercariHashSetDuplicateRemover;
+import com.ou.th.crawler.surugaya.MySurugayaHashSetDuplicateRemover;
+import com.ou.th.crawler.surugaya.SurugayaModel;
+import com.ou.th.crawler.surugaya.SurugayaPageProcessor;
+import com.ou.th.crawler.surugaya.SurugayaPipline;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.proxy.Proxy;
 import us.codecraft.webmagic.proxy.SimpleProxyProvider;
+import us.codecraft.webmagic.scheduler.QueueScheduler;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author kpkym
@@ -46,5 +57,44 @@ public class MyConfig {
                 new Proxy(kpkConfig.getProxy().getHost(), kpkConfig.getProxy().getPort())));
 
         return httpClientDownloader;
+    }
+
+    @Bean
+    public Spider mercariSpider(MercariPageProcessor pageProcessor,
+                              MercariPipline pipeline,
+                              HttpClientDownloader httpClientDownloader,
+                              KpkConfig kpkConfig) {
+        Spider spider = Spider.create(pageProcessor);
+        spider = spider.addUrl(kpkConfig.getMercariUrls().toArray(new String[0]));
+        spider.setScheduler(new QueueScheduler()
+                .setDuplicateRemover(new MyMercariHashSetDuplicateRemover())
+        );
+
+        spider.setDownloader(httpClientDownloader);
+        spider.addPipeline(pipeline);
+        spider.thread(20);
+        return spider;
+    }
+
+    @Bean
+    public Spider surugayaSpider(SurugayaPageProcessor pageProcessor,
+                                 SurugayaPipline pipeline,
+                                 HttpClientDownloader httpClientDownloader,
+                                 KpkConfig kpkConfig) {
+        Spider spider = Spider.create(pageProcessor);
+        spider = spider.addUrl(kpkConfig.getSurugayaUrls().toArray(new String[0]));
+        spider.setScheduler(new QueueScheduler()
+                .setDuplicateRemover(new MySurugayaHashSetDuplicateRemover())
+        );
+
+        spider.setDownloader(httpClientDownloader);
+        spider.addPipeline(pipeline);
+        spider.thread(20);
+        return spider;
+    }
+
+    @Bean
+    public CopyOnWriteArrayList<SurugayaModel> asyncSurugayaArr() {
+        return new CopyOnWriteArrayList<>();
     }
 }

@@ -3,10 +3,7 @@ package com.ou.th.crawler.surugaya;
 import com.ou.th.crawler.common.CommonModel;
 import com.ou.th.crawler.common.anatation.MyExtractBy;
 import com.ou.th.crawler.common.anatation.NeedUpdate;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
@@ -18,9 +15,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
+@Data()
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class SurugayaModel extends CommonModel {
     @Id
+    @EqualsAndHashCode.Include
     private String id;
 
     @MyExtractBy(list = "//p[@class='title']/a/text()", detail = "//h2[@id='item_title']/text()")
@@ -36,4 +35,6 @@ public class SurugayaModel extends CommonModel {
 
     @MyExtractBy(list = "//p[@class='title']/a/@href", detail = "//input[@type='hidden' and @name='url']/@value")
     private String url;
+
+
 }
