@@ -22,7 +22,11 @@ public class SurugayaModel extends CommonModel {
     @EqualsAndHashCode.Include
     private String id;
 
-    @MyExtractBy(list = "//p[@class='title']/a/text()", detail = "//h2[@id='item_title']/text()")
+    @MyExtractBy(list = "(?<=<p.{0,1000}class=.title.>.{0,1000}<a.{0,1000}>)[\\s\\S]*?(?=<\\/)",
+            detail = "(?<=<script type=\"application\\/ld\\+json\">[\\s\\S]{0,500}\"name\".{0,20}?\").+?(?=\",)",
+            xpathDetail = "//table[@class='table_grade_list']//span/text()",
+            type= MyExtractBy.Type.Regex)
+    @NeedUpdate
     private String title;
 
     private String picture;

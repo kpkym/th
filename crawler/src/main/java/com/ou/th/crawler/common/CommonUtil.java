@@ -1,6 +1,8 @@
 package com.ou.th.crawler.common;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.HtmlUtil;
 import com.ou.th.crawler.common.anatation.MyExtractBy;
 import us.codecraft.webmagic.selector.Html;
 
@@ -47,16 +49,28 @@ public class CommonUtil {
 
     public static<T> T handleAnotation(String item, T t, boolean isList) {
         Field[] declaredFields = t.getClass().getDeclaredFields();
+        String rule = "";
+        Object value = null;
         for (Field declaredField : declaredFields) {
             MyExtractBy myExtractBy = declaredField.getAnnotation(MyExtractBy.class);
             if (myExtractBy == null) {
                 continue;
             }
-            String xpath = isList ? myExtractBy.list() : myExtractBy.detail();
-            Object value = new Html(item).xpath(xpath).get();
+            rule = isList ? myExtractBy.list() : myExtractBy.detail();
+            if (MyExtractBy.Type.XPath.equals(myExtractBy.type())) {
+                value = new Html(item).xpath(rule).get();
+            }else if (MyExtractBy.Type.Regex.equals(myExtractBy.type())) {
+                if (StrUtil.isNotEmpty(myExtractBy.xpathDetail())) {
+                    value = new Html(item).xpath(myExtractBy.xpathDetail()).get();
+                }
+
+                value = ((String)value).length() > 2 ? value : HtmlUtil.unescape(new Html(item).regex(rule).get())
+                        .replaceAll("(?<=<)\\s+|\\s+(?=>)", "").trim();
+            }
             if (declaredField.getType().isAssignableFrom(BigDecimal.class)) {
                 value = CommonUtil.StrToBigdecimal((String) value);
             }
+
             declaredField.setAccessible(true);
             try {
                 declaredField.set(t, value);

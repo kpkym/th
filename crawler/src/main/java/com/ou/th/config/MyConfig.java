@@ -89,7 +89,7 @@ public class MyConfig {
 
         spider.setDownloader(httpClientDownloader);
         spider.addPipeline(pipeline);
-        spider.thread(20);
+        spider.thread(40);
         return spider;
     }
 

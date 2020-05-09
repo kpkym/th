@@ -16,6 +16,8 @@ public @interface MyExtractBy {
 
     String detail();
 
+    String xpathDetail() default "";
+
     enum Type {XPath, Regex, Css, JsonPath}
 
     Type type() default Type.XPath;
