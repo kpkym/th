@@ -50,7 +50,7 @@ public class CommonUtil {
     public static<T> T handleAnotation(String item, T t, boolean isList) {
         Field[] declaredFields = t.getClass().getDeclaredFields();
         String rule = "";
-        Object value = null;
+        Object value = "";
         for (Field declaredField : declaredFields) {
             MyExtractBy myExtractBy = declaredField.getAnnotation(MyExtractBy.class);
             if (myExtractBy == null) {
@@ -60,7 +60,7 @@ public class CommonUtil {
             if (MyExtractBy.Type.XPath.equals(myExtractBy.type())) {
                 value = new Html(item).xpath(rule).get();
             }else if (MyExtractBy.Type.Regex.equals(myExtractBy.type())) {
-                if (StrUtil.isNotEmpty(myExtractBy.xpathDetail())) {
+                if (!isList && StrUtil.isNotEmpty(myExtractBy.xpathDetail())) {
                     value = new Html(item).xpath(myExtractBy.xpathDetail()).get();
                 }
 
