@@ -10,21 +10,28 @@ import {
     initMercariAction,
     initSurugayaAction,
     updateMercariAction,
-    updateSurugayaAction
+    updateSurugayaAction,
+    searchSurugayaAction
 } from "redux/actions"
 import {chooseItem2UrlAndPic, displaydData, getViewData} from "util/utils";
 
 class App extends Component {
     static propTypes = {};
 
-    state = {
-        isLike: false,
-        website: "",
-        initFunc: null,
-        updateFunc: null,
-        delFunc: null,
-        item2UrlAndPic: null,
-    };
+    constructor(props){
+        super(props);
+        this.state = {
+            isLike: false,
+            website: "",
+            initFunc: null,
+            updateFunc: null,
+            delFunc: null,
+            item2UrlAndPic: null,
+        };
+
+    }
+
+    
 
     changeIsLike = () => this.setState({isLike: !this.state.isLike});
 
@@ -74,6 +81,9 @@ class App extends Component {
         this.switch2Mercari();
         this.props.initMercariAction().then(() => {
             window.addEventListener("keyup", e => {
+                if (e.target.localName === "input"){
+                    return;
+                }
                 switch (e.key) {
                     case 'a':
                     case 'ArrowLeft':
@@ -120,7 +130,7 @@ class App extends Component {
     }
 
     render() {
-        let {items} = this.props;
+        let {items, searchSurugayaAction} = this.props;
         let {website, isLike, updateFunc, delFunc, item2UrlAndPic} = this.state;
         let {delAll, readAll, triggerWebsite, changeIsLike} = this;
 
@@ -135,10 +145,11 @@ class App extends Component {
                         </Affix>
                     ) : null
                 }
+                
                 <Affix offsetTop={10} style={{position: "absolute", right: "2vw"}}>
                     <Button type="danger" size="large" onClick={delAll}>删除所有显示的数据</Button>
                 </Affix>
-                <Header isLike={isLike} website={website} triggerWebsite={triggerWebsite} changeIsLike={changeIsLike}
+                <Header searchSurugayaAction={searchSurugayaAction} isLike={isLike} website={website} triggerWebsite={triggerWebsite} changeIsLike={changeIsLike}
                         items={items} viewCount={viewData.length}/>
                 {data.map((line, index) => (
                     <Row gutter={[20, 20]} key={index}>
@@ -163,5 +174,6 @@ export default connect(state => (
     initSurugayaAction,
     updateSurugayaAction,
     delMercariAction,
-    delSurugayaAction
+    delSurugayaAction,
+    searchSurugayaAction
 })(App);

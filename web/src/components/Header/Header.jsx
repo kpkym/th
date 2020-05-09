@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {Button, Descriptions, message, PageHeader, Radio, Statistic, Switch} from 'antd';
+import {Button, Descriptions, message, PageHeader, Radio, Statistic, Switch, Input} from 'antd';
 import {crawlerMercari, crawlerSurugaya} from 'api/index'
 
 class Header extends Component {
@@ -11,7 +11,8 @@ class Header extends Component {
         changeIsLike: PropTypes.func.isRequired,
         triggerWebsite: PropTypes.func.isRequired,
         website: PropTypes.string,
-        isLike: PropTypes.bool
+        isLike: PropTypes.bool,
+        searchSurugayaAction: PropTypes.func
     };
 
     crawler = (func) => func().then(() => {
@@ -19,10 +20,17 @@ class Header extends Component {
     });
 
     render() {
-        let {items, viewCount, changeIsLike, triggerWebsite, website, isLike} = this.props;
+        let {items, viewCount, changeIsLike, triggerWebsite, website, isLike, searchSurugayaAction} = this.props;
         let likedCount = items.reduce((a, b) => a + b.isLike, 0);
         return (
-            <PageHeader title="吃土中……">
+            <PageHeader title={<>
+                "吃土中……"  
+                {
+                    website !== "surugaya" ? null : <Input.Search
+                    style={{ width: 400 }}
+                    size="middle" onSearch={value => searchSurugayaAction(value)} enterButton />
+                }
+            </>}>
                 <Descriptions size="small" column={7}>
                     <Descriptions.Item>
                         <Switch checked={isLike} onChange={changeIsLike}/>我感兴趣的<br/>

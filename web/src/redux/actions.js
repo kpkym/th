@@ -3,7 +3,7 @@
 异步action
 同步action
  */
-import {INIT, UPDATE, DELETE} from './action-types'
+import {INIT, UPDATE, DELETE, SEARCH} from './action-types'
 import {getAllMercari, getAllSurugaya, updateMercari, updateSurugaya, delMercari, delSurugaya} from "api/index"
 
 function convert2Arr(data) {
@@ -54,4 +54,13 @@ export function delSurugayaAction(data) {
     return dispatch => {
         return delSurugaya(ids).then(() => dispatch({type: DELETE, data:ids}));
     };
+}
+
+
+export function searchSurugayaAction(keyword) {
+    return dispatch => {
+        return getAllSurugaya(keyword).then(e => {
+            dispatch({type: SEARCH, data: e.data.data})
+        });
+    }
 }
