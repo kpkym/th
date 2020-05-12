@@ -22,6 +22,8 @@ public class MercariModel extends CommonModel {
     @Id
     private String id;
 
+    private Integer isSold;
+
     @NeedUpdate
     @MyExtractBy(list = "//h3[contains(@class, 'items-box-name')]/text()", detail = "//h1[@class='item-name']/text()")
     private String title;

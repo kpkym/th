@@ -34,6 +34,14 @@ export function delMercariAction(data) {
     };
 }
 
+export function searchMercariAction(keyword) {
+    return dispatch => {
+        return getAllMercari(keyword).then(e => {
+            dispatch({type: SEARCH, data: e.data.data})
+        });
+    }
+}
+
 export function initSurugayaAction() {
     return dispatch => {
         return getAllSurugaya().then(e => {

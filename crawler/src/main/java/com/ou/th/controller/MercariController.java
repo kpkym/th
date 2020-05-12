@@ -1,5 +1,6 @@
 package com.ou.th.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.ou.th.crawler.MercariCrawler;
 import com.ou.th.crawler.mercari.MercariModel;
 import com.ou.th.crawler.mercari.MercariService;
@@ -29,8 +30,8 @@ public class MercariController {
     }
 
     @GetMapping("list")
-    public Msg list() {
-        return Msg.success(mercariService.list());
+    public Msg list(String keyword) {
+        return Msg.success(StrUtil.isEmpty(keyword) ? mercariService.list() : mercariService.list(keyword));
     }
 
     @PutMapping("")

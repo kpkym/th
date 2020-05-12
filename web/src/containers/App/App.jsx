@@ -11,7 +11,8 @@ import {
     initSurugayaAction,
     updateMercariAction,
     updateSurugayaAction,
-    searchSurugayaAction
+    searchSurugayaAction,
+    searchMercariAction
 } from "redux/actions"
 import {chooseItem2UrlAndPic, displaydData, getViewData} from "util/utils";
 
@@ -27,11 +28,10 @@ class App extends Component {
             updateFunc: null,
             delFunc: null,
             item2UrlAndPic: null,
+            searchFunc: null,
         };
 
     }
-
-    
 
     changeIsLike = () => this.setState({isLike: !this.state.isLike});
 
@@ -54,7 +54,8 @@ class App extends Component {
             initFunc: this.props.initMercariAction,
             updateFunc: this.props.updateMercariAction,
             delFunc: this.props.delMercariAction,
-            item2UrlAndPic: chooseItem2UrlAndPic('mercari')
+            item2UrlAndPic: chooseItem2UrlAndPic('mercari'),
+            searchFunc: this.props.searchMercariAction,
         });
     };
 
@@ -64,7 +65,8 @@ class App extends Component {
             initFunc: this.props.initSurugayaAction,
             updateFunc: this.props.updateSurugayaAction,
             delFunc: this.props.delSurugayaAction,
-            item2UrlAndPic: chooseItem2UrlAndPic('surugaya')
+            item2UrlAndPic: chooseItem2UrlAndPic('surugaya'),
+            searchFunc: this.props.searchSurugayaAction,
         });
     };
 
@@ -130,8 +132,8 @@ class App extends Component {
     }
 
     render() {
-        let {items, searchSurugayaAction} = this.props;
-        let {website, isLike, updateFunc, delFunc, item2UrlAndPic} = this.state;
+        let {items} = this.props;
+        let {website, isLike, updateFunc, delFunc, item2UrlAndPic, searchFunc} = this.state;
         let {delAll, readAll, triggerWebsite, changeIsLike} = this;
 
         let viewData = getViewData(items, isLike);
@@ -149,7 +151,7 @@ class App extends Component {
                 <Affix offsetTop={10} style={{position: "absolute", right: "2vw"}}>
                     <Button type="danger" size="large" onClick={delAll}>删除所有显示的数据</Button>
                 </Affix>
-                <Header searchSurugayaAction={searchSurugayaAction} isLike={isLike} website={website} triggerWebsite={triggerWebsite} changeIsLike={changeIsLike}
+                <Header searchFunc={searchFunc} isLike={isLike} website={website} triggerWebsite={triggerWebsite} changeIsLike={changeIsLike}
                         items={items} viewCount={viewData.length}/>
                 {data.map((line, index) => (
                     <Row gutter={[20, 20]} key={index}>
@@ -175,5 +177,6 @@ export default connect(state => (
     updateSurugayaAction,
     delMercariAction,
     delSurugayaAction,
-    searchSurugayaAction
+    searchSurugayaAction,
+    searchMercariAction
 })(App);

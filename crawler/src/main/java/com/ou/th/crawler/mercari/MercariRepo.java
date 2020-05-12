@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface MercariRepo extends PagingAndSortingRepository<MercariModel, String> {
     List<MercariModel> findAllByIsDelFalse();
+    List<MercariModel> findAllByIdOrTitleContainsIgnoreCase(String id, String keyword);
 }
 
 

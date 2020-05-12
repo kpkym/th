@@ -12,7 +12,7 @@ class Header extends Component {
         triggerWebsite: PropTypes.func.isRequired,
         website: PropTypes.string,
         isLike: PropTypes.bool,
-        searchSurugayaAction: PropTypes.func
+        searchFunc: PropTypes.func
     };
 
     crawler = (func) => func().then(() => {
@@ -20,15 +20,13 @@ class Header extends Component {
     });
 
     render() {
-        let {items, viewCount, changeIsLike, triggerWebsite, website, isLike, searchSurugayaAction} = this.props;
+        let {items, viewCount, changeIsLike, triggerWebsite, website, isLike, searchFunc} = this.props;
         let likedCount = items.reduce((a, b) => a + b.isLike, 0);
         return (
             <PageHeader title={<>
                 "吃土中……"  
                 {
-                    website !== "surugaya" ? null : <Input.Search
-                    style={{ width: 400 }}
-                    size="middle" onSearch={value => searchSurugayaAction(value)} enterButton />
+                    <Input.Search style={{ width: 400 }} size="middle" onSearch={value => searchFunc(value)} enterButton />
                 }
             </>}>
                 <Descriptions size="small" column={7}>

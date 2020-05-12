@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Card, Drawer, Statistic} from "antd";
+import {Button, Card, Drawer, Statistic, Tag} from "antd";
 import {CloseOutlined, DeleteOutlined, HeartTwoTone, HistoryOutlined} from "@ant-design/icons";
 import PriceHistoryChart from "components/PriceHistoryChart/PriceHistoryChart"
 import {outOfStockPrice} from 'util/utils'
@@ -67,6 +67,7 @@ class ProductItem extends Component {
                 title={item.title}
                 headStyle={headStyle}
                 hoverable
+                extra={item.isSold === 1 ? <Tag color="orange">S</Tag> : null}
                 cover={<a href={item2UrlAndPic(item).url}
                           style={{height: "100%", width: "100%", textAlign: "center"}}
                           target="_blank">

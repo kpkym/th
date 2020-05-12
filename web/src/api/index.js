@@ -1,6 +1,6 @@
 import ajax from './ajax'
 
-export const getAllMercari = () => ajax('mercari/list');
+export const getAllMercari = (keyword) => ajax('mercari/list?' + (keyword ? `keyword=${keyword}` : ''));
 export const updateMercari = (mercari) => ajax('mercari', mercari, "PUT");
 export const delMercari = (ids) => ajax('mercari', ids, "PATCH");
 export const crawlerMercari = () => ajax('mercari/start');
