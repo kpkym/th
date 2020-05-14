@@ -25,6 +25,8 @@ class ProductItem extends Component {
         let {updateFunc, item} = this.props;
         updateFunc(item, e => {
             e.isLike = !e.isLike;
+            e.isDel = false;
+            e.isDontCrawler = false;
             return e
         });
     };
