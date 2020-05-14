@@ -48,10 +48,6 @@ public class SurugayaPipline implements Pipeline, Closeable {
         }
     }
 
-    private boolean hasPriceTag(ResultItems resultItems) {
-        return resultItems.getRequest().getUrl().contains("price");
-    }
-
     private void save(SurugayaModel newer, ResultItems resultItems) {
         String id = SurugayaUtil.getIdFrom(newer.getUrl());
         SurugayaModel older = surugayaService.getById(id).orElse(new SurugayaModel());
@@ -59,9 +55,6 @@ public class SurugayaPipline implements Pipeline, Closeable {
             initSave(newer, id);
         } else if (!older.getPrice().equals(newer.getPrice())) {
             // 有价格标签跟标记不抓取则不抓取(防止点错)
-            if (hasPriceTag(resultItems) && older.getIsDontCrawler()) {
-                return;
-            }
             CommonPipline.needUpdate(older, newer);
             older.setIsChange(true);
             older.setIsDontCrawler(false);

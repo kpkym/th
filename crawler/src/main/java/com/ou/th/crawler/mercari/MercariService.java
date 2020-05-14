@@ -47,7 +47,7 @@ public class MercariService {
     }
 
     public List<MercariModel> list() {
-        List<MercariModel> mercariModels = mercariRepo.findAllByIsDelFalse();
+        List<MercariModel> mercariModels = mercariRepo.findAllByIsDelFalseAndIsDontCrawlerFalse();
         log.info("获取列表数据总数：" + mercariModels.size());
         return mercariModels;
     }
@@ -74,6 +74,7 @@ public class MercariService {
 
     public List<MercariModel> list(String keyword) {
         if (keyword.startsWith("+")) {
+            keyword = keyword.substring(1);
             Map<String, MercariModel> notSolds = mercariRepo.findAllByIdOrTitleContainsIgnoreCase(keyword, keyword).stream()
                     .filter(e -> e.getIsSold() == null || new Integer(0).equals(e.getIsSold()))
                     .collect(Collectors.toMap(MercariModel::getId, e -> e));

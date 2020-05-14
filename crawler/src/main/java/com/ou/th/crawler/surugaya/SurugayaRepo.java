@@ -9,6 +9,6 @@ import java.util.List;
  * Date: 2020-04-01 17:11
  */
 public interface SurugayaRepo extends PagingAndSortingRepository<SurugayaModel, String> {
-    List<SurugayaModel> findAllByIsDelFalse();
+    List<SurugayaModel> findAllByIsDelFalseAndIsDontCrawlerFalse();
     List<SurugayaModel> findAllByIdOrTitleContainsIgnoreCase(String id, String keyword);
 }
