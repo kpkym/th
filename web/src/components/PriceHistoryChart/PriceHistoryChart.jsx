@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {VictoryChart, VictoryLine, VictoryScatter} from 'victory';
+import {VictoryChart, VictoryLine, VictoryScatter, VictoryZoomContainer} from 'victory';
 import {outOfStockPrice} from 'util/utils'
 
 function getPrice(item, arr) {
@@ -26,7 +26,7 @@ class PriceHistoryChart extends Component {
     render() {
         const {chartData} = this.props;
         return (
-            <VictoryChart width={800} height={150}>
+            <VictoryChart width={800} height={150} domainPadding={{x: [30, 30], y:[5, 5]}} containerComponent={<VictoryZoomContainer/>}>
                 <VictoryLine style={{data: {stroke: "#c43a31"}}}
                     labels={({datum}) => datum.price === outOfStockPrice ? "缺货" : datum.price}
                     data={chartData}
