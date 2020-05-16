@@ -24,7 +24,7 @@ public class SurugayaService {
     }
 
     public List<SurugayaModel> list() {
-        List<SurugayaModel> surugayaModels = surugayaRepo.findAllByIsDelFalseAndIsDontCrawlerFalse();
+        List<SurugayaModel> surugayaModels = surugayaRepo.findAllByIsDelFalse();
         log.info("获取列表数据总数：" + surugayaModels.size());
         return surugayaModels;
     }

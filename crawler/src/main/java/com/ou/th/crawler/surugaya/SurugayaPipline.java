@@ -54,7 +54,6 @@ public class SurugayaPipline implements Pipeline, Closeable {
         if (older.getId() == null) {
             initSave(newer, id);
         } else if (!older.getPrice().equals(newer.getPrice())) {
-            // 有价格标签跟标记不抓取则不抓取(防止点错)
             CommonPipline.needUpdate(older, newer);
             older.setIsChange(true);
             older.setIsDontCrawler(false);
