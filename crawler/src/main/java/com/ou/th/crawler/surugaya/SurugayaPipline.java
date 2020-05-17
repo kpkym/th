@@ -3,7 +3,6 @@ package com.ou.th.crawler.surugaya;
 import com.ou.th.crawler.common.CommonPipline;
 import com.ou.th.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
@@ -30,8 +29,9 @@ public class SurugayaPipline implements Pipeline, Closeable {
     FastdfsUtil fastdfsUtil;
 
     @Autowired
-    @Qualifier("asyncSurugayaArr")
-    CopyOnWriteArrayList<SurugayaModel> asyncSurugayaArr;
+    SurugayaRepo surugayaRepo;
+
+    CopyOnWriteArrayList<SurugayaModel> asyncSurugayaArr = new CopyOnWriteArrayList<>();
 
     Lock lock = new ReentrantLock();
 
@@ -61,6 +61,7 @@ public class SurugayaPipline implements Pipeline, Closeable {
             older.getPriceTimes().add(
                     SurugayaModel.PriceTime.builder()
                             .dateTime(new Date().getTime())
+                            .promotion(older.getPromotion())
                             .price(older.getPrice())
                             .build()
             );

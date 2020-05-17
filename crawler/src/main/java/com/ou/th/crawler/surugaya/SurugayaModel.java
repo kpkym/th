@@ -24,10 +24,15 @@ public class SurugayaModel extends CommonModel {
 
     @MyExtractBy(list = "(?<=<p.{0,1000}class=.title.>.{0,1000}<a.{0,1000}>)[\\s\\S]*?(?=<\\/)",
             detail = "(?<=<script type=\"application\\/ld\\+json\">[\\s\\S]{0,500}\"name\".{0,20}?\").+?(?=\",)",
-            xpathDetail = "//table[@class='table_grade_list']//span/text()",
+            xpathDetail = "//img[@id='imagecaption']/@title",
             type= MyExtractBy.Type.Regex)
     @NeedUpdate
     private String title;
+
+
+    @MyExtractBy(list = "//span[@class='sale_time']/text()", detail = "//p[@class='mgnB5']/strong/text()")
+    @NeedUpdate
+    private String promotion;
 
     private String picture;
 

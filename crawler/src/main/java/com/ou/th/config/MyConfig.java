@@ -1,7 +1,6 @@
 package com.ou.th.config;
 
 import com.ou.th.crawler.common.config.MyHttpClientDownloader;
-import com.ou.th.crawler.surugaya.SurugayaModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -10,8 +9,6 @@ import org.springframework.web.filter.CorsFilter;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.proxy.Proxy;
 import us.codecraft.webmagic.proxy.SimpleProxyProvider;
-
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author kpkym
@@ -51,8 +48,4 @@ public class MyConfig {
         return httpClientDownloader;
     }
 
-    @Bean
-    public CopyOnWriteArrayList<SurugayaModel> asyncSurugayaArr() {
-        return new CopyOnWriteArrayList<>();
-    }
 }

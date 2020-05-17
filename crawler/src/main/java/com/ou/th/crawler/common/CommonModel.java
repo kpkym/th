@@ -32,5 +32,6 @@ public class CommonModel {
     public static class PriceTime{
         private Long dateTime;
         private BigDecimal price;
+        private String promotion;
     }
 }
