@@ -1,5 +1,6 @@
 package com.ou.th.crawler.surugaya;
 
+import cn.hutool.core.collection.CollUtil;
 import com.ou.th.crawler.common.CommonPipline;
 import com.ou.th.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class SurugayaPipline implements Pipeline, Closeable {
         SurugayaModel older = surugayaService.getById(id).orElse(new SurugayaModel());
         if (older.getId() == null) {
             initSave(newer, id);
-        } else if (!older.getPrice().equals(newer.getPrice())) {
+        } else if (!CollUtil.getLast(older.getPriceTimes()).getPrice().equals(newer.getPrice())) {
             CommonPipline.needUpdate(older, newer);
             older.setIsChange(true);
             older.setIsDontCrawler(false);
