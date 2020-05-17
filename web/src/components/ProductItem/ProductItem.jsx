@@ -55,7 +55,7 @@ class ProductItem extends Component {
         let {priceTimes: chartData} = item;
 
         let ptLength = item.priceTimes.length;
-        let headStyle = {backgroundColor: item.isChange ? "lightgreen" : ""};
+        let headStyle = {backgroundColor: item.isChange && ptLength > 1 ? (item.priceTimes[ptLength - 1].price < item.priceTimes[ptLength - 2].price ? "lightgreen" : "lightpink") : ""};
         let price = (
             <Statistic title="价格" value={outOfStockPrice2Text(item.priceTimes[ptLength - 1].price)}
                        suffix={ptLength > 1 ?
