@@ -43,7 +43,7 @@ class PriceHistoryChart extends Component {
                                     return `${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
                                 }}
                                 y={e => getPrice(e, chartData)}
-                                style={{ data: { fill: "#c43a31" } }}
+                                style={{ data: { fill: ({ datum }) => datum.promotion ? "lightgreen" : "#c43a31" }, }}
                 />
             </VictoryChart>
         );
