@@ -27,19 +27,25 @@ public class SurugayaPageProcessor implements PageProcessor {
         // 当前是搜索页
         if (url.contains("/search")) {
             log.info("当前URL为：" + url);
-            List<String> items = page.getHtml().xpath("//div[@class='item']").all();
-            List<SurugayaModel> surugayaModels = new ArrayList<>();
 
-            for (String item : items) {
-                SurugayaModel surugayaModel = CommonUtil.handleAnotation(item, new SurugayaModel(), true);
-                surugayaModel.setPicturesOriginal(
-                        surugayaImgPrefix
-                                + SurugayaUtil.getIdFrom(surugayaModel.getUrl()).toLowerCase()
-                                + surugayaImgSuffix
-                );
-                surugayaModels.add(surugayaModel);
+            if (url.contains("category=5")) {
+                page.addTargetRequests(page.getHtml().xpath("//div[@class='item']//p[@class='title']//a/@href").all());
+                page.setSkip(true);
+            } else {
+                List<String> items = page.getHtml().xpath("//div[@class='item']").all();
+                List<SurugayaModel> surugayaModels = new ArrayList<>();
+
+                for (String item : items) {
+                    SurugayaModel surugayaModel = CommonUtil.handleAnotation(item, new SurugayaModel(), true);
+                    surugayaModel.setPicturesOriginal(
+                            surugayaImgPrefix
+                                    + SurugayaUtil.getIdFrom(surugayaModel.getUrl()).toLowerCase()
+                                    + surugayaImgSuffix
+                    );
+                    surugayaModels.add(surugayaModel);
+                }
+                page.putField("arr", surugayaModels);
             }
-            page.putField("arr", surugayaModels);
             List<String> all = page.getHtml().xpath("//div[@id='pager']//a/@href").all();
             page.addTargetRequests(all);
         } else if (url.contains("/product/detail")) {

@@ -68,6 +68,7 @@ public class SurugayaPipline implements Pipeline, Closeable {
             );
             // 如果是指定详情页面就删除队列中的数据，然后再添加
             if (resultItems.getRequest().getUrl().contains("product/detail")) {
+                surugayaService.save(older);
                 try {
                     lock.lock();
                     asyncSurugayaArr.remove(older);
