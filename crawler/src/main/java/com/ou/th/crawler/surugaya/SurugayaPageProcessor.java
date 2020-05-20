@@ -1,7 +1,9 @@
 package com.ou.th.crawler.surugaya;
 
 import com.ou.th.crawler.common.CommonUtil;
+import com.ou.th.crawler.kpk.SurugayaNotification;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -21,6 +23,9 @@ public class SurugayaPageProcessor implements PageProcessor {
     private String surugayaImgSuffix = ".jpg";
     private Site site = Site.me().setRetryTimes(10).setSleepTime(2300).setTimeOut(100000);
 
+    @Autowired
+    SurugayaNotification surugayaNotification;
+
     @Override
     public void process(Page page) {
         String url = page.getRequest().getUrl();
@@ -28,7 +33,7 @@ public class SurugayaPageProcessor implements PageProcessor {
         if (url.contains("/search")) {
             log.info("当前URL为：" + url);
 
-            if (url.contains("category=5")) {
+            if (surugayaNotification.neetDetail(url)) {
                 page.addTargetRequests(page.getHtml().xpath("//div[@class='item']//p[@class='title']//a/@href").all());
                 page.setSkip(true);
             } else {
