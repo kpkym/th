@@ -33,7 +33,7 @@ public class SurugayaScrawler {
     @Autowired
     CrawlerLogService logService;
 
-    @Scheduled(cron = "7 6,39 * * * *")
+    @Scheduled(cron = "7 6,39 0-1,8-23 * * *")
     public void start() {
         Spider spider = Spider.create(pageProcessor);
         spider = spider.addUrl(kpkConfig.getSurugayaUrls().toArray(new String[0]));

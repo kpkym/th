@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 /**
  * @author kpkym
@@ -36,7 +37,8 @@ public class SurugayaPipline implements Pipeline, Closeable {
     @Autowired
     SurugayaNotification surugayaNotification;
 
-    CopyOnWriteArrayList<SurugayaModel> asyncSurugayaArr = new CopyOnWriteArrayList<>();
+    CopyOnWriteArrayList<SurugayaModel> allSurugayaArr = new CopyOnWriteArrayList<>();
+    CopyOnWriteArrayList<SurugayaModel> detailSurugayaArr = new CopyOnWriteArrayList<>();
 
     Lock lock = new ReentrantLock();
 
@@ -57,7 +59,7 @@ public class SurugayaPipline implements Pipeline, Closeable {
         String id = SurugayaUtil.getIdFrom(newer.getUrl());
         SurugayaModel older = surugayaService.getById(id).orElse(new SurugayaModel());
         if (older.getId() == null) {
-            initSave(newer, id);
+            older = initSave(newer, id);
         } else if (!CollUtil.getLast(older.getPriceTimes()).getPrice().equals(newer.getPrice())) {
             CommonPipline.needUpdate(older, newer);
             older.setIsChange(true);
@@ -70,23 +72,16 @@ public class SurugayaPipline implements Pipeline, Closeable {
                             .price(older.getPrice())
                             .build()
             );
-            // 如果是指定详情页面就删除队列中的数据，然后再添加
-            if (resultItems.getRequest().getUrl().contains("product/detail")) {
-                surugayaService.save(older);
-                try {
-                    lock.lock();
-                    asyncSurugayaArr.remove(older);
-                    asyncSurugayaArr.addIfAbsent(older);
-                }finally {
-                    lock.unlock();
-                }
-            } else {
-                asyncSurugayaArr.addIfAbsent(older);
-            }
         }
+        // 详情的特殊放到一个队列
+        if (resultItems.getRequest().getUrl().contains("product/detail")) {
+            surugayaService.save(older);
+            detailSurugayaArr.addIfAbsent(older);
+        }
+        allSurugayaArr.addIfAbsent(older);
     }
 
-    private void initSave(SurugayaModel mercariModel, String id) {
+    private SurugayaModel initSave(SurugayaModel mercariModel, String id) {
         // 只上传第一张图片
         mercariModel.setId(id);
         mercariModel.setPicture(fastdfsUtil.uploadFromUrl(mercariModel.getPicturesOriginal()));
@@ -96,13 +91,24 @@ public class SurugayaPipline implements Pipeline, Closeable {
                         .price(mercariModel.getPrice())
                         .build()
         );
-        asyncSurugayaArr.addIfAbsent(mercariModel);
+        return mercariModel;
     }
 
     @Override
     public void close() throws IOException {
-        surugayaNotification.surugayaInterceptor(asyncSurugayaArr);
-        surugayaService.save(asyncSurugayaArr);
-        asyncSurugayaArr.clear();
+        CopyOnWriteArrayList<SurugayaModel> finalSurugayaArr = detailSurugayaArr;
+        List<String> detailIds = detailSurugayaArr.stream().map(SurugayaModel::getId).collect(Collectors.toList());
+
+        for (SurugayaModel surugayaModel : allSurugayaArr) {
+            if (!detailIds.contains(surugayaModel.getId())) {
+                finalSurugayaArr.addIfAbsent(surugayaModel);
+            }
+        }
+
+        surugayaNotification.surugayaInterceptor(finalSurugayaArr);
+        surugayaService.save(finalSurugayaArr);
+
+        allSurugayaArr.clear();
+        detailSurugayaArr.clear();
     }
 }

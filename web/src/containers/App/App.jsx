@@ -45,7 +45,7 @@ class App extends Component {
         this.state.updateFunc(viewData, e => {
             e.isChange = false;
             return e;
-        }).then(() => this.state.initFunc());
+        });
     };
 
     switch2Mercari = () => {
@@ -101,9 +101,7 @@ class App extends Component {
                         break;
                     case 's':
                     case 'ArrowDown':
-                        if (this.state.isLike) {
-                            this.readAll();
-                        }
+                        this.readAll();
                         break;
                     case 'z':
                         if (window.confirm("是否确认不再抓取所有？")) {

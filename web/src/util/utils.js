@@ -8,7 +8,7 @@ export function array2Matrix(arr, lineLen = 6) {
     for (let e of arr) {
         if (t.length === lineLen) {
             matrix.push(t);
-            t = [];
+            t = [e];
         } else {
             t.push(e);
         }
@@ -45,5 +45,16 @@ export function chooseItem2UrlAndPic(website) {
 }
 
 export function getViewData(items, isLike) {
-    return filterData(items, isLike).sort((a, b) => a.price - b.price);
+    return filterData(items, isLike).sort((a, b) => {
+        let aPriceTime = a.priceTimes;
+        let bPriceTime = b.priceTimes;
+        let aCompareIndex = aPriceTime.length - 1 >=0 ? aPriceTime.length - 1 : 0;
+        let bCompareIndex = bPriceTime.length - 1 >=0 ? bPriceTime.length - 1 : 0;
+        if (aPriceTime[aCompareIndex].price === bPriceTime[bCompareIndex].price){
+            aCompareIndex = aPriceTime.length - 2 >=0 ? aPriceTime.length - 2 : 0;
+            bCompareIndex = bPriceTime.length - 2 >=0 ? bPriceTime.length - 2 : 0;
+        }
+
+        return aPriceTime[aCompareIndex].price - bPriceTime[bCompareIndex].price;
+    });
 }

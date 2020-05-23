@@ -33,7 +33,7 @@ public class MercariCrawler {
     @Autowired
     CrawlerLogService logService;
 
-    @Scheduled(cron = "2 23,59 * * * *")
+    @Scheduled(cron = "2 23,59 0-1,8-23 * * *")
     public void start() {
         Spider spider = Spider.create(pageProcessor);
         spider = spider.addUrl(kpkConfig.getMercariUrls().toArray(new String[0]));
