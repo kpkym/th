@@ -1,7 +1,10 @@
 package com.ou.th.crawler.mercari;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.IoUtil;
+import com.ou.th.crawler.common.CommonUtil;
+import com.ou.th.crawler.common.anatation.MyExtractBy;
 import com.ou.th.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -16,10 +19,8 @@ import us.codecraft.webmagic.scheduler.QueueScheduler;
 import us.codecraft.webmagic.selector.Html;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -76,7 +77,7 @@ public class MercariService {
         if (keyword.startsWith("+")) {
             keyword = keyword.substring(1);
             Map<String, MercariModel> notSolds = mercariRepo.findAllByIdOrTitleContainsIgnoreCase(keyword, keyword).stream()
-                    .filter(e -> e.getIsSold() == null || new Integer(0).equals(e.getIsSold()))
+                    .filter(e -> !new Integer(1).equals(e.getIsSold()))
                     .collect(Collectors.toMap(MercariModel::getId, e -> e));
 
             List<MercariModel> delMercariModels = new ArrayList<>();
@@ -91,6 +92,24 @@ public class MercariService {
                     } else {
                         mercariModel.setIsSold(page.getHtml().xpath("//div[@class='item-photo']/div[@class='item-sold-out-badge']/div/text()").get() == null
                                 ? 0 : 1);
+                        if (mercariModel.getIsSold() == 1) {
+                            mercariModel.setIsChange(true);
+                            try {
+                                BigDecimal price = CommonUtil.StrToBigdecimal(page.getHtml().xpath(mercariModel.getClass().getDeclaredField("price").getAnnotation(MyExtractBy.class).detail()).get());
+                                if (!CollUtil.getLast(mercariModel.getPriceTimes()).getPrice().equals(price)) {
+                                    mercariModel.setPrice(price);
+                                    mercariModel.getPriceTimes().add(
+                                            MercariModel.PriceTime.builder()
+                                                    .dateTime(new Date().getTime())
+                                                    .price(mercariModel.getPrice())
+                                                    .build()
+                                    );
+                                }
+                            } catch (NoSuchFieldException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
                         updatedMercariModels.add(mercariModel);
                     }
                 }
