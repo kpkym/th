@@ -138,14 +138,6 @@ class App extends Component {
         let data = displaydData(viewData);
         return (
             <>
-                {
-                    this.state.isLike ? (
-                        <Affix offsetTop={10} style={{position: "absolute", left: "10vw"}}>
-                            <Button type="primary" size="large" onClick={readAll}>已读所有显示的数据</Button>
-                        </Affix>
-                    ) : null
-                }
-                
                 <Affix offsetTop={10} style={{position: "absolute", right: "2vw"}}>
                     <Button type="danger" size="large" onClick={delAll}>删除所有显示的数据</Button>
                 </Affix>
