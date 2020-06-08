@@ -14,7 +14,7 @@ public class SurugayaUtil {
     public static String getIdFrom(String url) {
         String normalize = URLUtil.normalize(url);
 
-        String[] split = normalize.split("/+");
+        String[] split = normalize.split("[/?]+");
         List<String> strings = new ArrayList<>(Arrays.asList(split));
 
         return strings.get(strings.indexOf("detail") + 1);
