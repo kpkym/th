@@ -42,6 +42,16 @@ public class SurugayaController {
         return Msg.success(surugayaModels);
     }
 
+    @PutMapping("/flushImg/{id}")
+    public Msg flushImg(@PathVariable String id) {
+        SurugayaModel surugayaModel = surugayaService.getById(id).get();
+        surugayaModel.setPicture(fastdfsUtil.uploadFromUrl(surugayaModel.getPicturesOriginal()));
+
+        surugayaService.save(surugayaModel);
+
+        return Msg.success(surugayaModel);
+    }
+
     @Async
     public void flushImg(List<SurugayaModel> surugayaModels) {
         List<SurugayaModel> models = surugayaModels.stream().filter(e -> e.getPicture().contains("https://"))

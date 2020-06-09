@@ -12,6 +12,7 @@ import us.codecraft.webmagic.pipeline.Pipeline;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -96,17 +97,18 @@ public class SurugayaPipline implements Pipeline, Closeable {
 
     @Override
     public void close() throws IOException {
-        CopyOnWriteArrayList<SurugayaModel> finalSurugayaArr = detailSurugayaArr;
+        List<SurugayaModel> notDetails = new ArrayList<>(allSurugayaArr.size());
         List<String> detailIds = detailSurugayaArr.stream().map(SurugayaModel::getId).collect(Collectors.toList());
 
         for (SurugayaModel surugayaModel : allSurugayaArr) {
             if (!detailIds.contains(surugayaModel.getId())) {
-                finalSurugayaArr.addIfAbsent(surugayaModel);
+                notDetails.add(surugayaModel);
             }
         }
 
-        surugayaNotification.surugayaInterceptor(finalSurugayaArr);
-        surugayaService.save(finalSurugayaArr);
+        surugayaNotification.surugayaInterceptor(notDetails);
+        surugayaNotification.surugayaInterceptor(detailSurugayaArr);
+        surugayaService.save(notDetails);
 
         allSurugayaArr.clear();
         detailSurugayaArr.clear();
