@@ -12,7 +12,8 @@ import {
     updateMercariAction,
     updateSurugayaAction,
     searchSurugayaAction,
-    searchMercariAction
+    searchMercariAction,
+    flushImgSurugayaAction
 } from "redux/actions"
 import {chooseItem2UrlAndPic, displaydData, getViewData} from "util/utils";
 
@@ -130,7 +131,7 @@ class App extends Component {
     }
 
     render() {
-        let {items} = this.props;
+        let {items, flushImgSurugayaAction} = this.props;
         let {website, isLike, updateFunc, delFunc, item2UrlAndPic, searchFunc} = this.state;
         let {delAll, readAll, triggerWebsite, changeIsLike} = this;
 
@@ -148,7 +149,9 @@ class App extends Component {
                         {line.map(e => (
                             <Col span={4} key={e.pid}>
                                 <ProductItem delFunc={delFunc} updateFunc={updateFunc} item={e}
-                                             item2UrlAndPic={item2UrlAndPic}/>
+                                             website={website}
+                                             item2UrlAndPic={item2UrlAndPic}
+                                             flushImgSurugayaAction={flushImgSurugayaAction}/>
                             </Col>
                         ))}
                     </Row>
@@ -168,5 +171,6 @@ export default connect(state => (
     delMercariAction,
     delSurugayaAction,
     searchSurugayaAction,
-    searchMercariAction
+    searchMercariAction,
+    flushImgSurugayaAction
 })(App);

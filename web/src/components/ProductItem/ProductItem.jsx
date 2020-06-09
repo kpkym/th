@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Card, Drawer, Statistic, Tag} from "antd";
-import {CloseOutlined, DeleteOutlined, HeartTwoTone, HistoryOutlined} from "@ant-design/icons";
+import {CloseOutlined, DeleteOutlined, HeartTwoTone, HistoryOutlined, SyncOutlined} from "@ant-design/icons";
 import PriceHistoryChart from "components/PriceHistoryChart/PriceHistoryChart"
 import {outOfStockPrice} from 'util/utils'
 
@@ -15,6 +15,7 @@ class ProductItem extends Component {
         updateFunc: PropTypes.func.isRequired,
         delFunc: PropTypes.func.isRequired,
         item2UrlAndPic: PropTypes.func.isRequired,
+        website: PropTypes.string,
     };
 
     state = {
@@ -43,6 +44,11 @@ class ProductItem extends Component {
         }).then(() => this.del());
     };
 
+    flushImg = () => {
+        let {item, flushImgSurugayaAction} = this.props;
+        flushImgSurugayaAction(item.id);
+    };
+    
     showDrawer = () => {
         this.setState({
             visible: true,
@@ -50,8 +56,8 @@ class ProductItem extends Component {
     };
 
     render() {
-        let {item, item2UrlAndPic} = this.props;
-        let {triggerLiked, del, showDrawer, dontCrawler} = this;
+        let {item, item2UrlAndPic, website} = this.props;
+        let {triggerLiked, del, showDrawer, dontCrawler, flushImg} = this;
         let {priceTimes: chartData} = item;
 
         let ptLength = item.priceTimes.length;
@@ -84,8 +90,10 @@ class ProductItem extends Component {
                     <Button type="link" onClick={showDrawer}>
                         <HistoryOutlined/>
                     </Button>,
+                    website === 'mercari' ? 
                     <a href={"https://www.suruga-ya.jp/search?category=&search_word=" + item.title}
                        target="_blank">駿河屋</a>
+                       : <Button type="link" onClick={flushImg}><SyncOutlined /></Button>
                 ]}
             >
                 <Card.Meta description={price}/>

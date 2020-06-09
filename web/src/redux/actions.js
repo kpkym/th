@@ -3,8 +3,8 @@
 异步action
 同步action
  */
-import {INIT, UPDATE, DELETE, SEARCH} from './action-types'
-import {getAllMercari, getAllSurugaya, updateMercari, updateSurugaya, delMercari, delSurugaya} from "api/index"
+import {INIT, UPDATE, UPDATE_SINGLE, DELETE, SEARCH} from './action-types'
+import {getAllMercari, getAllSurugaya, updateMercari, updateSurugaya, delMercari, delSurugaya, flushSurugayaImg} from "api/index"
 
 function convert2Arr(data) {
     return Array.isArray(data) ? data : [data];
@@ -69,6 +69,14 @@ export function searchSurugayaAction(keyword) {
     return dispatch => {
         return getAllSurugaya(keyword).then(e => {
             dispatch({type: SEARCH, data: e.data.data})
+        });
+    }
+}
+
+export function flushImgSurugayaAction(id) {
+    return dispatch => {
+        return flushSurugayaImg(id).then(e => {
+            dispatch({type: UPDATE_SINGLE, data: e.data.data})
         });
     }
 }

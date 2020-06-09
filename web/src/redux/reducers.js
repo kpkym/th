@@ -2,7 +2,7 @@
 包含n个reducer函数: 根据老的state和指定的action返回一个新的state
  */
 import {combineReducers} from 'redux'
-import {DELETE, INIT, UPDATE, SEARCH} from './action-types';
+import {DELETE, INIT, UPDATE, UPDATE_SINGLE, SEARCH} from './action-types';
 
 
 function th(state = {items: [], isSearch: false}, action) {
@@ -25,6 +25,10 @@ function th(state = {items: [], isSearch: false}, action) {
             return ({...state, items: state.items.filter(e => !action.data.includes(e.id))});
         case SEARCH:
             return ({...state, items: action.data, isSearch: true});
+        case UPDATE_SINGLE:
+            let items = state.items;
+            items[state.items.findIndex(e => e.id === action.data.id)] = action.data;
+            return ({...state, items});
         default:
             return state
     }
