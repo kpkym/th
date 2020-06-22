@@ -1,3 +1,5 @@
+server:
+  port: 8688
 spring:
   profiles:
     active: kpk
