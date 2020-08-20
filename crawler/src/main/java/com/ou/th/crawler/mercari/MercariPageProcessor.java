@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 public class MercariPageProcessor implements PageProcessor {
 
-    private Site site = Site.me().setRetryTimes(10).setSleepTime(2300).setTimeOut(100000);
+    private Site site = Site.me().setRetryTimes(10).setSleepTime(5331).setTimeOut(100000);
 
     @Autowired
     MercariService mercariService;
