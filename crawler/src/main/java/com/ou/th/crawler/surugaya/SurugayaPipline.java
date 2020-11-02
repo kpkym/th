@@ -81,10 +81,14 @@ public class SurugayaPipline implements Pipeline, Closeable {
         allSurugayaArr.addIfAbsent(older);
     }
 
+
     private SurugayaModel initSave(SurugayaModel mercariModel, String id) {
-        // 只上传第一张图片
         mercariModel.setId(id);
-        mercariModel.setPicture(fastdfsUtil.uploadFromUrl(mercariModel.getPicturesOriginal()));
+
+        // 只上传第一张图片
+        // 不上传图片了，直接用url
+        // mercariModel.setPicture(fastdfsUtil.uploadFromUrl(mercariModel.getPicturesOriginal()));
+
         mercariModel.getPriceTimes().add(
                 SurugayaModel.PriceTime.builder()
                         .dateTime(new Date().getTime())

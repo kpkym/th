@@ -15,12 +15,12 @@ public @interface MyExtractBy {
     /**
      * 页面元素可以直接获取的表达式
      */
-    String pageList();
+    String pageList() default "";
 
     /**
      * 进入页面详情获取的表达式
      */
-    String itemDetail();
+    String itemDetail() default "";
 
     /**
      * 当 {@link #type()}== {@link Type#Regex}时。对{@code HTML}字符串进行预处理

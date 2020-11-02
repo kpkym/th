@@ -2,12 +2,10 @@ package com.ou.th.crawler.common;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.TypeUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HtmlUtil;
 import com.ou.th.crawler.common.anatation.MyExtractBy;
 import us.codecraft.webmagic.selector.Html;
-import us.codecraft.webmagic.selector.Selectable;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -61,6 +59,12 @@ public class CommonUtil {
                 continue;
             }
             rule = isPageList ? myExtractBy.pageList() : myExtractBy.itemDetail();
+
+            // 为空时直接退出
+            if (StrUtil.isEmpty(rule)) {
+                return t;
+            }
+
             if (MyExtractBy.Type.XPath.equals(myExtractBy.type())) {
                 values.addAll(new Html(htmlStr).xpath(rule).all());
             }else if (MyExtractBy.Type.Regex.equals(myExtractBy.type())) {

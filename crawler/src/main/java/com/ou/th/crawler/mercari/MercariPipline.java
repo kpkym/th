@@ -57,9 +57,11 @@ public class MercariPipline implements Pipeline {
     }
 
     private void initSave(MercariModel mercariModel, String id) {
-        // 只上传第一张图片
         mercariModel.setId(id);
-        mercariModel.setPicture(fastdfsUtil.uploadFromUrl(mercariModel.getPicturesOriginal()));
+
+        // 只上传第一张图片
+        // 不上传图片了，直接通过url获取
+        // mercariModel.setPicture(fastdfsUtil.uploadFromUrl(mercariModel.getPicturesOriginal()));
         mercariModel.getPriceTimes().add(
                 MercariModel.PriceTime.builder()
                         .dateTime(new Date().getTime())

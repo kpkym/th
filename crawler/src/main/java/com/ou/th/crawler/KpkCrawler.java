@@ -5,9 +5,7 @@ import com.ou.th.crawler.kpk.KpkPageProcessor;
 import com.ou.th.crawler.kpk.KpkPipline;
 import com.ou.th.crawler.kpk.MyKpkHashSetDuplicateRemover;
 import com.ou.th.crawler.log.CrawlerLogService;
-import com.ou.th.crawler.mercari.MyMercariHashSetDuplicateRemover;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
@@ -36,7 +34,7 @@ public class KpkCrawler {
 
     public void start() {
         Spider spider = Spider.create(pageProcessor);
-        spider = spider.addUrl("");
+        spider = spider.addUrl(kpkConfig.getKpkUrls().toArray(new String[0]));
         spider.setScheduler(new QueueScheduler()
                 .setDuplicateRemover(new MyKpkHashSetDuplicateRemover())
         );
