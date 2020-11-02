@@ -2,7 +2,6 @@ package com.ou.th.crawler.surugaya;
 
 import cn.hutool.core.collection.CollUtil;
 import com.ou.th.crawler.common.CommonPipline;
-import com.ou.th.crawler.kpk.SurugayaNotification;
 import com.ou.th.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -12,15 +12,31 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface MyExtractBy {
-    String list();
+    /**
+     * 页面元素可以直接获取的表达式
+     */
+    String pageList();
 
-    String detail();
+    /**
+     * 进入页面详情获取的表达式
+     */
+    String itemDetail();
 
-    String xpathDetail() default "";
+    /**
+     * 当 {@link #type()}== {@link Type#Regex}时。对{@code HTML}字符串进行预处理
+     */
+    String regexPreHandle() default "";
 
-    enum Type {XPath, Regex, Css, JsonPath}
-
+    /**
+     * 对{@code HTML}字符串处理时表示式的类型
+     */
     Type type() default Type.XPath;
 
-    boolean needAll() default false;
+    /**
+     * 字段类型，一般是为List时，泛型强转
+     */
+    Class targetClazz() default String.class;
+
+    enum Type {XPath, Regex, Css, JsonPath}
 }
+

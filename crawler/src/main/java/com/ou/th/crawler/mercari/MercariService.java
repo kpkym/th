@@ -95,7 +95,7 @@ public class MercariService {
                         if (mercariModel.getIsSold() == 1) {
                             mercariModel.setIsChange(true);
                             try {
-                                BigDecimal price = CommonUtil.StrToBigdecimal(page.getHtml().xpath(mercariModel.getClass().getDeclaredField("price").getAnnotation(MyExtractBy.class).detail()).get());
+                                BigDecimal price = CommonUtil.StrToBigdecimal(page.getHtml().xpath(mercariModel.getClass().getDeclaredField("price").getAnnotation(MyExtractBy.class).itemDetail()).get());
                                 if (!CollUtil.getLast(mercariModel.getPriceTimes()).getPrice().equals(price)) {
                                     mercariModel.setPrice(price);
                                     mercariModel.getPriceTimes().add(

@@ -25,18 +25,18 @@ public class MercariModel extends CommonModel {
     private Integer isSold;
 
     @NeedUpdate
-    @MyExtractBy(list = "//h3[contains(@class, 'items-box-name')]/text()", detail = "//h1[@class='item-name']/text()")
+    @MyExtractBy(pageList = "//h3[contains(@class, 'items-box-name')]/text()", itemDetail = "//h1[@class='item-name']/text()")
     private String title;
 
     private String picture;
 
-    @MyExtractBy(list = "//img/@data-src", detail = "//div[@class='owl-carousel']//img/@data-src")
+    @MyExtractBy(pageList = "//img/@data-src", itemDetail = "//div[@class='owl-carousel']//img/@data-src")
     private String picturesOriginal;
 
     @NeedUpdate
-    @MyExtractBy(list = "//div[contains(@class, 'items-box-price')]/text()", detail = "//div[@class='item-price-box text-center']/span[@class='item-price bold']/text()")
+    @MyExtractBy(pageList = "//div[contains(@class, 'items-box-price')]/text()", itemDetail = "//div[@class='item-price-box text-center']/span[@class='item-price bold']/text()")
     private BigDecimal price;
 
-    @MyExtractBy(list = "//section[@class='items-box']/a/@href", detail = "//link[@rel='canonical']/@href")
+    @MyExtractBy(pageList = "//section[@class='items-box']/a/@href", itemDetail = "//link[@rel='canonical']/@href")
     private String url;
 }

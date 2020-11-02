@@ -1,7 +1,7 @@
 package com.ou.th.crawler.surugaya;
 
 import com.ou.th.crawler.common.CommonUtil;
-import com.ou.th.crawler.kpk.SurugayaNotification;
+import com.ou.th.crawler.surugaya.SurugayaNotification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

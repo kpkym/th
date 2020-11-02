@@ -22,15 +22,15 @@ public class SurugayaModel extends CommonModel {
     @EqualsAndHashCode.Include
     private String id;
 
-    @MyExtractBy(list = "(?<=<p.{0,1000}class=.title.>.{0,1000}<a.{0,1000}>)[\\s\\S]*?(?=<\\/)",
-            detail = "(?<=<script type=\"application\\/ld\\+json\">[\\s\\S]{0,500}\"name\".{0,20}?\").+?(?=\",)",
-            xpathDetail = "//img[@id='imagecaption']/@title",
+    @MyExtractBy(pageList = "(?<=<p.{0,1000}class=.title.>.{0,1000}<a.{0,1000}>)[\\s\\S]*?(?=<\\/)",
+            itemDetail = "(?<=<script type=\"application\\/ld\\+json\">[\\s\\S]{0,500}\"name\".{0,20}?\").+?(?=\",)",
+            regexPreHandle = "//img[@id='imagecaption']/@title",
             type= MyExtractBy.Type.Regex)
     @NeedUpdate
     private String title;
 
 
-    @MyExtractBy(list = "//span[@class='sale_time']/text()", detail = "//p[@class='mgnB5']/strong/text()")
+    @MyExtractBy(pageList = "//span[@class='sale_time']/text()", itemDetail = "//p[@class='mgnB5']/strong/text()")
     @NeedUpdate
     private String promotion;
 
@@ -39,10 +39,10 @@ public class SurugayaModel extends CommonModel {
     private String picturesOriginal;
 
     @NeedUpdate
-    @MyExtractBy(list = "//p[@class='price']/text()|//span[@class='text-red']/strong/text()", detail = "//table[@class='table_grade_list']//span[contains(@class, 'text-red')]/text()")
+    @MyExtractBy(pageList = "//p[@class='price']/text()|//span[@class='text-red']/strong/text()", itemDetail = "//table[@class='table_grade_list']//span[contains(@class, 'text-red')]/text()")
     private BigDecimal price;
 
-    @MyExtractBy(list = "//p[@class='title']/a/@href", detail = "//input[@type='hidden' and @name='url']/@value")
+    @MyExtractBy(pageList = "//p[@class='title']/a/@href", itemDetail = "//input[@type='hidden' and @name='url']/@value")
     private String url;
 
 
