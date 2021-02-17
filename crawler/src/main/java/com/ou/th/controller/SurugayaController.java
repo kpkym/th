@@ -38,7 +38,7 @@ public class SurugayaController {
     @GetMapping("list")
     public Msg list(String keyword) {
         List<SurugayaModel> surugayaModels = StrUtil.isEmpty(keyword) ? surugayaService.list() : surugayaService.list(keyword);
-        flushImg(surugayaModels);
+        // flushImg(surugayaModels);
         return Msg.success(surugayaModels);
     }
 
@@ -60,14 +60,14 @@ public class SurugayaController {
         surugayaService.save(models);
     }
 
-    @PutMapping("")
+    @PutMapping
     public Msg update(@RequestBody List<SurugayaModel> surugayaModels) {
         surugayaService.save(surugayaModels);
         return Msg.success();
     }
 
 
-    @PatchMapping("")
+    @PatchMapping
     public Msg del(@RequestBody List<String> ids) {
         surugayaService.del(ids);
         return Msg.success();

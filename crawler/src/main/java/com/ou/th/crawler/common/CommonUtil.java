@@ -1,12 +1,12 @@
 package com.ou.th.crawler.common;
 
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HtmlUtil;
 import com.ou.th.crawler.common.anatation.MyExtractBy;
 import us.codecraft.webmagic.selector.Html;
 
+import javax.xml.xpath.XPathConstants;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author kpkym
@@ -38,10 +39,10 @@ public class CommonUtil {
      * @param s
      * @return
      */
-    public static BigDecimal StrToBigdecimal(Object s) {
+    public static BigDecimal StrToBigdecimal(String s) {
         BigDecimal bigDecimal;
         try {
-            bigDecimal = new BigDecimal(s.toString().replaceAll("[^0-9]", ""));
+            bigDecimal = new BigDecimal(s.replaceAll("[^0-9]", ""));
         } catch (Exception e) {
             bigDecimal = new BigDecimal(Integer.MAX_VALUE);
         }
@@ -49,46 +50,34 @@ public class CommonUtil {
         return bigDecimal;
     }
 
-    public static<T> T handleAnotation(String htmlStr, T t, boolean isPageList) {
+    public static<T> T handleAnotation(String item, T t, boolean isList) {
         Field[] declaredFields = t.getClass().getDeclaredFields();
         String rule = "";
-        List<Object> values = new ArrayList<>();
+        Object value = "";
         for (Field declaredField : declaredFields) {
             MyExtractBy myExtractBy = declaredField.getAnnotation(MyExtractBy.class);
             if (myExtractBy == null) {
                 continue;
             }
-            rule = isPageList ? myExtractBy.pageList() : myExtractBy.itemDetail();
-
-            // 为空时直接退出
-            if (StrUtil.isEmpty(rule)) {
-                return t;
-            }
-
+            rule = isList ? myExtractBy.pageList() : myExtractBy.itemDetail();
             if (MyExtractBy.Type.XPath.equals(myExtractBy.type())) {
-                values.addAll(new Html(htmlStr).xpath(rule).all());
+                value = new Html(item).xpath(rule).get();
             }else if (MyExtractBy.Type.Regex.equals(myExtractBy.type())) {
-                String v = "";
-                if (!isPageList && StrUtil.isNotEmpty(myExtractBy.regexPreHandle())) {
-                    v = new Html(htmlStr).xpath(myExtractBy.regexPreHandle()).get();
+                if (!isList && StrUtil.isNotEmpty(myExtractBy.regexPreHandle())) {
+                    value = new Html(item).xpath(myExtractBy.regexPreHandle()).get();
                 }
 
-                values.addAll(new Html(v).regex(rule).all().stream()
-                        .map(e -> HtmlUtil.unescape(e).replaceAll("(?<=<)\\s+|\\s+(?=>)", "").trim())
-                        .collect(Collectors.toList()));
+                value = ((String)value).length() > 2 ? value : HtmlUtil.unescape(new Html(item).regex(rule).get())
+                        .replaceAll("(?<=<)\\s+|\\s+(?=>)", "").trim();
+            }
+            if (declaredField.getType().isAssignableFrom(BigDecimal.class)) {
+                value = CommonUtil.StrToBigdecimal((String) value);
             }
 
-            if (BigDecimal.class.equals(myExtractBy.targetClazz())) {
-                values = values.stream().map(CommonUtil::StrToBigdecimal).collect(Collectors.toList());
-            }
-
+            declaredField.setAccessible(true);
             try {
-                if (declaredField.getType().isAssignableFrom(Collection.class)) {
-                    ReflectUtil.setFieldValue(t, declaredField, values);
-                } else {
-                    ReflectUtil.setFieldValue(t, declaredField, values.stream().findFirst().orElse(null));
-                }
-            } catch (Exception e) {
+                declaredField.set(t, value);
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }

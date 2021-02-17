@@ -34,7 +34,7 @@ public class MercariModel extends CommonModel {
     private String picturesOriginal;
 
     @NeedUpdate
-    @MyExtractBy(pageList = "//div[contains(@class, 'items-box-price')]/text()", itemDetail = "//div[@class='item-price-box text-center']/span[@class='item-price bold']/text()")
+    @MyExtractBy(pageList = "//div[contains(@class, 'items-box-price')]/text()", itemDetail = "//div[@class='item-price-box text-center']/span[@class='item-price bold']/text()", targetClazz = BigDecimal.class)
     private BigDecimal price;
 
     @MyExtractBy(pageList = "//section[@class='items-box']/a/@href", itemDetail = "//link[@rel='canonical']/@href")

@@ -34,14 +34,14 @@ public class MercariController {
         return Msg.success(StrUtil.isEmpty(keyword) ? mercariService.list() : mercariService.list(keyword));
     }
 
-    @PutMapping("")
+    @PutMapping
     public Msg update(@RequestBody List<MercariModel> mercariModels) {
         mercariService.save(mercariModels);
         return Msg.success();
     }
 
 
-    @PatchMapping("")
+    @PatchMapping
     public Msg del(@RequestBody List<String> ids) {
         mercariService.del(ids);
         return Msg.success();

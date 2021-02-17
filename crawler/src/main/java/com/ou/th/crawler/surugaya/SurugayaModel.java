@@ -22,7 +22,7 @@ public class SurugayaModel extends CommonModel {
     @EqualsAndHashCode.Include
     private String id;
 
-    @MyExtractBy(pageList = "(?<=<p.{0,1000}class=.title.>.{0,1000}<a.{0,1000}>)[\\s\\S]*?(?=<\\/)",
+    @MyExtractBy(pageList = "(?<=<p.{0,1000}class=.title.>.{0,1000}<a.{0,1000}>)[\\s\\S]*?(?=<\\/a)",
             itemDetail = "(?<=<script type=\"application\\/ld\\+json\">[\\s\\S]{0,500}\"name\".{0,20}?\").+?(?=\",)",
             regexPreHandle = "//img[@id='imagecaption']/@title",
             type= MyExtractBy.Type.Regex)
@@ -39,7 +39,7 @@ public class SurugayaModel extends CommonModel {
     private String picturesOriginal;
 
     @NeedUpdate
-    @MyExtractBy(pageList = "//p[@class='price']/text()|//span[@class='text-red']/strong/text()", itemDetail = "//table[@class='table_grade_list']//span[contains(@class, 'text-red')]/text()")
+    @MyExtractBy(pageList = "//p[@class='price']/text()|//span[@class='text-red']/strong/text()", itemDetail = "//table[@class='table_grade_list']//span[contains(@class, 'text-red')]/text()", targetClazz = BigDecimal.class)
     private BigDecimal price;
 
     @MyExtractBy(pageList = "//p[@class='title']/a/@href", itemDetail = "//input[@type='hidden' and @name='url']/@value")
