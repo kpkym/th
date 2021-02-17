@@ -80,7 +80,7 @@ class ProductItem extends Component {
                           style={{height: "100%", width: "100%", textAlign: "center"}}
                           target="_blank">
                     <img style={{height: "100px", objectFit: 'scale-down'}}
-                         src={item2UrlAndPic(item).picture}/></a>}
+                         src={item.picturesOriginal}/></a>}
                 actions={[
                     <Button type="link" onClick={triggerLiked}>{item.isLike ?
                         <HeartTwoTone twoToneColor="#eb2f96"/>
