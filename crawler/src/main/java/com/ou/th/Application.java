@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Import(FdfsClientConfig.class)
 // 解决jmx重复注册bean的问题
 @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
-// @EnableScheduling
+@EnableScheduling
 @EnableAsync
 public class Application {
     public static void main(String[] args) {

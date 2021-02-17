@@ -38,6 +38,10 @@ public class MercariPipline implements Pipeline {
     }
 
     private void save(MercariModel newer) {
+        if (newer.getPrice() == null) {
+            return;
+        }
+
         String id = MercariUtil.getIdFrom(newer.getUrl());
         MercariModel older = mercariService.getById(id).orElse(new MercariModel());
         if (older.getId() == null) {

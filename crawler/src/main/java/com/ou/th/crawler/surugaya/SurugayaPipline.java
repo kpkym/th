@@ -56,6 +56,10 @@ public class SurugayaPipline implements Pipeline, Closeable {
     }
 
     private void save(SurugayaModel newer, ResultItems resultItems) {
+        if (newer.getPrice() == null) {
+            return;
+        }
+
         String id = SurugayaUtil.getIdFrom(newer.getUrl());
         SurugayaModel older = surugayaService.getById(id).orElse(new SurugayaModel());
         if (older.getId() == null) {
