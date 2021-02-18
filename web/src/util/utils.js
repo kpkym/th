@@ -31,13 +31,15 @@ export function chooseItem2UrlAndPic(website) {
     if (website === "mercari") {
         return item => {
             let url = item.url.includes("mercari.com") ? item.url : "https://www.mercari.com" + item.url;
-            let picture = item.picture.includes("static.mercdn.net") ? item.picture : (baseImgUrl + item.picture);
+            // let picture = item.picture.includes("static.mercdn.net") ? item.picture : (baseImgUrl + item.picture);
+            let picture = item.picturesOriginal;
             return ({url, picture});
         }
     } else if (website === "surugaya") {
         return item => {
             let url = item.url;
-            let picture = item.picture.includes("/database/pics") ? item.picture : baseImgUrl + item.picture;
+            // let picture = item.picture.includes("/database/pics") ? item.picture : baseImgUrl + item.picture;
+            let picture = item.picturesOriginal;
             return ({url, picture});
         }
     }

@@ -23,7 +23,7 @@ class App extends Component {
     constructor(props){
         super(props);
         this.state = {
-            isLike: false,
+            isLike: true,
             website: "",
             initFunc: null,
             updateFunc: null,
@@ -81,8 +81,8 @@ class App extends Component {
 
 
     componentDidMount() {
-        this.switch2Mercari();
-        this.props.initMercariAction().then(() => {
+        this.switch2Surugaya();
+        this.props.initSurugayaAction().then(() => {
             window.addEventListener("keyup", e => {
                 if (e.target.localName === "input"){
                     return;

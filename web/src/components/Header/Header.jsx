@@ -36,8 +36,8 @@ class Header extends Component {
                     <Descriptions.Item>
                         <Radio.Group value={website ? website : "mercari"} buttonStyle="solid"
                                      onChange={e => triggerWebsite(e.target.value)}>
-                            <Radio.Button value="mercari">Mercari</Radio.Button>
                             <Radio.Button value="surugaya">Surugaya</Radio.Button>
+                            <Radio.Button value="mercari">Mercari</Radio.Button>
                         </Radio.Group>
                     </Descriptions.Item>
                     <Descriptions.Item><Statistic title="显示数量" value={viewCount}/></Descriptions.Item>
