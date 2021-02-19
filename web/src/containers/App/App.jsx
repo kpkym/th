@@ -23,7 +23,7 @@ class App extends Component {
     constructor(props){
         super(props);
         this.state = {
-            isLike: true,
+            isLike: false,
             website: "",
             initFunc: null,
             updateFunc: null,
@@ -90,11 +90,11 @@ class App extends Component {
                 switch (e.key) {
                     case 'a':
                     case 'ArrowLeft':
-                        this.triggerWebsite("mercari");
+                        this.triggerWebsite("surugaya");
                         break;
                     case 'd':
                     case 'ArrowRight':
-                        this.triggerWebsite("surugaya");
+                        this.triggerWebsite("mercari");
                         break;
                     case 'w':
                     case 'ArrowUp':

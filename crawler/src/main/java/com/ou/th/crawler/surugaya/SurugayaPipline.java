@@ -1,6 +1,7 @@
 package com.ou.th.crawler.surugaya;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.ou.th.crawler.common.CommonPipline;
 import com.ou.th.util.FastdfsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,20 +87,22 @@ public class SurugayaPipline implements Pipeline, Closeable {
     }
 
 
-    private SurugayaModel initSave(SurugayaModel mercariModel, String id) {
-        mercariModel.setId(id);
+    private SurugayaModel initSave(SurugayaModel surugayaModel, String id) {
+        surugayaModel.setId(id);
+
+        surugayaModel.setUrl(StrUtil.format("https://www.suruga-ya.jp/product/detail/{}", id));
 
         // 只上传第一张图片
         // 不上传图片了，直接用url
-        // mercariModel.setPicture(fastdfsUtil.uploadFromUrl(mercariModel.getPicturesOriginal()));
+        // surugayaModel.setPicture(fastdfsUtil.uploadFromUrl(surugayaModel.getPicturesOriginal()));
 
-        mercariModel.getPriceTimes().add(
+        surugayaModel.getPriceTimes().add(
                 SurugayaModel.PriceTime.builder()
                         .dateTime(new Date().getTime())
-                        .price(mercariModel.getPrice())
+                        .price(surugayaModel.getPrice())
                         .build()
         );
-        return mercariModel;
+        return surugayaModel;
     }
 
     @Override

@@ -42,8 +42,6 @@ public class SurugayaModel extends CommonModel {
     @MyExtractBy(pageList = "//p[@class='price']/text()|//span[@class='text-red']/strong/text()", itemDetail = "//table[@class='table_grade_list']//span[contains(@class, 'text-red')]/text()", targetClazz = BigDecimal.class)
     private BigDecimal price;
 
-    @MyExtractBy(pageList = "//p[@class='title']/a/@href", itemDetail = "//input[@type='hidden' and @name='url']/@value")
+    // @MyExtractBy(pageList = "//p[@class='title']/a/@href", itemDetail = "//input[@type='hidden' and @name='url']/@value")
     private String url;
-
-
 }

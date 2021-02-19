@@ -2,8 +2,12 @@ package com.ou.th.crawler.surugaya;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,13 +22,19 @@ import java.util.stream.StreamSupport;
 public class SurugayaService {
     @Autowired
     SurugayaRepo surugayaRepo;
+    @Resource
+    MongoTemplate mongoTemplate;
 
     public Optional<SurugayaModel> getById(String id) {
-        return surugayaRepo.findById(id);
+        return Optional.ofNullable(mongoTemplate.findById(id, SurugayaModel.class));
     }
 
     public List<SurugayaModel> list() {
-        List<SurugayaModel> surugayaModels = surugayaRepo.findAllByIsDelFalse();
+        Query query = new Query(Criteria.where("isDel").is(false));
+        // query.addCriteria(Criteria.where("isDel").is(false));
+
+        List<SurugayaModel> surugayaModels = mongoTemplate.find(query, SurugayaModel.class);
+        // surugayaRepo.findAllByIsDelFalse();
         log.info("获取列表数据总数：" + surugayaModels.size());
         return surugayaModels;
     }
