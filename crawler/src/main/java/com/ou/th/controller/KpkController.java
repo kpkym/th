@@ -1,26 +1,15 @@
 package com.ou.th.controller;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.poi.excel.ExcelUtil;
-import cn.hutool.poi.excel.ExcelWriter;
 import com.ou.th.crawler.KpkCrawler;
-import com.ou.th.crawler.MercariCrawler;
 import com.ou.th.crawler.kpk.KpkModel;
 import com.ou.th.crawler.kpk.KpkRepo;
 import com.ou.th.crawler.kpk.KpkService;
-import com.ou.th.crawler.mercari.MercariModel;
-import com.ou.th.crawler.mercari.MercariService;
 import com.ou.th.util.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * @author kpkym
@@ -39,7 +28,8 @@ public class KpkController {
     KpkRepo repo;
 
     @GetMapping(value = "start")
-    public void mercari() throws IOException {
+    public void start() throws IOException {
+        kpkCrawler.start();
     }
 
     @GetMapping("file")

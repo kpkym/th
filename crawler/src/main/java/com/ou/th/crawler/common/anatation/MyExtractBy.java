@@ -25,7 +25,7 @@ public @interface MyExtractBy {
     /**
      * 当 {@link #type()}== {@link Type#Regex}时。对{@code HTML}字符串进行预处理
      */
-    String regexPreHandle() default "";
+    String regexPreHandleXpath() default "";
 
     /**
      * 对{@code HTML}字符串处理时表示式的类型
@@ -36,6 +36,9 @@ public @interface MyExtractBy {
      * 字段类型，一般是为List时，泛型强转
      */
     Class targetClazz() default String.class;
+
+    // collection的分隔符
+    String separatorRegex() default "";
 
     enum Type {XPath, Regex, Css, JsonPath}
 }

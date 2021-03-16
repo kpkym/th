@@ -1,7 +1,6 @@
 package com.ou.th.crawler.surugaya;
 
 import com.ou.th.crawler.common.CommonUtil;
-import com.ou.th.crawler.surugaya.SurugayaNotification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,11 +41,11 @@ public class SurugayaPageProcessor implements PageProcessor {
 
                 for (String item : items) {
                     SurugayaModel surugayaModel = CommonUtil.handleAnotation(item, new SurugayaModel(), true);
-                    surugayaModel.setPicturesOriginal(
-                            surugayaImgPrefix
-                                    + SurugayaUtil.getIdFrom(surugayaModel.getUrl()).toLowerCase()
-                                    + surugayaImgSuffix
-                    );
+                    // surugayaModel.setPicturesOriginal(
+                    //         surugayaImgPrefix
+                    //                 + SurugayaUtil.getIdFrom(surugayaModel.getUrl()).toLowerCase()
+                    //                 + surugayaImgSuffix
+                    // );
                     surugayaModels.add(surugayaModel);
                 }
                 page.putField("arr", surugayaModels);
@@ -55,11 +54,11 @@ public class SurugayaPageProcessor implements PageProcessor {
             page.addTargetRequests(all);
         } else if (url.contains("/product/detail")) {
             SurugayaModel surugayaModel = CommonUtil.handleAnotation(page.getHtml().get(), new SurugayaModel(), false);
-            surugayaModel.setPicturesOriginal(
-                    surugayaImgPrefix
-                            + SurugayaUtil.getIdFrom(surugayaModel.getUrl()).toLowerCase()
-                            + surugayaImgSuffix
-            );
+            // surugayaModel.setPicturesOriginal(
+            //         surugayaImgPrefix
+            //                 + SurugayaUtil.getIdFrom(surugayaModel.getUrl()).toLowerCase()
+            //                 + surugayaImgSuffix
+            // );
             page.putField("obj", surugayaModel);
         } else {
             page.setSkip(true);

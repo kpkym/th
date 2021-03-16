@@ -1,12 +1,12 @@
 package com.ou.th.crawler.common;
 
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HtmlUtil;
 import com.ou.th.crawler.common.anatation.MyExtractBy;
 import us.codecraft.webmagic.selector.Html;
 
-import javax.xml.xpath.XPathConstants;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author kpkym
@@ -63,15 +62,21 @@ public class CommonUtil {
             if (MyExtractBy.Type.XPath.equals(myExtractBy.type())) {
                 value = new Html(item).xpath(rule).get();
             }else if (MyExtractBy.Type.Regex.equals(myExtractBy.type())) {
-                if (!isList && StrUtil.isNotEmpty(myExtractBy.regexPreHandle())) {
-                    value = new Html(item).xpath(myExtractBy.regexPreHandle()).get();
+                if (!isList && StrUtil.isNotEmpty(myExtractBy.regexPreHandleXpath())) {
+                    value = new Html(item).xpath(myExtractBy.regexPreHandleXpath()).get();
+                } else {
+                    value = item;
                 }
 
-                value = ((String)value).length() > 2 ? value : HtmlUtil.unescape(new Html(item).regex(rule).get())
-                        .replaceAll("(?<=<)\\s+|\\s+(?=>)", "").trim();
+                value = StrUtil.join(",", ReUtil.findAll(rule, StrUtil.toString(value), 0));
+                value = StrUtil.trim(HtmlUtil.cleanHtmlTag(StrUtil.toString(value)));
             }
+            if (Collection.class.isAssignableFrom(declaredField.getType())) {
+                value = Arrays.stream(StrUtil.toString(value).split(myExtractBy.separatorRegex())).collect(Collectors.toList());
+            }
+
             if (declaredField.getType().isAssignableFrom(BigDecimal.class)) {
-                value = CommonUtil.StrToBigdecimal((String) value);
+                value = CommonUtil.StrToBigdecimal(value.toString());
             }
 
             declaredField.setAccessible(true);

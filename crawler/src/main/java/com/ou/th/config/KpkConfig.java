@@ -19,6 +19,8 @@ public class KpkConfig {
     private List<String> surugayaUrls;
     private List<String> kpkUrls;
 
+    private List<String> surugayaKeyword;
+
     @NestedConfigurationProperty
     private KpkProxy proxy;
 

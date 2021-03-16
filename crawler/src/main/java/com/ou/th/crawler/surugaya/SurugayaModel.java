@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data()
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class SurugayaModel extends CommonModel {
     @Id
@@ -23,8 +23,8 @@ public class SurugayaModel extends CommonModel {
     private String id;
 
     @MyExtractBy(pageList = "(?<=<p.{0,1000}class=.title.>.{0,1000}<a.{0,1000}>)[\\s\\S]*?(?=<\\/a)",
-            itemDetail = "(?<=<script type=\"application\\/ld\\+json\">[\\s\\S]{0,500}\"name\".{0,20}?\").+?(?=\",)",
-            regexPreHandle = "//img[@id='imagecaption']/@title",
+            itemDetail = "(?<=id=\"item_title\">).+?(?=</h1>)",
+            // regexPreHandleXpath = "//img[@id='imagecaption']/@title",
             type= MyExtractBy.Type.Regex)
     @NeedUpdate
     private String title;
@@ -36,12 +36,13 @@ public class SurugayaModel extends CommonModel {
 
     private String picture;
 
+    @MyExtractBy(pageList = "//span[@class='sale_time']/text()", itemDetail = "//img[@class='img-fluid' and @alt]/@src")
     private String picturesOriginal;
 
     @NeedUpdate
-    @MyExtractBy(pageList = "//p[@class='price']/text()|//span[@class='text-red']/strong/text()", itemDetail = "//table[@class='table_grade_list']//span[contains(@class, 'text-red')]/text()", targetClazz = BigDecimal.class)
+    @MyExtractBy(pageList = "//span[@class='text-red']/strong/text()", itemDetail = "//label[@class='mgnB0']/span[@class='text-price-detail price-buy']/text()", targetClazz = BigDecimal.class)
     private BigDecimal price;
 
-    // @MyExtractBy(pageList = "//p[@class='title']/a/@href", itemDetail = "//input[@type='hidden' and @name='url']/@value")
+    // @MyExtractBy(pageList = "//p[@class='title']/a/@href", itemDetail = "//link[@rel='canonical']/@href")
     private String url;
 }
