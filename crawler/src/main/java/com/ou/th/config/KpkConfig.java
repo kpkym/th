@@ -18,6 +18,9 @@ public class KpkConfig {
     private List<String> mercariUrls;
     private List<String> surugayaUrls;
     private List<String> kpkUrls;
+    private List<String> dlUrls;
+
+    private String dlDetail;
 
     private List<String> surugayaKeyword;
 

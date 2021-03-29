@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -24,10 +25,11 @@ public class CommonController {
                 .map(URLUtil::normalize)
                 .orElse("http://127.0.0.1");
 
-        Map<String, String> map = Map.of(
-                "serverUrl", s + ":" + serverPort,
-                "imgUrl", s + ":" + imgPort
-        );
+        Map<String, String> map = new HashMap<>();
+
+        map.put("serverUrl", s + ":" + serverPort);
+        map.put("imgUrl", s + ":" + imgPort);
+
         return Msg.success(map);
     }
 }
