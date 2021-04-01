@@ -13,7 +13,7 @@ module.exports = {
       },
       plugins: [
         new HtmlWebpackPlugin({
-          filename: 'output.html', // the output file name that will be created
+          filename: 'index.html', // the output file name that will be created
           template: 'src/index.html', // this is important - a template file to use for insertion
           inlineSource: '.(js|css)$' // embed all javascript and css inline
         }),
