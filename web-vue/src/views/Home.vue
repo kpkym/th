@@ -38,7 +38,7 @@
         <a :href="`${config.urlFormat}${record.code}.html`" target="_blank"><Avatar shape="square" :size="200" :src="`${config.imgFormat}${record.code}.jpg`" /></a>
       </span>
 
-      <span slot="circleAndseriesData" slot-scope="text, record">
+      <span slot="circleAndseriesData" slot-scope="text, record" @contextmenu="listDir($event, record)" @dblclick="koeOpen(record)">
         <Tag color="blue" v-if="isHave(ihave, record.code)">我有</Tag>
         <Tag color="pink" v-if="isHave(ohas, record.code)">别人有</Tag>
         <Tag color="green" v-if="isHave(free, record.code)">当场身亡</Tag>
@@ -94,6 +94,16 @@
       </CollapsePanel>
     </Collapse>
 
+    
+
+    <Modal :visible="visible" :closable="false" @cancel="visible = false" :okButtonProps="{ style: { display: 'none' } }" :cancelButtonProps="{ style: { display: 'none' } }">
+      <List bordered :data-source="dirList">
+        <ListItem slot="renderItem" slot-scope="item, index" @click="open(item)">
+          {{item.type}} =====> {{ item.path }}
+        </ListItem>
+      </List>
+    </Modal>
+
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
   </div>
 </template>
@@ -101,13 +111,14 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from "@/components/HelloWorld.vue";
-import { Table, Avatar, Input, Select, Tag, Collapse } from "ant-design-vue";
+import { Table, Avatar, Input, Select, Tag, Collapse, List, Modal } from "ant-design-vue";
 import Axios from "axios";
 import _ from 'underscore';
 import data from "@/data/data.json"
 import my from "@/data/my.json"
 import dcsw from "@/data/dcsw.json"
 import config from "@/data/config.json"
+
 
 const columns = [
   {dataIndex: "img",scopedSlots: { customRender: "img" }, slots: { title: 'code' },},
@@ -144,6 +155,10 @@ export default {
   },
   data() {
     return {
+      visible: false,
+      dirList: [],
+      clicks: 0,
+      clicksTimeout: null,
       config,
       pagination: {"showSizeChanger": true, "showTotal": total => `总数量 ${total}`, "pageSizeOptions": ["10", "20", "50", "100", "1000", "1000000"], "showQuickJumper": true},
       sortValue: "dlCount",
@@ -163,19 +178,9 @@ export default {
         {label: "降序", value: 1},
         {label: "升序", value: 0},
       ],
-      selectedTags: {
-        // "age": ["全年龄"]
-      },
+      selectedTags: {},
       tags:{},
       conditions: {
-        code: '',
-        circle: '',
-        series: '',
-        circle: '',
-        voice: '',
-        age: '',
-        voice: '',
-        
         
         rank24hRange: [],
         rank7dRange: [],
@@ -335,6 +340,21 @@ export default {
   methods: {
     isHave(list, code){
       return _.contains(list, code)
+    },
+    listDir(e, item){
+      this.visible = true
+      let norj = item.code.replace("RJ", "")
+      Axios.post(config.pyServer, {"koe_list": norj})
+          .then(e => e.data)
+          .then(e => this.dirList = e)
+      e.preventDefault();
+    },
+    koeOpen(item){
+      let norj = item.code.replace("RJ", "")
+      Axios.post(config.pyServer, {"koe_open": norj})
+    },
+    open(item){
+      Axios.post(config.pyServer, {"direct_open": item.path})
     }
   },
   name: "Home",
@@ -348,7 +368,10 @@ export default {
     SelectOption: Select.Option,
     Tag,
     Collapse,
-    CollapsePanel: Collapse.Panel
+    CollapsePanel: Collapse.Panel,
+    List,
+    ListItem: List.Item,
+    Modal
   },
 };
 </script>
