@@ -38,7 +38,7 @@
         <a :href="`${config.urlFormat}${record.code}.html`" target="_blank"><Avatar shape="square" :size="200" :src="`${config.imgFormat}${record.code}.jpg`" /></a>
       </span>
 
-      <span slot="circleAndseriesData" slot-scope="text, record" @contextmenu="listDir($event, record)" @dblclick="koeOpen(record)">
+      <span slot="circleAndseriesData" slot-scope="text, record" @contextmenu.prevent="listDir(record)" @dblclick.prevent="koeOpen(record)">
         <Tag color="blue" v-if="isHave(ihave, record.code)">我有</Tag>
         <Tag color="pink" v-if="isHave(ohas, record.code)">别人有</Tag>
         <Tag color="green" v-if="isHave(free, record.code)">当场身亡</Tag>
@@ -53,7 +53,7 @@
         </span>
       </span>
 
-      <span slot="releaseDate" slot-scope="text, record">
+      <span slot="releaseDate" slot-scope="text, record" @dblclick.prevent="copy(record, false)" @contextmenu.prevent="copy(record, true)">
         <Tag color="cyan" v-if="record.age == '全年龄'">{{record.age}}</Tag>
         <Tag color="purple" v-if="record.age == 'R-15'">{{record.age}}</Tag>
         <Tag color="pink" v-if="record.age == '18禁'">{{record.age}}</Tag>
@@ -98,7 +98,7 @@
 
     <Modal :visible="visible" :closable="false" @cancel="visible = false" :okButtonProps="{ style: { display: 'none' } }" :cancelButtonProps="{ style: { display: 'none' } }">
       <List bordered :data-source="dirList">
-        <ListItem slot="renderItem" slot-scope="item, index" @click="open(item)">
+        <ListItem slot="renderItem" slot-scope="item" @click="open(item)">
           {{item.type}} =====> {{ item.path }}
         </ListItem>
       </List>
@@ -111,7 +111,7 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from "@/components/HelloWorld.vue";
-import { Table, Avatar, Input, Select, Tag, Collapse, List, Modal } from "ant-design-vue";
+import { Table, Avatar, Input, Select, Tag, Collapse, List, Modal, message } from "ant-design-vue";
 import Axios from "axios";
 import _ from 'underscore';
 import data from "@/data/data.json"
@@ -151,7 +151,11 @@ export default {
       let propmpt = window.prompt();
 
       this.ohas = propmpt == "dcsw" ? this.free : propmpt.split(/\s*,\s*/);
+    }else if (this.$route.path == '/'){
+      this.conditions.dlCountRange = [500];
     }
+
+    
   },
   data() {
     return {
@@ -160,7 +164,7 @@ export default {
       clicks: 0,
       clicksTimeout: null,
       config,
-      pagination: {"showSizeChanger": true, "showTotal": total => `总数量 ${total}`, "pageSizeOptions": ["10", "20", "50", "100", "1000", "1000000"], "showQuickJumper": true},
+      pagination: {"showSizeChanger": true, "showTotal": total => `总数量 ${total}`, "defaultPageSize": 50, "pageSizeOptions": ["10", "20", "50", "100", "1000", "1000000"], "showQuickJumper": true},
       sortValue: "dlCount",
       orderValue: 1,
       sorts: [
@@ -185,7 +189,7 @@ export default {
         rank24hRange: [],
         rank7dRange: [],
         rank30dRange: [],
-        dlCountRange: [500],
+        dlCountRange: [],
         wishlistCountRange: [],
         scoreRange: [],
         scoreCountRange: [],
@@ -295,6 +299,8 @@ export default {
 
         if(this.$route.path == '/my'){
             flag = flag && _.contains(this.ihave, e.code)
+        }else if(this.$route.path == '/mynodcsw'){
+            flag = flag && _.contains(this.ihave, e.code) && !_.contains(this.free, e.code)
         }else if(this.$route.path == '/iinput'){
             flag = flag && _.contains(this.ohas, e.code)
         }
@@ -341,13 +347,12 @@ export default {
     isHave(list, code){
       return _.contains(list, code)
     },
-    listDir(e, item){
+    listDir(item){
       this.visible = true
       let norj = item.code.replace("RJ", "")
       Axios.post(config.pyServer, {"koe_list": norj})
           .then(e => e.data)
           .then(e => this.dirList = e)
-      e.preventDefault();
     },
     koeOpen(item){
       let norj = item.code.replace("RJ", "")
@@ -355,7 +360,13 @@ export default {
     },
     open(item){
       Axios.post(config.pyServer, {"direct_open": item.path})
-    }
+    },
+    copy(item, without){
+      if (without){navigator.clipboard.writeText(item.code.replace("RJ", ""));}else{navigator.clipboard.writeText(item.code);}
+      message.destroy()
+      message.info("copied")
+    },
+    
   },
   name: "Home",
   components: {
