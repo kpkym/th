@@ -61,7 +61,7 @@ public class DlModel {
     private String format;
 
     // 其他
-    @MyExtractBy(itemDetail = "(?<=其他</th>)[\\s\\S]*?(?=<\\/td>)", type = MyExtractBy.Type.Regex, separatorRegex = "\\s+")
+    @MyExtractBy(itemDetail = "(?<=对应语言</th>)[\\s\\S]*?(?=<\\/td>)", type = MyExtractBy.Type.Regex, separatorRegex = "\\s+")
     private List<String> miscellaneous;
 
     // 分类

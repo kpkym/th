@@ -152,10 +152,10 @@ export default {
 
       this.ohas = propmpt == "dcsw" ? this.free : propmpt.split(/\s*,\s*/);
     }else if (this.$route.path == '/'){
+      // this.conditions.dlCountRange = [500];
+    }else if (this.$route.path == '/all'){
       this.conditions.dlCountRange = [500];
     }
-
-    
   },
   data() {
     return {
@@ -201,16 +201,7 @@ export default {
       free: [],
       data: [],
       columns,
-      rowSelection: {
-        onChange: (selectedRowKeys, selectedRows) => {
-          let text = selectedRows.map(e => e.code).reduce((a, b) => a + "," + b, "");
-          if (text){
-            this.text = text.substr(1)
-          }
-
-        },
-      },
-      text: ""
+      selectedRowKeys: [],
     };
   },
   computed:{
@@ -294,10 +285,10 @@ export default {
             flag = flag && _.contains(selectedList, propVal.trim());
           }
         }
-
-
-
-        if(this.$route.path == '/my'){
+        
+        if(this.$route.path == '/'){
+            flag = flag && _.contains(this.ihave, e.code)
+        }else if(this.$route.path == '/my'){
             flag = flag && _.contains(this.ihave, e.code)
         }else if(this.$route.path == '/mynodcsw'){
             flag = flag && _.contains(this.ihave, e.code) && !_.contains(this.free, e.code)
@@ -341,6 +332,43 @@ export default {
       }
     
       return display;
+    },
+    rowSelection() {
+      const { selectedRowKeys } = this;
+
+      return {
+        selectedRowKeys,
+        hideDefaultSelections: true,
+        onChange: (selectedRowKeys, selectedRows) => {
+          let text = selectedRows.map(e => e.code).reduce((a, b) => a + "," + b, "");
+          if (text){
+            this.text = text.substr(1)
+          }
+        },
+        selections: [
+          {
+            text: '我有',
+            onSelect: changableRowKeys => {
+              this.selectedRowKeys = _.intersection(this.ihave, changableRowKeys);
+            },
+          },
+          {
+            text: '我没有',
+            onSelect: changableRowKeys => {
+              this.selectedRowKeys = _.difference(changableRowKeys, this.ihave);
+            },
+          },
+          {
+            text: '清空选项',
+            onSelect: changableRowKeys => {
+              this.selectedRowKeys = []
+            },
+          },
+        ],
+      }
+    },
+    text(){
+      return this.selectedRowKeys.join(",")
     }
   },
   methods: {
