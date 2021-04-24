@@ -43,6 +43,7 @@
         <Tag color="pink" v-if="isHave(ohas, record.code)">别人有</Tag>
         <Tag color="green" v-if="isHave(free, record.code)">当场身亡</Tag>
 
+        {{record.code}}
         {{record.title}}
                 <span v-if="record.circle" style="color: red">
           {{record.circle}}
@@ -114,10 +115,10 @@ import HelloWorld from "@/components/HelloWorld.vue";
 import { Table, Avatar, Input, Select, Tag, Collapse, List, Modal, message } from "ant-design-vue";
 import Axios from "axios";
 import _ from 'underscore';
-import data from "@/data/data.json"
-import my from "@/data/my.json"
-import dcsw from "@/data/dcsw.json"
-import config from "@/data/config.json"
+import data from "#/data.json"
+import my from "##/my.json"
+import dcsw from "##/dcsw.json"
+import config from "#/config.json"
 
 
 const columns = [
@@ -164,7 +165,7 @@ export default {
       clicks: 0,
       clicksTimeout: null,
       config,
-      pagination: {"showSizeChanger": true, "showTotal": total => `总数量 ${total}`, "defaultPageSize": 50, "pageSizeOptions": ["10", "20", "50", "100", "1000", "1000000"], "showQuickJumper": true},
+      pagination: {"showSizeChanger": true, "showTotal": total => `总数量 ${total}`, "defaultPageSize": 50, "pageSizeOptions": ["10", "20", "50", "100", "1000", "1000000"], "showQuickJumper": true, "onChange": (page, pageSize) => window.scrollTo(0,0)},
       sortValue: "dlCount",
       orderValue: 1,
       sorts: [
@@ -340,22 +341,21 @@ export default {
         selectedRowKeys,
         hideDefaultSelections: true,
         onChange: (selectedRowKeys, selectedRows) => {
-          let text = selectedRows.map(e => e.code).reduce((a, b) => a + "," + b, "");
-          if (text){
-            this.text = text.substr(1)
-          }
+          this.selectedRowKeys = selectedRowKeys;
         },
         selections: [
           {
             text: '我有',
             onSelect: changableRowKeys => {
               this.selectedRowKeys = _.intersection(this.ihave, changableRowKeys);
+              // this.selectedTags.code = _.intersection(this.ihave, changableRowKeys);
             },
           },
           {
             text: '我没有',
             onSelect: changableRowKeys => {
               this.selectedRowKeys = _.difference(changableRowKeys, this.ihave);
+              // this.selectedTags.code = _.difference(changableRowKeys, this.ihave);
             },
           },
           {
