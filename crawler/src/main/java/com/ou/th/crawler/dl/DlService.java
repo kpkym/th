@@ -61,7 +61,7 @@ public class DlService {
                 .collect(Collectors.toMap(e -> JSONUtil.parseObj(e).getStr("term"), e -> JSONUtil.parseObj(e).getInt("rank")));
 
 
-        dlModel.setOfficialPrice(jsonObject.getInt("official_price"));
+        dlModel.setPrice(jsonObject.containsKey("official_price") ? jsonObject.getInt("official_price") : jsonObject.getInt("price"));
         dlModel.setRank24h(ranks.get("day"));
         dlModel.setRank7d(ranks.get("week"));
         dlModel.setRank30d(ranks.get("month"));

@@ -69,7 +69,7 @@ public class DlModel {
     private List<String> genre;
 
 
-    private Integer officialPrice;
+    private Integer price;
 
     private Integer rank24h;
 

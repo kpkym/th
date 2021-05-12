@@ -33,28 +33,24 @@ public class DlPageProcessor implements PageProcessor {
 
         // 当前是搜索页
         if (url.contains("/maniax/fsr")) {
-            try {
-                Assert.isTrue(NumberUtil.parseInt(StrUtil.subAfter(url, "page/", true)) <= 50);
-            } catch (Exception e) {
-                page.setSkip(true);
-                return;
-            }
+            try { Assert.isTrue(NumberUtil.parseInt(StrUtil.subAfter(url, "page/", true)) <= 50); } catch (Exception e) { page.setSkip(true);return; }
+
             log.info("当前URL为：" + url);
-            List<String> alldata = page.getHtml().xpath("//dd[@class='work_name']//a/@href").all()
-                    .stream().map(e -> e + "/?locale=zh_CN").collect(Collectors.toList());
+            List<String> alldata = page.getHtml().xpath("//dd[@class='work_name']//a/@href").all().stream().map(e -> e + "/?locale=zh_CN").collect(Collectors.toList());
             List<String> allPage = page.getHtml().xpath("//td[@class='page_no']//a/@href").all();
+
             page.addTargetRequests(allPage);
             page.addTargetRequests(alldata);
         } else if (url.contains("product_id")) {
-            DlModel field = CommonUtil.handleAnotation(page.getHtml().get(), new DlModel(), false);
+            DlModel dlModel = CommonUtil.handleAnotation(page.getHtml().get(), new DlModel(), false);
 
-            String code = ReUtil.findAllGroup0("(?<=product_id/)[\\s\\S]*?(?=.html)", url).stream().findFirst().orElse("");
+            ReUtil.findAllGroup0("(?<=product_id/)[\\s\\S]*?(?=.html)", url).stream().findFirst().ifPresent(e -> {
+                dlModel.setCode(e);
+                page.putField("obj", dlModel);
+            });
 
-            List<String> alldata = page.getHtml().xpath("//li/div[@class='work_edition_linklist type_body']/a/@href").all()
-                    .stream().map(e -> e + "/?locale=zh_CN").collect(Collectors.toList());
+            List<String> alldata = page.getHtml().xpath("//li/div[@class='work_edition_linklist type_body']/a/@href").all().stream().map(e -> e + "/?locale=zh_CN").collect(Collectors.toList());
             page.addTargetRequests(alldata);
-            field.setCode(code);
-            page.putField("obj", field);
 
         } else {
             page.setSkip(true);
