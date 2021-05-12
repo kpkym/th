@@ -46,6 +46,11 @@ public class DlService {
 
     @Async
     public void save(DlModel dlModel) {
+        if (StrUtil.isEmpty(dlModel.getTitle())
+        ) {
+            return;
+        }
+
         String body = HttpRequest.get(StrUtil.format(kpkConfig.getDlDetail(), dlModel.getCode()))
                 .setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(kpkConfig.getProxy().getHost(), kpkConfig.getProxy().getPort())))
                 .execute()
@@ -55,7 +60,8 @@ public class DlService {
         Map<String, Integer> ranks = jsonObject.getJSONArray("rank").stream().filter(e -> "voice".equals(JSONUtil.parseObj(e).getStr("category")))
                 .collect(Collectors.toMap(e -> JSONUtil.parseObj(e).getStr("term"), e -> JSONUtil.parseObj(e).getInt("rank")));
 
-        dlModel.setPrice(jsonObject.getInt("price"));
+
+        dlModel.setOfficialPrice(jsonObject.getInt("official_price"));
         dlModel.setRank24h(ranks.get("day"));
         dlModel.setRank7d(ranks.get("week"));
         dlModel.setRank30d(ranks.get("month"));
