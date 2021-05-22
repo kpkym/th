@@ -35,15 +35,16 @@
       <InputGroup slot="price" compact><Input v-model="conditions.priceRange[0]" /><Input placeholder="价格" v-model="conditions.priceRange[1]" /></InputGroup>
       
       <span slot="img" slot-scope="text, record">
-        <a :href="`${config.urlFormat}${record.code}.html`" target="_blank"><Avatar shape="square" :size="200" :src="`${config.imgFormat}${record.code}.jpg`" /></a>
+        <span @dblclick.prevent="koeOpen(record)"><Avatar shape="square" :size="200" :src="`${config.imgFormat}${record.code}.jpg`" /></span>
       </span>
 
-      <span slot="circleAndseriesData" slot-scope="text, record" @contextmenu.prevent="listDir(record)" @dblclick.prevent="koeOpen(record)">
+      <span slot="circleAndseriesData" slot-scope="text, record" @contextmenu.prevent="listDir(record)">
         <Tag color="blue" v-if="isHave(ihave, record.code)">我有</Tag>
+        <Tag color="cyan" v-if="isHave(hasmp4, record.code)">mp4</Tag>
+        <Tag color="purple" v-if="isHave(haslrc, record.code)">lrc</Tag>
         <Tag color="pink" v-if="isHave(ohas, record.code)">别人有</Tag>
         <Tag color="green" v-if="isHave(free, record.code)">当场身亡</Tag>
 
-        {{record.code}}
         {{record.title}}
                 <span v-if="record.circle" style="color: red">
           {{record.circle}}
@@ -74,6 +75,7 @@
       </span>
 
       <span slot="voiceData" slot-scope="text, record">
+        {{record.code}} <br>
         <span v-for="(item) in record.voice" :key="item">
           <Tag color="orange">{{item}}</Tag>
           <br>
@@ -117,6 +119,9 @@ import Axios from "axios";
 import _ from 'underscore';
 import data from "#/data.json"
 import my from "##/my.json"
+import pos from "##/pos.json"
+import hasmp4 from "##/hasmp4.json"
+import haslrc from "##/haslrc.json"
 import dcsw from "##/dcsw.json"
 import config from "#/config.json"
 
@@ -144,14 +149,15 @@ export default {
     // let data = (await Axios.get("/dl/list")).data;
     this.data = data;
     this.ihave = my
-
+    this.hasmp4 = hasmp4
+    this.haslrc = haslrc
 
     this.free = dcsw
 
     if (this.$route.path == '/iinput'){
       let propmpt = window.prompt();
 
-      this.ohas = propmpt == "dcsw" ? this.free : propmpt.split(/\s*,\s*/);
+      this.ohas = propmpt == "dcsw" ? this.free : propmpt.match(/(?<!\d)\d{6}(?!\d)/g).map(e => `RJ${e}`);
     }else if (this.$route.path == '/'){
       // this.conditions.dlCountRange = [500];
     }else if (this.$route.path == '/all'){
@@ -198,6 +204,8 @@ export default {
         priceRange: []
       },
       ihave: [],
+      hasmp4: [],
+      haslrc: [],
       ohas: [],
       free: [],
       data: [],
@@ -263,6 +271,7 @@ export default {
         && scoreCountRange[0] <= e.scoreCount && e.scoreCount <= scoreCountRange[1]
         && reviewCountRange[0] <= e.reviewCount && e.reviewCount <= reviewCountRange[1]
         && priceRange[0] <= e.price && e.price <= priceRange[1]
+        || (e.rank24h || e.rank7d || e.rank30d || e.dlCount || e.wishlistCount || e.score || e.scoreCount || e.reviewCount || e.price)
       );
       
       // filterd = filterd.slice(filterd.length - 1)
@@ -299,6 +308,8 @@ export default {
 
         return flag;
       });      
+
+    
 
       let code = []
       // let code = filterd.map(e => e.code);
@@ -378,16 +389,36 @@ export default {
     listDir(item){
       this.visible = true
       let norj = item.code.replace("RJ", "")
-      Axios.post(config.pyServer, {"koe_list": norj})
+
+      if (location.href.includes("file:///")){
+        Axios.post(config.pyServer, {"koe_list": norj})
           .then(e => e.data)
           .then(e => this.dirList = e)
+          return;
+      }
+
+      let p = pos.filter(e => e.path.includes(norj))
+      _.sortBy(p, a => a.path.length)
+      this.dirList = p;
     },
     koeOpen(item){
       let norj = item.code.replace("RJ", "")
-      Axios.post(config.pyServer, {"koe_open": norj})
+
+      if (location.href.includes("file:///")){
+        Axios.post(config.pyServer, {"koe_open": norj})
+        return;
+      }
+
+      let p = pos.filter(e => e.path.includes(norj))
+      _.sortBy(p, a => a.path.length)
+      window.open(p[0].path.replace("/Volumes/koe", ""))
     },
     open(item){
-      Axios.post(config.pyServer, {"direct_open": item.path})
+      if (location.href.includes("file:///")){
+        Axios.post(config.pyServer, {"direct_open": item.path})
+      }
+      
+      window.open(item.path.replace("/Volumes/koe", ""))
     },
     copy(item, without){
       if (without){navigator.clipboard.writeText(item.code.replace("RJ", ""));}else{navigator.clipboard.writeText(item.code);}

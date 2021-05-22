@@ -9,6 +9,8 @@ import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
+import java.util.Optional;
+
 /**
  * @author kpkym
  * Date: 2020-03-16 21:18
@@ -24,9 +26,7 @@ public class DlPipline implements Pipeline {
 
     @Override
     public void process(ResultItems resultItems, Task task) {
-        DlModel dlModel = resultItems.get("obj");
-
-        ThreadUtil.execute(() -> dlService.save(handle(dlModel)));
+        Optional.<DlModel>ofNullable(resultItems.get("obj")).ifPresent(e -> ThreadUtil.execute(() -> dlService.save(handle(e))));
     }
 
     public DlModel handle(DlModel dlModel) {

@@ -4,7 +4,9 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import com.ou.th.controller.DlController;
 import com.ou.th.crawler.common.CommonUtil;
+import com.ou.th.util.RjsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,7 +35,7 @@ public class DlPageProcessor implements PageProcessor {
 
         // 当前是搜索页
         if (url.contains("/maniax/fsr")) {
-            try { Assert.isTrue(NumberUtil.parseInt(StrUtil.subAfter(url, "page/", true)) <= 50); } catch (Exception e) { page.setSkip(true);return; }
+            try { Assert.isTrue(NumberUtil.parseInt(StrUtil.subAfter(url, "page/", true)) <= 5); } catch (Exception e) { page.setSkip(true);return; }
 
             log.info("当前URL为：" + url);
             List<String> alldata = page.getHtml().xpath("//dd[@class='work_name']//a/@href").all().stream().map(e -> e + "/?locale=zh_CN").collect(Collectors.toList());
@@ -41,6 +43,8 @@ public class DlPageProcessor implements PageProcessor {
 
             page.addTargetRequests(allPage);
             page.addTargetRequests(alldata);
+
+            // RjsUtil.addAll(alldata.stream().flatMap(e -> ReUtil.findAllGroup0("(?<!\\d)\\d{6}(?!\\d)", e).stream()).filter(StrUtil::isNotEmpty).collect(Collectors.toSet()));
         } else if (url.contains("product_id")) {
             DlModel dlModel = CommonUtil.handleAnotation(page.getHtml().get(), new DlModel(), false);
 
