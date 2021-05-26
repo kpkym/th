@@ -1,5 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
 const path = require('path');
 
 module.exports = {
@@ -17,7 +19,8 @@ module.exports = {
         extensions: ['.js', '.vue', '.json']
       },
       optimization: {
-        splitChunks: false // makes there only be 1 js file - leftover from earlier attempts but doesn't hurt
+        splitChunks: false, // makes there only be 1 js file - leftover from earlier attempts but doesn't hurt
+        minimizer: [new UglifyJsPlugin()],
       },
       plugins: [
         new HtmlWebpackPlugin({

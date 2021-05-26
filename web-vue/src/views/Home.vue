@@ -34,11 +34,11 @@
       <InputGroup slot="reviewCount" compact><Input v-model="conditions.reviewCountRange[0]" /><Input placeholder="评论数" v-model="conditions.reviewCountRange[1]" /></InputGroup>
       <InputGroup slot="price" compact><Input v-model="conditions.priceRange[0]" /><Input placeholder="价格" v-model="conditions.priceRange[1]" /></InputGroup>
       
-      <span slot="img" slot-scope="text, record">
-        <span @dblclick.prevent="koeOpen(record)"><Avatar shape="square" :size="200" :src="`${config.imgFormat}${record.code}.jpg`" /></span>
+      <span slot="img" slot-scope="text, record" @press="koeOpen(record)" @dblclick.prevent="koeOpen(record)">
+        <span><Avatar shape="square" :size="200" :src="`${config.imgFormat}${record.code}.jpg`" /></span>
       </span>
 
-      <span slot="circleAndseriesData" slot-scope="text, record" @contextmenu.prevent="listDir(record)">
+      <span slot="circleAndseriesData" slot-scope="text, record" @press="listDir(record)" @contextmenu.prevent="listDir(record)">
         <Tag color="blue" v-if="isHave(ihave, record.code)">我有</Tag>
         <Tag color="cyan" v-if="isHave(hasmp4, record.code)">mp4</Tag>
         <Tag color="purple" v-if="isHave(haslrc, record.code)">lrc</Tag>
@@ -117,14 +117,14 @@ import HelloWorld from "@/components/HelloWorld.vue";
 import { Table, Avatar, Input, Select, Tag, Collapse, List, Modal, message } from "ant-design-vue";
 import Axios from "axios";
 import _ from 'underscore';
-import data from "#/data.json"
+import data from "##/data.json"
 import my from "##/my.json"
 import pos from "##/pos.json"
 import hasmp4 from "##/hasmp4.json"
 import haslrc from "##/haslrc.json"
 import dcsw from "##/dcsw.json"
 import config from "#/config.json"
-
+import AnyTouch from 'any-touch';
 
 const columns = [
   {dataIndex: "img",scopedSlots: { customRender: "img" }, slots: { title: 'code' },},
@@ -145,7 +145,6 @@ const columns = [
 
 export default {
   async created() {
-
     // let data = (await Axios.get("/dl/list")).data;
     this.data = data;
     this.ihave = my
@@ -157,12 +156,16 @@ export default {
     if (this.$route.path == '/iinput'){
       let propmpt = window.prompt();
 
-      this.ohas = propmpt == "dcsw" ? this.free : propmpt.match(/(?<!\d)\d{6}(?!\d)/g).map(e => `RJ${e}`);
+      this.ohas = propmpt == "dcsw" ? this.free : propmpt.match(/\d{6,}/g).filter(e => e.length == 6).map(e => `RJ${e}`);
     }else if (this.$route.path == '/'){
       // this.conditions.dlCountRange = [500];
     }else if (this.$route.path == '/all'){
       this.conditions.dlCountRange = [500];
     }
+  },
+  mounted() {
+      const at= new AnyTouch(this.$el, { preventDefault: false });
+      this.$on('hook:destroyed', ()=>{at.destroy()});
   },
   data() {
     return {
@@ -190,6 +193,7 @@ export default {
         {label: "升序", value: 0},
       ],
       selectedTags: {},
+      // selectedTags: {"age": ["全年龄"]},
       tags:{},
       conditions: {
         
@@ -262,16 +266,17 @@ export default {
       priceRange[1] = priceRange[1] || 10000000;
       
 
-      let filterd =  this.data.filter(e => rank24hRange[0] <= e.rank24h && e.rank24h <= rank24hRange[1]
-        && rank7dRange[0] <= e.rank7d && e.rank7d <= rank7dRange[1]
-        && rank30dRange[0] <= e.rank30d && e.rank30d <= rank30dRange[1]
-        && dlCountRange[0] <= e.dlCount && e.dlCount <= dlCountRange[1]
-        && wishlistCountRange[0] <= e.wishlistCount && e.wishlistCount <= wishlistCountRange[1]
-        && scoreRange[0] <= Number(e.score) && Number(e.score) <= scoreRange[1]
-        && scoreCountRange[0] <= e.scoreCount && e.scoreCount <= scoreCountRange[1]
-        && reviewCountRange[0] <= e.reviewCount && e.reviewCount <= reviewCountRange[1]
-        && priceRange[0] <= e.price && e.price <= priceRange[1]
-        || (e.rank24h || e.rank7d || e.rank30d || e.dlCount || e.wishlistCount || e.score || e.scoreCount || e.reviewCount || e.price)
+      let filterd =  this.data.filter(e => 1 == 1
+        && (!e.rank24h || (rank24hRange[0] <= e.rank24h && e.rank24h <= rank24hRange[1]))
+        && (!e.rank7d || (rank7dRange[0] <= e.rank7d && e.rank7d <= rank7dRange[1]))
+        && (!e.rank30d || (rank30dRange[0] <= e.rank30d && e.rank30d <= rank30dRange[1]))
+        && (!e.dlCount || (dlCountRange[0] <= e.dlCount && e.dlCount <= dlCountRange[1]))
+        && (!e.wishlistCount || (wishlistCountRange[0] <= e.wishlistCount && e.wishlistCount <= wishlistCountRange[1]))
+        && (!e.score || (scoreRange[0] <= Number(e.score) && Number(e.score) <= scoreRange[1]))
+        && (!e.scoreCount || (scoreCountRange[0] <= e.scoreCount && e.scoreCount <= scoreCountRange[1]))
+        && (!e.reviewCount || (reviewCountRange[0] <= e.reviewCount && e.reviewCount <= reviewCountRange[1]))
+        && (!e.price || (priceRange[0] <= e.price && e.price <= priceRange[1]))
+
       );
       
       // filterd = filterd.slice(filterd.length - 1)
@@ -292,7 +297,12 @@ export default {
           if (_.isArray(propVal)){
             flag = flag && _.intersection(selectedList, propVal.map(e => e.trim())).length > 0;
           }else{
-            flag = flag && _.contains(selectedList, propVal.trim());
+            try{
+              flag = flag && _.contains(selectedList, propVal.trim());
+            }catch{
+              console.log(i)
+              console.log(propVal)
+            }
           }
         }
         
@@ -396,10 +406,8 @@ export default {
           .then(e => this.dirList = e)
           return;
       }
-
-      let p = pos.filter(e => e.path.includes(norj))
-      _.sortBy(p, a => a.path.length)
-      this.dirList = p;
+      
+      this.dirList = _.sortBy(pos.filter(e => e.path.includes(norj)), a => a.path.length);
     },
     koeOpen(item){
       let norj = item.code.replace("RJ", "")
@@ -408,14 +416,13 @@ export default {
         Axios.post(config.pyServer, {"koe_open": norj})
         return;
       }
-
-      let p = pos.filter(e => e.path.includes(norj))
-      _.sortBy(p, a => a.path.length)
-      window.open(p[0].path.replace("/Volumes/koe", ""))
+      
+      window.open(_.sortBy(pos.filter(e => e.path.includes(norj)), a => a.path.length)[0].path.replace("/Volumes/koe", ""))
     },
     open(item){
       if (location.href.includes("file:///")){
         Axios.post(config.pyServer, {"direct_open": item.path})
+        return;
       }
       
       window.open(item.path.replace("/Volumes/koe", ""))
